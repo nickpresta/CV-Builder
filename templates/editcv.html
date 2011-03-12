@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+
+{% block navigation %}
+<ul id="navlist">
+    <li><a href="/" class="navitem">Home</a></li>
+    <li><a href="editcv.html" class="navitem navitem_selected">Edit CV</a></li>
+</ul>
+{% endblock %}
+
+{% block topmenu %}
+{% endblock %}
+
+{% block content %}
+<dl class="expandlist">
+    <dt>
+        <input type="button" class="expandlist" value="+" />
+        <a target="__none" class="expandlist">Part 1: Executive Summary</a>
+    </dt>
+    <dt>
+        <input type="button" class="expandlist" value="+" />
+        <a target="__none" class="expandlist">Part 2: Biographical Information</a>
+    </dt>
+    <dd>
+        <a target="__none" class="expandlist">(a) Name/Depatment</a>
+    </dd>
+    <dd>
+        <a target="__none" class="expandlist">(b) Degrees</a>
+    </dd>
+    <dd>
+        <a target="__none" class="expandlist">(c) Major Honours & Fellowships</a>
+    </dd>
+    <dd>
+        <a target="__none" class="expandlist">(d) Date of first appointment at University of Guelph</a>
+    </dd>
+    <dd>
+        <a target="__none" class="expandlist">(e) Positions held at University of Guelph</a>
+    </dd>
+    <dd>
+        <a target="__none" class="expandlist">(f) Experience prior to appointment at Guelph</a>
+    </dd>
+    <dd>
+        <a target="__none" class="expandlist">(g) Visiting Professorships, etc. elsewhere since appointment</a>
+    </dd>
+    <dt>
+        <input type="button" class="expandlist" value="+" />
+        <a target="__none" class="expandlist">Part 3: Cumulative Information on Teaching, Research and Service</a>
+    </dt>
+    <dd>
+        <dl class="expandlist subexpandlist">
+            <dt>
+                <input type="button" class="expandlist" value="+" />
+                <a target="__none" class="expandlist">3A: Research</a>
+            </dt>
+            <dd>
+                <a target="__none" class="expandlist">(a) Summary of Research Activity</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(b) Six-year Publication List</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(c) Research Grants and Contracts Held</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(d) Research Grants Applied For</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(e) Professional Consulting</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(f) Patents</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(g) Other Activities</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(h) Recognition of Research and Scholarship</a>
+            </dd>
+            <dt>
+                <input type="button" class="expandlist" value="+" />
+                <a target="__none" class="expandlist">3B: Teaching and Learning</a>
+            </dt>
+            <dd>
+                <a target="__none" class="expandlist">(a) Report on Teaching</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(b) Courses</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(c) Contributions to Student Counselling</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(d) Graduate Advising and Examining</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(e) Major Work in Graduate and Undergraduate Course Development</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(f) Recognition of Teaching Ability and Achievement</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(g) Support Received for Major Teaching Projects</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(h) Scholarship in Education</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(i) Other Contributions to Education</a>
+            </dd>
+            <dt>
+                <input type="button" class="expandlist" value="+" />
+                <a target="__none" class="expandlist">3C: Service and Administrative Contributions</a>
+            </dt>
+            <dd>
+                <a target="__none" class="expandlist">(a) Department Committees and Similar Bodies with Dates</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(b) College Committees and Similar Bodies with Dates</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(c) University Committees and Similar Bodies with Dates</a>
+            </dd>
+            <dd>
+                <a target="__none" class="expandlist">(d) External/Professional Committees and Similar Bodies with Dates</a>
+            </dd>
+            <dt>
+                <input type="button" class="expandlist" value="+" />
+                <a target="__none" class="expandlist">3D: Off-Campus Recognition</a>
+            </dt>
+
+        </dl>
+    </dd>
+    <dt>
+        <input type="button" class="expandlist" value="+" />
+        <a target="__none" class="expandlist">Part 4: Lifetime Publication List</a>
+    </dt>
+</dl>
+{% endblock %}

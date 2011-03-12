@@ -18,4 +18,11 @@ urlpatterns = patterns('',
 
 urlpatterns += patterns('3760.cv.views',
     url(r'^$', 'index', name='cv-index'),
+    url(r'^editcv.html$', 'editcv', name='cv-editcv'),
+    url(r'^.*css$', 'stylesheet', name='cv-stylesheet'),
 )
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        (r'^media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
+    )

@@ -1,0 +1,45 @@
+<html>
+<head>
+    <title>{% block title %}CIS*3760 CV Builder{% endblock %}</title>
+    
+    <link rel="stylesheet" type="text/css" href="/media/css/style.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
+    </script>
+    <script type="text/javascript">
+
+$(document).ready(function() {
+    $("input.expandlist").click(function(event) {
+        if (event.target.value == "-")
+            event.target.value = "+";
+        else
+            event.target.value = "-";
+
+        $(this).parent().nextUntil("dt").toggle();
+        return false;
+    });
+    
+    $("dd").hide();
+});
+
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="header">
+            <a href="/"><img src="/media/banner.jpg" /></a>
+        </div>
+        <div id="navigation">
+            {% block navigation %}{% endblock %}
+        </div>
+        <div id="content_wrapper">
+            <div id="topmenu">
+                {% block topmenu %}
+                {% endblock %}
+            </div>
+            <div id="content">{% block content %}{% endblock %}</div>
+        </div>
+    </div>
+</body>
+
+</html>

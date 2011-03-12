@@ -6,3 +6,9 @@ def index(request):
     """ Responsible for showing the index page """
 
     return direct_to_template(request, 'index.html', {'status': 'works!'})
+    
+def stylesheet(request):
+    return direct_to_template(request, 'style.css', { })
+    
+def editcv(request):
+    return direct_to_template(request, 'editcv.html', { })

@@ -46,17 +46,17 @@ USE_L10N = True
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/"
 #MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'site_media')
-MEDIA_ROOT = '/home/nickp/webapps/3760_admin/'
+MEDIA_ROOT = '/home/ecoutu/cis3760/tags/3760/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
 # Examples: "http://media.lawrence.com", "http://example.com/media/"
-MEDIA_URL = 'http://3760.nickpresta.ca/media/'
+MEDIA_URL = '/media/'
 
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = 'http://3760.nickpresta.ca/media/admin/'
+ADMIN_MEDIA_PREFIX = '/media/admin/'
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'g3+rqbut7po1l&77#58qll#t%=98!gdw^rpf&nj!t-8o32f-dp'
