@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block topmenu %}
+<input type="button" value="Save" />
+<input type="button" value="Cancel" />
+{% endblock %}
+
+{% block navigation %}
+<ul id="navlist">
+    <li><a href="/" class="navitem">Home</a></li>
+    <li><a href="editcv.html" class="navitem navitem_selected">Edit CV</a></li>
+</ul>
+{% endblock %}
+
+{% block content %}
+<h1>Part 1: Executive Summary</h1>
+<h2>Distribution of Effort</h2>
+<table>
+    <tr>
+        <th>Year</th>
+        <th>Research %</th>
+        <th>Teaching %</th>
+        <th>Service</th>
+    </tr>
+    <tr>
+        <td><input type="number" size="4" /></td>
+        <td><input type="number" size="4" /></td>
+        <td><input type="number" size="4" /></td>
+        <td><input type="number" size="4" /></td>
+    </tr>
+</table>
+<h2>Free format</h2>
+<textarea>
+</textarea>
+{% endblock %}
