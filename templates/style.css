@@ -86,33 +86,25 @@ input[type="button"]:hover {
     background-color: #bbccff;
 }
 
-ul.expandlist {
-    list-style-type: none;   
-}
-
 dl.expandlist {
-    margin-left: 10px;
+    margin-left: 40px;
 }
 
 dl.subexpandlist {
     margin: 0px;
 }
 
-dt {
+dt.expandable {
     background: #eee;
 }
 
-li.expandlist {
-    line-height: 200%;
-}
-
-a.expandlist {
-    padding-left: 20px;
+dt.expandlist {
+    padding-left: 5px;
 }
 
 input.expandlist[type="button"] {
     width: 18px;
     height: 18px;
     padding: 0px;
-    margin: 0px;
+    margin-left: -22px;
 }

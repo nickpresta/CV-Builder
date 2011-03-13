@@ -9,13 +9,20 @@
 
 $(document).ready(function() {
     $("input.expandlist").click(function(event) {
-        if (event.target.value == "-")
-            event.target.value = "+";
-        else
-            event.target.value = "-";
 
-        $(this).parent().nextUntil("dt").toggle();
+
+
         return false;
+    });
+    
+    $("input.expandlist").toggle(
+    function(event) {
+        $(this).val("-");
+        $(this).parent().nextUntil("dt").toggle();
+    },
+    function(event) {
+        $(this).val("+");
+        $(this).parent().nextUntil("dt").toggle();
     });
     
     $("dd").hide();
