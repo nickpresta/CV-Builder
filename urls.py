@@ -20,6 +20,7 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^$', 'index', name='cv-index'),
     url(r'^editcv.html$', 'editcv', name='cv-editcv'),
     url(r'^.*css$', 'stylesheet', name='cv-stylesheet'),
+    url(r'^form1.html$', 'form1', name='cv-form1'),
 )
 
 if settings.DEBUG:
