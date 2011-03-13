@@ -15,13 +15,9 @@ $(document).ready(function() {
         return false;
     });
     
-    $("input.expandlist").toggle(
-    function(event) {
-        $(this).val("-");
-        $(this).parent().nextUntil("dt").toggle();
-    },
-    function(event) {
-        $(this).val("+");
+    $("img.expandlist").click(function(event) {
+        $(this).toggleClass("plus");
+        $(this).toggleClass("minus");
         $(this).parent().nextUntil("dt").toggle();
     });
     

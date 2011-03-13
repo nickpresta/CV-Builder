@@ -18,7 +18,11 @@ a.navitem {
     outline-style: none
 }
 
-a.navitem_selected {
+a.navitem:hover {
+    background-color: #dde5ff;
+}
+
+a.navitem_selected, a.navitem_selected:hover {
     background-color: #bbccff;
 }
 
@@ -109,6 +113,30 @@ input.expandlist[type="button"] {
     margin-left: -22px;
 }
 
+/* Firefox hack, removes dotted outline of focused buttons */
 input.expandlist[type="button"]::-moz-focus-inner {
     border: 0;
+}
+
+img.minus {
+    background: url(/media/icons.png) no-repeat 0 -120px;
+    height: 12px;
+    width: 12px;
+}
+
+img.minus:hover {
+    background: url(/media/icons.png) no-repeat -20px -120px;
+    height: 12px;
+    width: 12px;    
+}
+img.plus {
+    background: url(/media/icons.png) no-repeat -40px -120px;
+    height: 12px;
+    width: 12px;
+}
+
+img.plus:hover {
+    background: url(/media/icons.png) no-repeat -60px -120px;
+    height: 12px;
+    width: 12px;
 }
