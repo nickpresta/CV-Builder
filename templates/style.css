@@ -90,6 +90,18 @@ input[type="button"]:hover {
     background-color: #bbccff;
 }
 
+/* alternative top menu look*/
+/*#topmenu {*/
+/*    width: 100%;*/
+/*    height: 24px;*/
+/*    border-top: thick solid #bbccff;*/
+/*    border-left: thick solid #bbccff;*/
+/*    background-color: #dde5ff;*/
+/*    padding-top: 5px;*/
+/*    padding-bottom: 5px;*/
+/*}*/
+
+
 dl.expandlist {
     margin-left: 40px;
 }
