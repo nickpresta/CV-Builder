@@ -45,8 +45,7 @@ USE_L10N = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/"
-#MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'site_media')
-MEDIA_ROOT = '/home/ecoutu/cis3760/tags/3760/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(__file__), 'media')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
@@ -97,3 +96,11 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
     '3760.cv',
 )
+
+# Allows for a local file to override global settings
+# Do not check in your settings_local.py
+try:
+    from settings_local import *
+except ImportError:
+    pass
+

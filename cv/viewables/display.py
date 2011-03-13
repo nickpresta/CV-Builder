@@ -9,10 +9,6 @@ def index(request):
 
     return direct_to_template(request, 'index.html', {'status': 'works!'})
     
-def stylesheet(request):
-    # TODO: serving style.css for any css request
-    return direct_to_template(request, 'style.css', { })
-    
 def editcv(request):
     return direct_to_template(request, 'editcv.html', { })
 
