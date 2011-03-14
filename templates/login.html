@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if not user.is_authenticated %}
+<form method="post" action="{% url cv-login %}">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <td>{{ form.username.label_tag }}</td>
+            <td>{{ form.username }}</td>
+        </tr>
+        <tr>
+            <td>{{ form.password.label_tag }}</td>
+            <td>{{ form.password }}</td>
+        </tr>
+    </table>
+
+    <input type="submit" value="Login" />
+    <input type="hidden" name="next" value="{% url cv-login %}" />
+</form>
+{% else %}
+    <p>Howdy, {{ user.first_name }}!</p>
+    <p><a href="{% url cv-logout %}">Logout</a> | <a href="{% url admin:index %}">Admin</a></p>
+{% endif %}
+{% endblock %}

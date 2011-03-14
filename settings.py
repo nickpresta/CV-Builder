@@ -1,5 +1,7 @@
 import os
 
+import django_auth_ldap
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -97,10 +99,29 @@ INSTALLED_APPS = (
     '3760.cv',
 )
 
+# For LDAP auth
+AUTH_LDAP_SERVER_URI = "ldap://directory.uoguelph.ca"
+AUTH_LDAP_BIND_DN = ""
+AUTH_LDAP_BIND_PASSWORD = ""
+AUTH_LDAP_USER_DN_TEMPLATE = "uid=%(user)s,ou=People,o=uoguelph.ca"
+
+# LDAP User Mapping
+AUTH_LDAP_USER_ATTR_MAP = {"first_name": "givenName", "last_name": "sn",
+                           "email": "mail"}
+# Cache the group attributes, to reduce load on the server
+AUTH_LDAP_CACHE_GROUPS = True
+
+# For LDAP auth
+AUTHENTICATION_BACKENDS = (
+        'django_auth_ldap.backend.LDAPBackend',
+        'django.contrib.auth.backends.ModelBackend',
+)
+
 # Allows for a local file to override global settings
 # Do not check in your settings_local.py
 try:
     from settings_local import *
+    print("Importing your local settings")
 except ImportError:
     pass
 

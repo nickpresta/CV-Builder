@@ -1,6 +1,8 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
+from django.views.generic.simple import redirect_to
+
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
 admin.autodiscover()
@@ -17,9 +19,17 @@ urlpatterns = patterns('',
 )
 
 urlpatterns += patterns('3760.cv.views',
-    url(r'^$', 'index', name='cv-index'),
-    url(r'^editcv.html$', 'editcv', name='cv-editcv'),
-    url(r'^form1.html$', 'form1', name='cv-form1'),
+    url(r'^index/$', 'index', name='cv-index'),
+    url(r'^editcv/$', 'editcv', name='cv-editcv'),
+    url(r'^form1/$', 'form1', name='cv-form1'),
+)
+
+urlpatterns += patterns('',
+    (r'^$', redirect_to, {'url': '/index/'}),
+    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
+        'login.html'}, name="cv-login"),
+    url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page':
+        '/login/'}, name="cv-logout")
 )
 
 if settings.DEBUG:

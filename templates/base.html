@@ -6,24 +6,30 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js">
     </script>
     <script type="text/javascript">
+        function highlight_active() {
+            $("#navlist li a").each(function(){
+                var hreflink = $(this).attr("href");
+                if (hreflink.toLowerCase() ==
+                    window.location.pathname.toLowerCase()) {
+                    $(this).addClass("navitem_selected");
+                }
+            });
+        }
 
-$(document).ready(function() {
-    $("input.expandlist").click(function(event) {
+        $(document).ready(function() {
+            highlight_active()
+            $("input.expandlist").click(function(event) {
+                return false;
+            });
 
+            $("img.expandlist").click(function(event) {
+                $(this).toggleClass("plus");
+                $(this).toggleClass("minus");
+                $(this).parent().nextUntil("dt").toggle();
+            });
 
-
-        return false;
-    });
-    
-    $("img.expandlist").click(function(event) {
-        $(this).toggleClass("plus");
-        $(this).toggleClass("minus");
-        $(this).parent().nextUntil("dt").toggle();
-    });
-    
-    $("dd").hide();
-});
-
+            $("dd").hide();
+        });
     </script>
 </head>
 
@@ -33,6 +39,15 @@ $(document).ready(function() {
             <a href="/"><img src="/media/banner.jpg" /></a>
         </div>
         <div id="navigation">
+            <ul id="navlist">
+                <li><a href="{% url cv-index %}" class="navitem">Home</a></li>
+                <li><a href="{% url cv-editcv %}" class="navitem">Edit CV</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url cv-login %}" class="navitem">Logout</a></li>
+                {% else %}
+                <li><a href="{% url cv-login %}" class="navitem">Login</a></li>
+                {% endif %}
+            </ul>
             {% block navigation %}{% endblock %}
         </div>
         <div id="content_wrapper">
