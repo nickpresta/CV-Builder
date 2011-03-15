@@ -5,13 +5,6 @@
 <input type="button" value="Cancel" />
 {% endblock %}
 
-{% block navigation %}
-<ul id="navlist">
-    <li><a href="/" class="navitem">Home</a></li>
-    <li><a href="editcv.html" class="navitem navitem_selected">Edit CV</a></li>
-</ul>
-{% endblock %}
-
 {% block content %}
 <h1>Part 1: Executive Summary</h1>
 <h2>Distribution of Effort</h2>
@@ -22,17 +15,43 @@
         <th>Teaching %</th>
         <th>Service</th>
     </tr>
-    <tr>
+    <tr style="text-align: center">
         <td><input type="number" size="4" /></td>
-        <td><input type="number" size="4" /></td>
-        <td><input type="number" size="4" /></td>
-        <td><input type="number" size="4" /></td>
+        <td><input type="number" value="40" size="4" /></td>
+        <td><input type="number" value="40" size="4" /></td>
+        <td><input type="number" value="20" size="4" /></td>
     </tr>
 </table>
-<h2>Free format</h2>
-<textarea>
+
+<h2>Free Format</h2>
+<form method="post" action="">
+{% csrf_token %}
+<textarea rows="50" cols="40">
 </textarea>
+</form>
 
 <h2>Date Example</h2>
-<input type="text" class="date-pick" />
+<input type="text" class="datepicker" readonly="readonly" />
+<div class="shortcuts">
+    <button class="winter_semester" type="button">Winter</button>
+    <button class="spring_semester" type="button">Spring</button>
+    <button class="fall_semester" type="button">Fall</button>
+</div>
+
+<h2>Another Date Example</h2>
+<input type="text" class="datepicker" readonly="readonly" />
+<div class="shortcuts">
+    <button class="winter_semester" type="button">Winter</button>
+    <button class="spring_semester" type="button">Spring</button>
+    <button class="fall_semester" type="button">Fall</button>
+</div>
+
+<h2>Another Free Format</h2>
+<form method="post" action="">
+{% csrf_token %}
+<textarea rows="50" cols="40">
+</textarea>
+</form>
+
+
 {% endblock %}

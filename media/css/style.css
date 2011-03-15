@@ -26,8 +26,15 @@ a.navitem_selected, a.navitem_selected:hover {
     background-color: #bbccff;
 }
 
+html {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: arial, sans-serif;
+    padding: 1em 0;
+    margin: 0;
 }
 
 #container {
@@ -37,9 +44,10 @@ body {
 
 #content {
     /* probally set height to auto once we have content */
-    padding: 5px;
-    border-left: thick solid #bbccff; 
-    border-bottom: thick solid #bbccff; 
+    padding: 1em;
+    min-height: 50%;
+    border-left: thick solid #bbccff;
+    border-bottom: thick solid #bbccff;
 }
 
 #content_wrapper {
@@ -151,4 +159,12 @@ img.plus:hover {
     background: url(/media/icons.png) no-repeat -60px -120px;
     height: 12px;
     width: 12px;
+}
+
+div.shortcuts {
+    display: inline;
+}
+
+textarea {
+    width: 100%;
 }

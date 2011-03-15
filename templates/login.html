@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}Login{% endblock %}
+
 {% block content %}
 {% if form.errors %}
 <p>Your username and password didn't match. Please try again.</p>
@@ -19,8 +21,8 @@
         </tr>
     </table>
 
-    <input type="submit" value="Login" />
     <input type="hidden" name="next" value="{% url cv-login %}" />
+    <input type="submit" value="Login" />
 </form>
 {% else %}
     <p>Howdy, {{ user.first_name }}!</p>
