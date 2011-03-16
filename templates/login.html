@@ -21,7 +21,7 @@
         </tr>
     </table>
 
-    <input type="hidden" name="next" value="{% url cv-login %}" />
+    <input type="hidden" name="next" value="{{ next }}" />
     <input type="submit" value="Login" />
 </form>
 {% else %}

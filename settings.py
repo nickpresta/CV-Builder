@@ -99,6 +99,8 @@ INSTALLED_APPS = (
     '3760.cv',
 )
 
+LOGIN_URL = "/login/"
+
 # For LDAP auth
 AUTH_LDAP_SERVER_URI = "ldap://directory.uoguelph.ca"
 AUTH_LDAP_BIND_DN = ""
