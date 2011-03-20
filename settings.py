@@ -99,6 +99,9 @@ INSTALLED_APPS = (
     '3760.cv',
 )
 
+# User Profiles
+AUTH_PROFILE_MODULE = "cv.userprofile"
+
 LOGIN_URL = "/login/"
 
 # For LDAP auth

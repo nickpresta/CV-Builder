@@ -1,63 +1,198 @@
-a {
-    font-size: 10pt;
-    color: #0000A1;
-    text-decoration: none;
-    font-weight:bold;
-}
-
-a:hover {
-    color: #0022Ad;
-    text-decoration: none;
-}
-
-a.navitem {
-    display: block;
-    margin-left: -20px;
-    padding: 2px;
-    padding-left: 40px;
-    outline-style: none
-}
-
-a.navitem:hover {
-    background-color: #dde5ff;
-}
-
-a.navitem_selected, a.navitem_selected:hover {
-    background-color: #bbccff;
-}
-
-html {
+html, body {
     margin: 0;
     padding: 0;
+    background: #21201c;
 }
 
 body {
-    font-family: arial, sans-serif;
-    padding: 1em 0;
-    margin: 0;
+    background: #fff url("/media/img/content_bg.jpg") 0px 148px repeat-x;
 }
 
-#container {
-    width: 100%;
-    height: 100%;
+div#header_wrapper {
+    background: #fff url("/media/img/header_bg.jpg") repeat-x;
 }
 
-#content {
-    /* probally set height to auto once we have content */
-    padding: 1em;
-    min-height: 50%;
-    border-left: thick solid #bbccff;
-    border-bottom: thick solid #bbccff;
+div#header {
+    line-height: 100px;
+    height: 100px;
+    width: 860px;
+    margin: 0 auto;
 }
 
-#content_wrapper {
+div#header h1 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+div#header h1 a {
+    text-decoration: none;
+    color: #fff;
+}
+
+div#header h1 a:hover {
+    color: #ffcc33;
+}
+
+/** Having the icon split into two images allows for better
+ *  compatibility or else Opera dev wouldn't render correctly **/
+div#header img {
     float: left;
-    width: 85%;
-    height: 90%;
+    height: 100px;
+    width: 100px;
+    margin-right: 10px;
 }
 
-#header {
+div#navigation img {
+    float: left;
+    height: 50px;
+    width: 100px;
+    margin-right: 10px;
+}
 
+div#navigation {
+    background: #fff url("/media/img/nav_bar_bg.jpg") repeat-x;
+    height: 50px;
+}
+
+div#navigation_wrapper {
+    width: 860px;
+    margin: 0 auto;
+    position: relative;
+}
+
+div#navigation ul {
+    position: absolute;
+    right: 0;
+    margin: 0 auto;
+    float: right;
+}
+
+div#navigation ul li {
+    display: inline;
+    float: left;
+}
+
+div#navigation ul li a {
+    text-decoration: none;
+    color: white;
+    line-height: 50px;
+    display: block;
+    width: 90px;
+    text-align: center;
+    height: 50px;
+}
+
+div#navigation ul li a:hover {
+    background: url("/media/img/nav_bar_hover_bg.jpg") repeat-x;
+}
+
+div#content_wrapper {
+    margin-top: 0;
+    width: 860px;
+    margin: 0 auto;
+    background: #fff;
+}
+
+div#sidebar {
+    background: #fff url("/media/img/sidebar_bg.jpg") no-repeat;
+    width: 270px;
+    float: right;
+    min-height: 300px;
+}
+
+div#sidebar h3 {
+    background: #666;
+    color: #fff;
+    text-transform: uppercase;
+    padding: 2px 20px;
+    margin-bottom: 0;
+}
+
+div#sidebar ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+div#sidebar ul li {
+    border: 1px solid #ccc;
+    border-width: 0 0 1px;
+    list-style: none;
+}
+
+div#sidebar ul li a {
+    color: #666;
+    text-decoration: none;
+    display: block;
+    padding: 2px 40px;
+}
+
+div#sidebar ul li a:hover {
+    background: #999;
+    color: #fff;
+}
+
+div#content {
+    float: left;
+    width: 560px;
+    background: #fff;
+    padding: 15px;
+}
+
+div#footer {
+    background: #45403a url("/media/img/footer_bg.jpg") repeat-x;
+}
+
+div#footer h3 {
+    margin-top: 0;
+}
+
+div#footer p {
+    background: #21201c;
+    text-align: center;
+    color: #ccc;
+    clear: right;
+    margin: 0 auto;
+    padding-top: 20px;
+}
+
+div#footer_wrapper {
+    margin: 0 auto;
+    width: 860px;
+    position: relative;
+}
+
+div#footer_text {
+    padding: 20px 45px;
+    background: #21201c;
+    color: #ccc;
+    width: 180px;
+    line-height: 19px;
+    font-size: 13px;
+    float: right;
+}
+
+div#footer_text a {
+    text-decoration: none;
+    border-bottom: 1px dotted #ccc;
+    color: #ccc;
+}
+
+div.clear:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+/** Misc classes and styles **/
+div.shortcuts {
+    display: inline;
+}
+
+textarea {
+    width: 100%;
 }
 
 img {
@@ -71,44 +206,12 @@ input.empty {
 
 input[type="button"] {
     border:1px solid gray;
-    background:#FFFFFF;
+    background: #fff;
 }
 
-input[type="button"]:hover { 
-    border-color:#0000CC;
+input[type="button"]:hover {
+    border-color: #0000CC;
 }
-
-#navlist {
-    list-style-type: none;
-    margin: 0;
-    margin-top: 35px;
-    padding: 0;
-}
-
-#navigation {
-    float: left;
-    width: 14%;
-    height: 90%;
-}
-
-#topmenu {
-    width: 100%;
-    height: 24px;
-    border: thick solid #bbccff;
-    background-color: #bbccff;
-}
-
-/* alternative top menu look*/
-/*#topmenu {*/
-/*    width: 100%;*/
-/*    height: 24px;*/
-/*    border-top: thick solid #bbccff;*/
-/*    border-left: thick solid #bbccff;*/
-/*    background-color: #dde5ff;*/
-/*    padding-top: 5px;*/
-/*    padding-bottom: 5px;*/
-/*}*/
-
 
 dl.expandlist {
     margin-left: 40px;
@@ -133,38 +236,31 @@ input.expandlist[type="button"] {
     margin-left: -22px;
 }
 
-/* Firefox hack, removes dotted outline of focused buttons */
-input.expandlist[type="button"]::-moz-focus-inner {
-    border: 0;
+/* Firefox hack, removes dotted outline of
+ * focused buttons */
+    input.expandlist[type="button"]::-moz-focus-inner {
+        border: 0;
 }
 
 img.minus {
-    background: url(/media/icons.png) no-repeat 0 -120px;
+    background: url("/media/img/icons.png") no-repeat 0 -120px;
     height: 12px;
     width: 12px;
 }
 
 img.minus:hover {
-    background: url(/media/icons.png) no-repeat -20px -120px;
+    background: url("/media/img/icons.png") no-repeat -20px -120px;
     height: 12px;
-    width: 12px;    
+    width: 12px;
 }
 img.plus {
-    background: url(/media/icons.png) no-repeat -40px -120px;
+    background: url("/media/img/icons.png") no-repeat -40px -120px;
     height: 12px;
     width: 12px;
 }
 
 img.plus:hover {
-    background: url(/media/icons.png) no-repeat -60px -120px;
+    background: url("/media/img/icons.png") no-repeat -60px -120px;
     height: 12px;
     width: 12px;
-}
-
-div.shortcuts {
-    display: inline;
-}
-
-textarea {
-    width: 100%;
 }

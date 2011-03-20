@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE>
+<html lang="en">
 <head>
     <title>CIS*3760 CV Builder - {% block title %}{% endblock %}</title>
     <link rel="stylesheet" type="text/css" href="/media/css/style.css" />
@@ -6,85 +7,8 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.min.js"></script>
     <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/cupertino/jquery-ui.css" />
     <script type="text/javascript" src="/media/tiny_mce/tiny_mce.js"></script>
+    <script type="text/javascript" src="/media/js/utils.js"></script>
     <script type="text/javascript">
-        tinyMCE.init({
-                // General options
-                mode: "textareas",
-                theme: "advanced",
-                plugins:
-                "pagebreak,style,layer,table,advhr,advimage,advlink,iespell,inlinepopups,insertdatetime,preview,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,xhtmlxtras,template",
-                theme_advanced_buttons1:
-                "newdocument,|,bold,italic,underline,strikethrough,|,justifyleft,justifycenter,justifyright,justifyfull,|,formatselect,fontselect,fontsizeselect",
-                theme_advanced_buttons2 :
-                "cut,copy,paste,pastetext,pasteword,|,search,replace,|,bullist,numlist,|,outdent,indent,blockquote,|,undo,redo,|,link,unlink,image",
-                theme_advanced_buttons3 :
-                "tablecontrols,|,hr,removeformat,visualaid,|,sub,sup,|,charmap,iespell,advhr,|,fullscreen",
-                theme_advanced_toolbar_location: "top",
-                theme_advanced_toolbar_align: "left",
-                theme_advanced_statusbar_location: 'bottom',
-                theme_advanced_path: false,
-                theme_advanced_resize_horizontal: false,
-                theme_advanced_resizing_use_cookie: true,
-                theme_advanced_resizing: true,
-        });
-
-
-        function highlight_active() {
-            $("#navlist li a").each(function(){
-                var hreflink = $(this).attr("href");
-                if (hreflink.toLowerCase() ==
-                    window.location.pathname.toLowerCase()) {
-                    $(this).addClass("navitem_selected");
-                }
-            });
-        }
-
-        function expand_list() {
-            $("img.expandlist").click(function(event) {
-                $(this).toggleClass("plus");
-                $(this).toggleClass("minus");
-                $(this).parent().nextUntil("dt").toggle();
-            });
-
-            $("dd").hide();
-        }
-
-        function date_picker() {
-            $(".datepicker").datepicker({
-                yearRange: "-40:+10",
-                changeMonth: true,
-                changeYear: true,
-                showButtonPanel: true,
-                beforeShow: function(input) {
-                     setTimeout(function() {
-                        var buttonPane = $(input).datepicker("widget")
-                        .find(".ui-datepicker-buttonpane");
-                        var btn = $('<button class="ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all" type="button">Clear</button>');
-                        btn.unbind("click").bind("click", function () {
-                          $.datepicker._clearDate(input);
-                        });
-                        btn.appendTo(buttonPane);
-                    }, 0)
-                },
-            });
-        }
-
-        function shortcut_functions() {
-            var d = new Date();
-            $(".fall_semester").click(function() {
-                $(this).parent().prev(".datepicker").datepicker("setDate", "09/01/" +
-                    d.getFullYear());
-            });
-            $(".winter_semester").click(function() {
-                $(this).parent().prev(".datepicker").datepicker("setDate", "01/01/" +
-                    d.getFullYear());
-            });
-            $(".spring_semester").click(function() {
-                $(this).parent().prev(".datepicker").datepicker("setDate", "05/01/" +
-                    d.getFullYear());
-            });
-        }
-
         $(document).ready(function() {
             highlight_active();
             expand_list();
@@ -94,33 +18,62 @@
     </script>
     {% block morehead %}{% endblock %}
 </head>
-
 <body>
-    <div id="container">
+    <div id="header_wrapper">
         <div id="header">
-            <a href="/"><img src="/media/banner.jpg" /></a>
+            <img src="/media/img/uog_icon_top.jpg" width="100" height="100" />
+            <h1><a href="/">University of Guelph: CV Builder</a></h1>
         </div>
         <div id="navigation">
-            <ul id="navlist">
-                <li><a href="{% url cv-index %}" class="navitem">Home</a></li>
-                <li><a href="{% url cv-editcv %}" class="navitem">Edit CV</a></li>
-                <li><a href="{% url cv-form1 %}" class="navitem">Form 1</a></li>
-                {% if user.is_authenticated %}
-                <li><a href="{% url cv-login %}" class="navitem">Logout</a></li>
-                {% else %}
-                <li><a href="{% url cv-login %}" class="navitem">Login</a></li>
-                {% endif %}
-            </ul>
-            {% block navigation %}{% endblock %}
-        </div>
-        <div id="content_wrapper">
-            <div id="topmenu">
-                {% block topmenu %}
-                {% endblock %}
+            <div id="navigation_wrapper">
+                <img src="/media/img/uog_icon_bot.jpg" width="100" height="50" />
+                <ul id="navlist">
+                    <li><a href="{% url cv-editcv %}" class="navitem">Edit CV</a></li>
+                    <li><a href="{% url cv-form1 %}" class="navitem">Form 1</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url cv-login %}" class="navitem">Logout</a></li>
+                    {% else %}
+                    <li><a href="{% url cv-login %}" class="navitem">Login</a></li>
+                    {% endif %}
+                </ul>
+                {% block navigation %}{% endblock %}
             </div>
-            <div id="content">{% block content %}{% endblock %}</div>
         </div>
     </div>
-</body>
+    <div id="content_wrapper">
+        <div id="content">{% block content %}{% endblock %}</div>
+        <div id="sidebar">
+            <h3>Main Menu</h3>
+            <ul>
+                <li><a href="#">Link 1</a></li>
+            </ul>
 
+            <h3>Sub Menu</h3>
+            <ul>
+                <li><a href="#">Link 2</a></li>
+            </ul>
+            {% block sidebar %}{% endblock %}
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div id="footer">
+        <div id="footer_wrapper">
+            <div id="footer_text">
+                <h3>University of Guelph</h3>
+                <address>
+                    <a
+                    href="http://maps.google.com/maps/ms?ie=UTF8&amp;hl=en&amp;msa=0&amp;msid=106115594900620713079.000436308185e9184c678&amp;ll=43.531407,-80.228584&amp;spn=0.007607,0.014591&amp;z=16&amp;om=1"
+                    title="Find us on Google Maps">50 Stone Road East</a><br />
+                    Guelph,<br />
+                    Ontario,<br />
+                    N1G 2W1<br />
+                    Canada<br />
+                    519-824-4120<br />
+                </address>
+            </div>
+        </div>
+        <p>&copy; Team Amuir 2011</p>
+        <div class="clear"></div>
+    </div>
+</body>
 </html>
