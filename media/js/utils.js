@@ -17,6 +17,7 @@ tinyMCE.init({
         theme_advanced_resize_horizontal: false,
         theme_advanced_resizing_use_cookie: true,
         theme_advanced_resizing: true,
+        editor_deselector "mceNoEditor",
 });
 
 
