@@ -2,6 +2,23 @@
 
 {% block title %}Edit CV{% endblock %}
 
+{% block morehead %}
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $(".mceNoEditor").focus(function() {
+        $(this).parent().parent().find(".mceNoEditor").height(40);
+    });
+    $(".mceNoEditor").blur(function() {
+        $(this).parent().parent().find(".mceNoEditor").height(20);
+    });
+});
+
+</script>
+
+{% endblock %}
+
 {% block content %}
 
 <h1>Biographical Information</h1>
@@ -93,7 +110,25 @@
         <div style="clear:both" />
         
     </fieldset>
-    
+    <fieldset>
+        <legend>b - Degrees (example 3)</legend>
+        <span class="clickable" id="degrees_adddegree">Add Degree</span>
+        <table id="degrees_table">
+            <tr>
+                <th>Degree</th>
+                <th>Discipline</th>
+                <th>Universitiy</th>
+                <th>Date</th>
+            </tr>
+            <tr id="degree_blankrow">
+                <td><textarea class="mceNoEditor" style="overflow-y: hidden; height: 20px; resize: none;"></textarea></td>
+                <td><textarea class="mceNoEditor" style="overflow-y: hidden; height: 20px; resize: none;"></textarea></td>
+                <td><textarea class="mceNoEditor" style="overflow-y: hidden; height: 20px; resize: none;"></textarea></td>
+                <td><input type="text" class="datepicker mceNoEditor" style="height: 20px;" size="10em"></textarea></td>
+                <td><span class="clickable degrees_removedegree">remove</span></td>
+            </tr>
+        </table>
+    </fieldset>
     <fieldset>
         <legend>c - Major Honours & Fellowships</legend>
         <span class="clickable" id="">Add New</span>
