@@ -203,6 +203,10 @@ label {
     width: 100px;
 }
 
+legend {
+    font-weight: bold;
+}
+
 input.empty {
     color:gray;
     font-style:italic;

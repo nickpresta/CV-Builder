@@ -2,35 +2,6 @@
 
 {% block title %}Edit CV{% endblock %}
 
-{% block morehead %}
-
-<script type="text/javascript">
-
-function removeYear() {
-    $(this).parents("tr").remove();
-    return false;
-}
-
-$(document).ready(function() {
-    var blankRow = $("#distribution_blankrow").detach();
-    
-    $("#distribution_addyear").click(function() {
-        var newRow = blankRow.clone();
-        newRow.find(".distribution_removeyear").click(removeYear);
-        newRow.appendTo("#distribution_table");
-        return false;
-    });
-
-    $(".distribution_removeyear").click(removeYear);
-    
-    
-
-});
-    
-</script>
-    
-{% endblock %}
-
 {% block content %}
 
 

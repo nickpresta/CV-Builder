@@ -84,3 +84,31 @@ function shortcut_functions() {
     });
 }
 
+function removeYear() {
+    $(this).parents("tr").remove();
+    
+    if ($("#distribution_table tr").length == 1)
+        $("#distribution_table tr:first").hide();
+            
+    return false;
+}
+
+function executive_functions() {
+    var blankRow = $("#distribution_blankrow").detach();
+    
+    $("#distribution_addyear").click(function() {
+        var newRow = blankRow.clone();
+        newRow.find(".distribution_removeyear").click(removeYear);
+        newRow.appendTo("#distribution_table");
+        
+        $("#distribution_table tr:first").show();
+        
+        return false;
+    });
+
+    $(".distribution_removeyear").click(removeYear);
+    
+    if ($("#distribution_table tr").length == 1)
+        $("#distribution_table tr:first").hide();
+}
+
