@@ -22,6 +22,8 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^index/$', 'index', name='cv-index'),
     url(r'^editcv/$', 'editcv', name='cv-editcv'),
     url(r'^form1/$', 'form1', name='cv-form1'),
+    url(r'^executive/$', 'executive', name='cv-executive'),
+    url(r'^biographical/$', 'biographical', name='cv-biographical'),
 )
 
 urlpatterns += patterns('',

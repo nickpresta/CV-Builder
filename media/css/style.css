@@ -199,6 +199,10 @@ img {
     border: none;
 }
 
+label {
+    width: 100px;
+}
+
 input.empty {
     color:gray;
     font-style:italic;
@@ -215,6 +219,7 @@ input[type="button"]:hover {
 
 dl.expandlist {
     margin-left: 40px;
+    padding-left: 5px;
 }
 
 dl.subexpandlist {
@@ -223,9 +228,18 @@ dl.subexpandlist {
 
 dt.expandable {
     background: #eee;
+    margin-left: -16px;
 }
 
-dt.expandlist {
+ol.expandlist {
+    list-style-type: lower-alpha;
+    margin: 0px;
+    padding-left: 5px;
+}
+
+ul.expandlist {
+    list-style-type: none;
+    margin: 0px;
     padding-left: 5px;
 }
 
@@ -246,21 +260,31 @@ img.minus {
     background: url("/media/img/icons.png") no-repeat 0 -120px;
     height: 12px;
     width: 12px;
+    border: 0px;
 }
 
 img.minus:hover {
     background: url("/media/img/icons.png") no-repeat -20px -120px;
     height: 12px;
     width: 12px;
+    border: 0px;
 }
 img.plus {
     background: url("/media/img/icons.png") no-repeat -40px -120px;
     height: 12px;
     width: 12px;
+    border: 0px;
 }
 
 img.plus:hover {
     background: url("/media/img/icons.png") no-repeat -60px -120px;
     height: 12px;
     width: 12px;
+    border: 0px;
+}
+
+span.clickable {
+    cursor: pointer;
+    color: #777;
+    font-size: 11px;
 }

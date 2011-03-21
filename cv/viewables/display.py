@@ -14,3 +14,11 @@ def editcv(request):
 @login_required
 def form1(request):
     return direct_to_template(request, 'form1.html', {})
+
+@login_required
+def executive(request):
+    return direct_to_template(request, 'executive.html', {})
+    
+@login_required
+def biographical(request):
+    return direct_to_template(request, 'biographical.html', {})

@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Edit CV{% endblock %}
+
+{% block morehead %}
+
+<script type="text/javascript">
+
+function removeYear() {
+    $(this).parents("tr").remove();
+    return false;
+}
+
+$(document).ready(function() {
+    var blankRow = $("#distribution_blankrow").detach();
+    
+    $("#distribution_addyear").click(function() {
+        var newRow = blankRow.clone();
+        newRow.find(".distribution_removeyear").click(removeYear);
+        newRow.appendTo("#distribution_table");
+        return false;
+    });
+
+    $(".distribution_removeyear").click(removeYear);
+    
+    
+
+});
+    
+</script>
+    
+{% endblock %}
+
+{% block content %}
+
+
+<h1>Executive Summary</h1>
+<form>
+    <fieldset>
+        <legend id="distribution">Distribution of Effort</legend>
+        <span class="clickable" id="distribution_addyear">Add Year</span>
+        <table id="distribution_table">
+            <tr>
+                <th>Year</th>
+                <th>Research</th>
+                <th>Teaching</th>
+                <th>Service</th>
+                <th></th>
+            </tr>
+            <tr id="distribution_blankrow">
+                <td><input type="number" size="4" /></td>
+                <td><input type="number" value="40" size="4" /></td>
+                <td><input type="number" value="40" size="4" /></td>
+                <td><input type="number" value="20" size="4" /></td>
+                <td><span class="clickable distribution_removeyear">remove</span></td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend id="summary">Summary</legend>
+        {% csrf_token %}
+        <textarea rows="50" cols="40"></textarea>
+    </fieldset>
+</form>
+{% endblock %}

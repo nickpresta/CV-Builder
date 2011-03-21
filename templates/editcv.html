@@ -4,122 +4,89 @@
 
 {% block content %}
 <dl class="expandlist">
-    <dt class="expandlist">
-        <a href="form1.html">Part 1: Executive Summary</a>
-    </dt>
-    <dt class="expandlist expandable">
-        <img src="/media/cleardot.gif" class="expandlist plus" role="button" />
-        <a>Part 2: Biographical Information</a>
+    <dt class="expandable">
+        <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
+        <a href="{% url cv-executive %}">Part 1: Executive Summary</a>
     </dt>
     <dd>
-        <a>(a) Name/Depatment</a>
+        <ul class="expandlist">
+            <li><a href="{% url cv-executive %}#distribution">Distribution of Effort</a></li>
+            <li><a href="{% url cv-executive %}#summary">Executive Summary</a></li>
+        </ul>
     </dd>
+    <dt class="expandable">
+        <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
+        <a href="{% url cv-biographical %}">Part 2: Biographical Information</a>
+    </dt>
     <dd>
-        <a>(b) Degrees</a>
+        <ol class="expandlist">
+            <li><a>Name/Department</a></li>
+            <li><a>Degrees</a></li>
+            <li><a>Major Honours & Fellowships</a></li>
+            <li><a>Date of first appointment at University of Guelph</a></li>
+            <li><a>Positions held at University of Guelph</a></li>
+            <li><a>Experience prior to appointment at Guelph</a></li>
+            <li><a>Visiting Professorships, etc. elsewhere since appointment</a></li>
+        </ol>
+            
     </dd>
-    <dd>
-        <a>(c) Major Honours & Fellowships</a>
-    </dd>
-    <dd>
-        <a>(d) Date of first appointment at University of Guelph</a>
-    </dd>
-    <dd>
-        <a>(e) Positions held at University of Guelph</a>
-    </dd>
-    <dd>
-        <a>(f) Experience prior to appointment at Guelph</a>
-    </dd>
-    <dd>
-        <a>(g) Visiting Professorships, etc. elsewhere since appointment</a>
-    </dd>
-    <dt class="expandlist expandable">
-        <img src="/media/cleardot.gif" class="expandlist plus" role="button" />
+    <dt class="expandable">
+        <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
         <a>Part 3: Cumulative Information on Teaching, Research and Service</a>
     </dt>
     <dd>
         <dl class="expandlist subexpandlist">
-            <dt class="expandlist expandable">
-                <img src="/media/cleardot.gif" class="expandlist plus" role="button" />
+            <dt class="expandable">
+                <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
                 <a>3A: Research</a>
             </dt>
             <dd>
-                <a>(a) Summary of Research Activity</a>
+                <ol class="expandlist">
+                    <li><a>Summary of Research Activity</a></li>
+                    <li><a>Six-year Publication List</a></li>
+                    <li><a>Research Grants and Contracts Held</a></li>
+                    <li><a>Research Grants Applied For</a></li>
+                    <li><a>Professional Consulting</a></li>
+                    <li><a>Patents</a></li>
+                    <li><a>Other Activities</a></li>
+                    <li><a>Recognition of Research and Scholarship</a></li>
+                </ol>
             </dd>
-            <dd>
-                <a>(b) Six-year Publication List</a>
-            </dd>
-            <dd>
-                <a>(c) Research Grants and Contracts Held</a>
-            </dd>
-            <dd>
-                <a>(d) Research Grants Applied For</a>
-            </dd>
-            <dd>
-                <a>(e) Professional Consulting</a>
-            </dd>
-            <dd>
-                <a>(f) Patents</a>
-            </dd>
-            <dd>
-                <a>(g) Other Activities</a>
-            </dd>
-            <dd>
-                <a>(h) Recognition of Research and Scholarship</a>
-            </dd>
-            <dt class="expandlist expandable">
-                <img src="/media/cleardot.gif" class="expandlist plus" role="button" />
+            <dt class="expandable">
+                <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
                 <a>3B: Teaching and Learning</a>
             </dt>
             <dd>
-                <a>(a) Report on Teaching</a>
+                <ol class="expandlist">
+                    <li><a>Report on Teaching</a></li>
+                    <li><a>Courses</a></li>
+                    <li><a>Contributions to Student Counselling</a></li>
+                    <li><a>Graduate Advising and Examining</a></li>
+                    <li><a>Major Work in Graduate and Undergraduate Course Development</a></li>
+                    <li><a>Recognition of Teaching Ability and Achievement</a></li>
+                    <li><a>Support Received for Major Teaching Projects</a></li>
+                    <li><a>Scholarship in Education</a></li>
+                    <li><a>Other Contributions to Education</a></li>
+                </ol>
             </dd>
-            <dd>
-                <a>(b) Courses</a>
-            </dd>
-            <dd>
-                <a>(c) Contributions to Student Counselling</a>
-            </dd>
-            <dd>
-                <a>(d) Graduate Advising and Examining</a>
-            </dd>
-            <dd>
-                <a>(e) Major Work in Graduate and Undergraduate Course Development</a>
-            </dd>
-            <dd>
-                <a>(f) Recognition of Teaching Ability and Achievement</a>
-            </dd>
-            <dd>
-                <a>(g) Support Received for Major Teaching Projects</a>
-            </dd>
-            <dd>
-                <a>(h) Scholarship in Education</a>
-            </dd>
-            <dd>
-                <a>(i) Other Contributions to Education</a>
-            </dd>
-            <dt class="expandlist expandable">
-                <img src="/media/cleardot.gif" class="expandlist plus" role="button" />
+            <dt class="expandable">
+                <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
                 <a>3C: Service and Administrative Contributions</a>
             </dt>
             <dd>
-                <a>(a) Department Committees and Similar Bodies with Dates</a>
+                <ol class="expandlist">
+                    <li><a>Department Committees and Similar Bodies with Dates</a></li>
+                    <li><a>College Committees and Similar Bodies with Dates</a></li>
+                    <li><a>University Committees and Similar Bodies with Dates</a></li>
+                    <li><a>External/Professional Committees and Similar Bodies with Dates</a></li>
+                </ol>
             </dd>
-            <dd>
-                <a>(b) College Committees and Similar Bodies with Dates</a>
-            </dd>
-            <dd>
-                <a>(c) University Committees and Similar Bodies with Dates</a>
-            </dd>
-            <dd>
-                <a>(d) External/Professional Committees and Similar Bodies with Dates</a>
-            </dd>
-            <dt class="expandlist">
+            <dt>
                 <a>3D: Off-Campus Recognition</a>
             </dt>
-
         </dl>
     </dd>
-            <dt class="expandlist">
+    <dt class="expandlist">
         <a>Part 4: Lifetime Publication List</a>
     </dt>
 </dl>

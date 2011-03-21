@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Edit CV{% endblock %}
+
+{% block content %}
+
+<h1>Biographical Information</h1>
+
+<form>
+    <fieldset>
+        <legend>a</legend>
+        <div style="clear: both">
+            <div style="float: left; width: 100px;">
+                <label for="name">Name</label>
+            </div>
+            <div style="float: right">
+                <input type="text" id="name" />
+            </div>
+        </div>
+        <div style="clear: both">
+            <div style="float: left; width: 100px;">
+                <label for="department">Department</label>
+            </div>
+            <div style="float: right">
+                <input type="text" id="department" />
+            </div>
+        
+        </div>
+        
+        <div style="clear:both" />
+        
+    </fieldset>
+    <fieldset>
+        <legend>b - Degrees (example 1)</legend>
+        <span class="clickable" id="degrees_adddegree">Add Degree</span>
+        <table id="degrees_table">
+            <tr>
+                <th>Degree</th>
+                <th>Discipline</th>
+                <th>Universitiy</th>
+                <th>Date</th>
+            </tr>
+            <tr id="degree_blankrow">
+                <td><input type="text" size="15" /></td>
+                <td><input type="text" size="15" /></td>
+                <td><input type="text" size="15" /></td>
+                <td><input type="number" size="4" /></td>
+                <td><span class="clickable degrees_removedegree">remove</span></td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>b - Degrees (example 2)</legend>
+        <span class="clickable" id="degrees_adddegree">Add Degree</span><br />
+        <select>
+            <option>BSc, Victoria</option>
+            <option>BComp, University of Guelph</option>
+        </select>
+        <span class="clickable" id="degrees_adddegree">remove</span>
+        <div style="clear: both">
+            <div style="float: left; width: 100px;">
+                <label for="">Degree</label>
+            </div>
+            <div style="float: right">
+                <input type="text" id="" />
+            </div>
+        </div>
+        <div style="clear: both">
+            <div style="float: left; width: 100px;">
+                <label for="">Discipline</label>
+            </div>
+            <div style="float: right">
+                <input type="text" id="" />
+            </div>
+        </div>
+        
+        <div style="clear: both">
+            <div style="float: left; width: 100px;">
+                <label for="">University</label>
+            </div>
+            <div style="float: right">
+                <input type="text" id="" />
+            </div>
+        </div>
+        <div style="clear: both">
+            <div style="float: left; width: 100px;">
+                <label for="">Year</label>
+            </div>
+            <div style="float: right">
+                <input type="text" id="" />
+            </div>
+        </div>
+        <div style="clear:both" />
+        
+    </fieldset>
+    
+    <fieldset>
+        <legend>c - Major Honours & Fellowships</legend>
+        <span class="clickable" id="">Add New</span>
+        <ul>
+            <li><input type="text" /> <span class="clickable" id="">remove</span></li>
+        </ul>
+    </fieldset>
+    <fieldset>
+        <legend>d - Date of first appointment at University of Guelph</legend>
+        <input type="text" class="datepicker" readonly="readonly" size="10em" />
+    </fieldset>
+
+    <fieldset>
+        <legend>e - Positions held at University of Guelph and dates</legend>
+        <span class="clickable" id="">Add Position</span>
+        <table id="">
+            <tr>
+                <th>Rank</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+            <tr id="">
+                <td><input type="text" /></td>
+                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
+                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
+                <td><span class="clickable">remove</span></td>
+            </tr>
+        </table>
+    </fieldset>
+    
+    <fieldset>
+        <legend>f - Experince prior to appointment at Guelph</legend>
+        <span class="clickable" id="">Add Experience</span>
+        <table id="">
+            <tr>
+                <th>Position</th>
+                <th>Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+            <tr id="">
+                <td><input type="text" /></td>
+                <td><input type="text" /></td>
+                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
+                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
+                <td><span class="clickable">remove</span></td>
+            </tr>
+        </table>
+    </fieldset>
+    <fieldset>
+        <legend>g - Visiting Professorships, etc. elsewhere since appointment</legend>
+        <span class="clickable" id="">Add New</span>
+        <table id="">
+            <tr>
+                <th>Position</th>
+                <th>Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th></th>
+            </tr>
+            <tr id="">
+                <td><input type="text" /></td>
+                <td><input type="text" /></td>
+                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
+                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
+                <td><span class="clickable">remove</span></td>
+            </tr>
+        </table>
+    </fieldset>
+</form>
+
+
+{% endblock %}
