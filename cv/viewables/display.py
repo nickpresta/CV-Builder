@@ -22,3 +22,7 @@ def executive(request):
 @login_required
 def biographical(request):
     return direct_to_template(request, 'biographical.html', {})
+
+@login_required
+def offCampusRecognition(request):
+    return direct_to_template(request, 'OffCampusRecognition.html', {})

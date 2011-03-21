@@ -24,6 +24,7 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^form1/$', 'form1', name='cv-form1'),
     url(r'^executive/$', 'executive', name='cv-executive'),
     url(r'^biographical/$', 'biographical', name='cv-biographical'),
+    url(r'^offCampusRecognition/$', 'offCampusRecognition', name='cv-offCampusRecognition')
 )
 
 urlpatterns += patterns('',
