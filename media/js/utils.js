@@ -55,6 +55,7 @@ function date_picker() {
         changeMonth: true,
         changeYear: true,
         showButtonPanel: true,
+        constrainInput: false,
         beforeShow: function(input) {
              setTimeout(function() {
                 var buttonPane = $(input).datepicker("widget")

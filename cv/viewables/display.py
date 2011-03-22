@@ -38,20 +38,25 @@ def executive(request):
 
     if request.method == 'POST':
         formset = ExecutiveSummaryForm(request.POST, request.FILES, instance=data)
-        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=data)
+        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=doeData)
 
-        if formset.is_valid():
+        if formset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
             summary = formset.save(commit=False)
             summary.user = request.user
             summary.save()
             formset.save_m2m()
             
+            doe = doeFormset.save(commit=False)
+            doe.user = request.user
+            doe.save()
+            doeFormset.save_m2m()
+            
         return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
-        doeFormset = DistributionOfEffortForm(instance=doeData)
         formset = ExecutiveSummaryForm(instance=data)
+        doeFormset = DistributionOfEffortForm(instance=doeData)
 
     formset.fields['executive'].widget.attrs['rows'] = '50'
     formset.fields['executive'].widget.attrs['cols'] = '40'
