@@ -1,9 +1,14 @@
 from django.forms import ModelForm
 from cv.models import *
+from django import forms
+from django.forms.models import inlineformset_factory
 
 class DistributionOfEffortForm(ModelForm):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
+
+    year = forms.DateField(widget=forms.DateInput(attrs={"class": "datepicker year"}))
+        
     class Meta:
         fields = ('year', 'research', 'teaching', 'service')
         model = DistributionOfEffort
@@ -28,3 +33,9 @@ class DistributionOfEffortForm(ModelForm):
             del cleaned_data['service']
 
         return cleaned_data
+
+class ExecutiveSummaryForm(ModelForm):
+        
+    class Meta:
+        fields = ('executive',)
+        model = Summary

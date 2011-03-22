@@ -39,7 +39,9 @@ class DistributionOfEffort(models.Model):
     teaching = models.IntegerField(default=40)
     service = models.IntegerField(default=20)
 
-
+class Summary(models.Model):
+    user = models.ForeignKey(User)
+    executive = models.TextField()
 
 
 

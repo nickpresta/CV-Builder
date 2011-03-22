@@ -195,6 +195,10 @@ textarea {
     width: 100%;
 }
 
+input.year {
+    width: 6em;
+}
+
 img {
     border: none;
 }

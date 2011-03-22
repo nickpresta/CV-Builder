@@ -4,33 +4,20 @@
 
 {% block content %}
 
-
 <h1>Executive Summary</h1>
-<form>
+<form method="post" action="/executive/">
+    {% csrf_token %}
     <fieldset>
         <legend id="distribution">Distribution of Effort</legend>
-        <span class="clickable" id="distribution_addyear">Add Year</span>
-        <table id="distribution_table">
-            <tr>
-                <th>Year</th>
-                <th>Research</th>
-                <th>Teaching</th>
-                <th>Service</th>
-                <th></th>
-            </tr>
-            <tr id="distribution_blankrow">
-                <td><input class="datepicker" type="text" size="6" /></td>
-                <td><input type="text" value="40" size="6" /></td>
-                <td><input type="text" value="40" size="6" /></td>
-                <td><input type="text" value="20" size="6" /></td>
-                <td><span class="clickable distribution_removeyear">remove</span></td>
-            </tr>
-        </table>
+        {% with doeFormset as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
     </fieldset>
     <fieldset>
         <legend id="summary">Summary</legend>
-        {% csrf_token %}
-        <textarea rows="50" cols="40"></textarea>
+        {{ formset.executive }}
     </fieldset>
+
+    <input type="submit" value="Save" />
 </form>
 {% endblock %}

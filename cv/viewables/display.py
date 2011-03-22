@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
@@ -21,7 +21,42 @@ def form1(request):
 
 @login_required
 def executive(request):
-    return direct_to_template(request, 'executive.html', {})
+    """ Create a form view for the Distribution of Effort """
+
+    # get this user's Summary or else create a new one
+    try:
+        data = Summary.objects.get(user=request.user)
+    except:
+        data = Summary()
+
+    # get this user's DoE or else create a new one
+    try:
+        doeData = DistributionOfEffort.objects.get(user=request.user)
+    except:
+        doeData = DistributionOfEffort()
+
+
+    if request.method == 'POST':
+        formset = ExecutiveSummaryForm(request.POST, request.FILES, instance=data)
+        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=data)
+
+        if formset.is_valid():
+            # Save the form data, ensure they are updating as themselves
+            summary = formset.save(commit=False)
+            summary.user = request.user
+            summary.save()
+            formset.save_m2m()
+            
+        return HttpResponseRedirect('/executive/')
+    else:
+        # Show the Executive Summary form
+        doeFormset = DistributionOfEffortForm(instance=doeData)
+        formset = ExecutiveSummaryForm(instance=data)
+
+    formset.fields['executive'].widget.attrs['rows'] = '50'
+    formset.fields['executive'].widget.attrs['cols'] = '40'
+
+    return direct_to_template(request, 'executive.html', {'formset': formset, 'doeFormset': doeFormset})
 
 @login_required
 def biographical(request):

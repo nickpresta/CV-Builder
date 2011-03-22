@@ -96,13 +96,18 @@ function removeYear() {
 
 function executive_functions() {
     var blankRow = $("#distribution_blankrow").detach();
+
+    blankRow.find('.datepicker').datepicker('destroy');
     
     $("#distribution_addyear").click(function() {
-        var newRow = blankRow.clone();
+        var newRow = blankRow.clone(true, true);
         newRow.find(".distribution_removeyear").click(removeYear);
+        newRow.find(".datepicker").datepicker();
         newRow.appendTo("#distribution_table");
         
         $("#distribution_table tr:first").show();
+
+        date_picker();
         
         return false;
     });

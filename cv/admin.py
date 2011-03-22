@@ -14,3 +14,5 @@ class UserProfileAdmin(UserAdmin):
 # This adds the UserProfile to the User admin page
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(DistributionOfEffort)
+admin.site.register(Summary)
+
