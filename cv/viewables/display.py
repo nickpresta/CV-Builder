@@ -31,14 +31,14 @@ def executive(request):
 
     # get this user's DoE or else create a new one
     try:
-        doeData = DistributionOfEffort.objects.get(user=request.user)
+        doeData = DistributionOfEffort.objects.filter(user=request.user)
+        print doeData
     except:
         doeData = DistributionOfEffort()
 
-
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
-        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=doeData, prefix="doe")
+        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=doeData[0], prefix="doe")
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
@@ -56,11 +56,13 @@ def executive(request):
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
-        doeFormset = DistributionOfEffortForm(instance=doeData, prefix="doe")
+        doeFormset = [DistributionOfEffortForm(prefix="doe-" + str(i), instance=doeData[i]) for i in range(0,len(doeData))]
+
+    for form in doeFormset:
+        form.fields['year'].widget.attrs['class'] = 'datepicker'
 
     summaryFormset.fields['executive'].widget.attrs['rows'] = '50'
     summaryFormset.fields['executive'].widget.attrs['cols'] = '40'
-    doeFormset.fields['year'].widget.attrs['class'] = 'datepicker'
 
     return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 

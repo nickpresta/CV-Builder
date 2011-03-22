@@ -1,17 +1,19 @@
 <span class="clickable" id="additem">add</span>
 <table width="100%">
     <tr>
-        {% for field in tableFormset %}
+        {% for field in tableFormset.0 %}
             <th>{{ field.label }}</th>
         {% endfor %}
     </tr>
-    <tr>
-        {% for field in tableFormset %}
-        <td>
-            {{ field }}
-        </td>
-        {% endfor %}
-        <td><span class="clickable removeyear">remove</span></td>
-    </tr>
+    {% for form in tableFormset %}
+        <tr>
+            {% for field in form %}
+            <td>
+                {{ field }}
+            </td>
+            {% endfor %}
+            <td><span class="clickable removeyear">remove</span></td>
+        </tr>
+    {% endfor %}
 </table>
 

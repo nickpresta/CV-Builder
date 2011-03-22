@@ -95,6 +95,30 @@ function removeYear() {
     return false;
 }
 
+function multiItemTable_functions() {
+    var blankRow = $("#distribution_blankrow").detach();
+
+    blankRow.find('.datepicker').datepicker('destroy');
+    
+    $("#distribution_addyear").click(function() {
+        var newRow = blankRow.clone(true, true);
+        newRow.find(".distribution_removeyear").click(removeYear);
+        newRow.find(".datepicker").datepicker();
+        newRow.appendTo("#distribution_table");
+        
+        $("#distribution_table tr:first").show();
+
+        date_picker();
+        
+        return false;
+    });
+
+    $(".distribution_removeyear").click(removeYear);
+    
+    if ($("#distribution_table tr").length == 1)
+        $("#distribution_table tr:first").hide();
+}
+
 function executive_functions() {
     var blankRow = $("#distribution_blankrow").detach();
 
