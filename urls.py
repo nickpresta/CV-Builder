@@ -30,6 +30,7 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^ResearchGrants/$', 'ResearchGrants', name='cv-ResearchGrants'),
     url(r'^Courses/$', 'Courses', name='cv-Courses'),
     url(r'^ResearchActivity/$', 'ResearchActivity', name='cv-ResearchActivity'),
+    url(r'^doe/$', 'distribution_of_effort', name='cv-doe'),
 )
 
 urlpatterns += patterns('',

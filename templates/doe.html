@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Distribution Of Effort{% endblock %}
+
+{% block content %}
+<form method="post" action="">
+    {% csrf_token %}
+    <table width="100%">
+        {{ formset.as_table }}
+    </table>
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}

@@ -1,6 +1,10 @@
 from django.http import HttpResponse
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
+from django.forms.models import modelformset_factory
+
+from cv.forms import *
+from cv.models import *
 
 def index(request):
     """ Responsible for showing the index page """
@@ -18,7 +22,7 @@ def form1(request):
 @login_required
 def executive(request):
     return direct_to_template(request, 'executive.html', {})
-    
+
 @login_required
 def biographical(request):
     return direct_to_template(request, 'biographical.html', {})
@@ -26,7 +30,7 @@ def biographical(request):
 @login_required
 def offCampusRecognition(request):
     return direct_to_template(request, 'OffCampusRecognition.html', {})
-    
+
 @login_required
 def ServiceAndAdmin(request):
     return direct_to_template(request, 'ServiceAndAdministrativeContributions.html', {})
@@ -37,12 +41,35 @@ def ReportOnTeaching(request):
 
 @login_required
 def ResearchGrants(request):
-    return direct_to_template(request, 'ResearchGrants.html', {})   
+    return direct_to_template(request, 'ResearchGrants.html', {})
 
 @login_required
 def Courses(request):
-    return direct_to_template(request, 'Courses.html', {})  
-    
+    return direct_to_template(request, 'Courses.html', {})
+
 @login_required
 def ResearchActivity(request):
     return direct_to_template(request, 'ResearchActivity.html', {})
+
+@login_required
+def distribution_of_effort(request):
+    """ Create a form view for the Distribution of Effort """
+
+    # get this user's DoE or else create a new one
+    try:
+        data = DistributionOfEffort.objects.get(user=request.user)
+    except:
+        data = DistributionOfEffort()
+
+    if request.method == 'POST':
+        formset = DistributionOfEffortForm(request.POST, request.FILES, instance=data)
+        if formset.is_valid():
+            # Save the form data, ensure they are updating as themselves
+            doe = formset.save(commit=False)
+            doe.user = request.user
+            doe.save()
+            formset.save_m2m()
+    else:
+        # Show the DoE form
+        formset = DistributionOfEffortForm(instance=data)
+    return direct_to_template(request, 'doe.html', {'formset': formset})

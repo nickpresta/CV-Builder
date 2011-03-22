@@ -28,3 +28,18 @@ class UserProfile(models.Model):
     review_term = models.IntegerField(default=2)
     faculty_start = models.DateField()
     department = models.CharField(max_length=100, choices=DEPARTMENT_CHOICES)
+
+class DistributionOfEffort(models.Model):
+    """ This class holds information about the DoE for a
+        given employee (Teaching, Research, Service) """
+    user = models.ForeignKey(User)
+    year = models.DateField()
+    # These three fields should add up to 100 (%)
+    research = models.IntegerField(default=40)
+    teaching = models.IntegerField(default=40)
+    service = models.IntegerField(default=20)
+
+
+
+
+
