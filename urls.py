@@ -24,7 +24,12 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^form1/$', 'form1', name='cv-form1'),
     url(r'^executive/$', 'executive', name='cv-executive'),
     url(r'^biographical/$', 'biographical', name='cv-biographical'),
-    url(r'^offCampusRecognition/$', 'offCampusRecognition', name='cv-offCampusRecognition')
+    url(r'^offCampusRecognition/$', 'offCampusRecognition', name='cv-offCampusRecognition'),
+    url(r'^ServiceAndAdmin/$', 'ServiceAndAdmin', name='cv-ServiceAndAdmin'),
+    url(r'^ReportOnTeaching/$', 'ReportOnTeaching', name='cv-ReportOnTeaching'),
+    url(r'^ResearchGrants/$', 'ResearchGrants', name='cv-ResearchGrants'),
+    url(r'^Courses/$', 'Courses', name='cv-Courses'),
+    url(r'^ResearchActivity/$', 'ResearchActivity', name='cv-ResearchActivity'),
 )
 
 urlpatterns += patterns('',

@@ -26,3 +26,23 @@ def biographical(request):
 @login_required
 def offCampusRecognition(request):
     return direct_to_template(request, 'OffCampusRecognition.html', {})
+    
+@login_required
+def ServiceAndAdmin(request):
+    return direct_to_template(request, 'ServiceAndAdministrativeContributions.html', {})
+
+@login_required
+def ReportOnTeaching(request):
+    return direct_to_template(request, 'ReportOnTeaching.html', {})
+
+@login_required
+def ResearchGrants(request):
+    return direct_to_template(request, 'ResearchGrants.html', {})   
+
+@login_required
+def Courses(request):
+    return direct_to_template(request, 'Courses.html', {})  
+    
+@login_required
+def ResearchActivity(request):
+    return direct_to_template(request, 'ResearchActivity.html', {})
