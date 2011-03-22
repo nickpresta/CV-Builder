@@ -7,8 +7,6 @@ class DistributionOfEffortForm(ModelForm):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
 
-    year = forms.DateField(widget=forms.DateInput(attrs={"class": "datepicker year"}))
-        
     class Meta:
         fields = ('year', 'research', 'teaching', 'service')
         model = DistributionOfEffort

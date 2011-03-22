@@ -25,9 +25,9 @@ def executive(request):
 
     # get this user's Summary or else create a new one
     try:
-        data = Summary.objects.get(user=request.user)
+        summaryData = Summary.objects.get(user=request.user)
     except:
-        data = Summary()
+        summaryData = Summary()
 
     # get this user's DoE or else create a new one
     try:
@@ -37,15 +37,15 @@ def executive(request):
 
 
     if request.method == 'POST':
-        formset = ExecutiveSummaryForm(request.POST, request.FILES, instance=data)
-        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=doeData)
+        summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
+        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=doeData, prefix="doe")
 
-        if formset.is_valid() and doeFormset.is_valid():
+        if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
-            summary = formset.save(commit=False)
+            summary = summaryFormset.save(commit=False)
             summary.user = request.user
             summary.save()
-            formset.save_m2m()
+            summaryFormset.save_m2m()
             
             doe = doeFormset.save(commit=False)
             doe.user = request.user
@@ -55,13 +55,14 @@ def executive(request):
         return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
-        formset = ExecutiveSummaryForm(instance=data)
-        doeFormset = DistributionOfEffortForm(instance=doeData)
+        summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
+        doeFormset = DistributionOfEffortForm(instance=doeData, prefix="doe")
 
-    formset.fields['executive'].widget.attrs['rows'] = '50'
-    formset.fields['executive'].widget.attrs['cols'] = '40'
+    summaryFormset.fields['executive'].widget.attrs['rows'] = '50'
+    summaryFormset.fields['executive'].widget.attrs['cols'] = '40'
+    doeFormset.fields['year'].widget.attrs['class'] = 'datepicker'
 
-    return direct_to_template(request, 'executive.html', {'formset': formset, 'doeFormset': doeFormset})
+    return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 
 @login_required
 def biographical(request):

@@ -191,12 +191,12 @@ div.shortcuts {
     display: inline;
 }
 
-textarea {
-    width: 100%;
+fieldset#distribution_fieldset input {
+    width: 6em;
 }
 
-input.year {
-    width: 6em;
+textarea {
+    width: 100%;
 }
 
 img {
