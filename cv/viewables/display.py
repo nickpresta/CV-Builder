@@ -32,25 +32,28 @@ def executive(request):
     # get this user's DoE or else create a new one
     try:
         doeData = DistributionOfEffort.objects.filter(user=request.user)
-        print doeData
     except:
         doeData = DistributionOfEffort()
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
-        doeFormset = DistributionOfEffortForm(request.POST, request.FILES, instance=doeData[0], prefix="doe")
+        doeFormset = [DistributionOfEffortForm(prefix="doe-" + str(i), instance=doeData[i]) for i in range(0,len(doeData))]
 
-        if summaryFormset.is_valid() and doeFormset.is_valid():
+        print filter(lambda f: f.is_valid(), doeFormset)
+
+        if summaryFormset.is_valid() and  not filter(lambda f: f.is_valid(), doeFormset):
             # Save the form data, ensure they are updating as themselves
             summary = summaryFormset.save(commit=False)
             summary.user = request.user
             summary.save()
             summaryFormset.save_m2m()
             
-            doe = doeFormset.save(commit=False)
-            doe.user = request.user
-            doe.save()
-            doeFormset.save_m2m()
+            
+            for doeForm in doeFormset:
+                doe = doeForm.save(commit=False)
+                doe.user = request.user
+                doe.save()
+                #doeForm.save_m2m()
             
         return HttpResponseRedirect('/executive/')
     else:
@@ -58,6 +61,8 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
         doeFormset = [DistributionOfEffortForm(prefix="doe-" + str(i), instance=doeData[i]) for i in range(0,len(doeData))]
 
+    # Set up widget HTML properties
+    # TODO: not sure if this should be here or in forms.py
     for form in doeFormset:
         form.fields['year'].widget.attrs['class'] = 'datepicker'
 
