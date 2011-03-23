@@ -304,3 +304,7 @@ span.clickable {
 td.error input {
     border: 3px solid red;
 }
+
+.hidden {
+    display: none;
+}

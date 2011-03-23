@@ -75,16 +75,13 @@ function date_picker() {
 function shortcut_functions() {
     var d = new Date();
     $(".fall_semester").click(function() {
-        $(this).parent().prev(".datepicker").datepicker("setDate", "09/01/" +
-            d.getFullYear());
+        $(this).parent().prev(".datepicker").datepicker("setDate", d.getFullYear() + "-09-01");
     });
     $(".winter_semester").click(function() {
-        $(this).parent().prev(".datepicker").datepicker("setDate", "01/01/" +
-            d.getFullYear());
+        $(this).parent().prev(".datepicker").datepicker("setDate", d.getFullYear() + "-01-01");
     });
     $(".spring_semester").click(function() {
-        $(this).parent().prev(".datepicker").datepicker("setDate", "05/01/" +
-            d.getFullYear());
+        $(this).parent().prev(".datepicker").datepicker("setDate", d.getFullYear() + "-05-01");
     });
 }
 
@@ -103,45 +100,45 @@ function multiItemTable_functions() {
         var blankRow = $(this).next().find("tr:last");
         var totalForms = $(this).siblings("#id_form-TOTAL_FORMS");
         var prefix_regex = new RegExp("((id_form|form)-\\d+)");
-        
+
         $(blankRow).find("input").each(function(index) {
             if (this.id)
-                this.id = this.id.replace(prefix_regex, "");  
+                this.id = this.id.replace(prefix_regex, "");
             if (this.name)
                 this.name = this.name.replace(prefix_regex, "");
         });
-        
+
         $(totalForms).addClass("hidden");
         blankRow.hide();
-        
+
         $(this).click(function() {
-            var newRow = blankRow.clone();
+            var newRow = blankRow.clone(true, true);
             var formCount = parseInt($(totalForms).val()) - 1;
             var newPrefix = "form-" + formCount;
-            
+
             $(newRow).find("input").each(function(index) {
                 if (this.id)
                     this.id = "id_" + newPrefix + this.id;
                 if (this.name)
                     this.name = newPrefix + this.name;
             });
-            
+
             newRow.show();
             newRow.appendTo($(this).next());
-            
+
             $(totalForms).val(formCount + 1);
-            
+
             return false;
         });
 
     });
-    
+
     $(".removeitem").click(function() {
-        var parentTable = $(this).parents("table");    
+        var parentTable = $(this).parents("table");
         var index_regex = new RegExp("(form-\\d+)");
 
         var rows;
-   
+
         $(this).parents("tr").addClass("hidden");
         $(this).closest("td").siblings().find(".multiitem_delete").val(true);
         rows = $(parentTable).find(".multiitem_row").not(".hidden");
@@ -152,9 +149,9 @@ function multiItemTable_functions() {
                     this.id = this.id.replace(index_regex, "form-" + i);
                 if (this.name)
                     this.name = this.name.replace(index_regex, "form-" + i);
-            });                
+            });
         }
-        
+
         $(parentTable).siblings("#id_form-TOTAL_FORMS").val(rows.length - 1);
         return false;
     });
@@ -164,7 +161,7 @@ function executive_functions() {
     var blankRow = $("#distribution_blankrow").detach();
 
     blankRow.find('.datepicker').datepicker('destroy');
-    
+
     $("#distribution_addyear").click(function() {
         var newRow = blankRow.clone(true, true);
         newRow.find(".distribution_removeyear").click(removeYear);
