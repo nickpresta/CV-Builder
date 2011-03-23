@@ -101,6 +101,8 @@ function multiItemTable_functions() {
         var totalForms = $(this).siblings("#id_form-TOTAL_FORMS");
         var prefix_regex = new RegExp("((id_form|form)-\\d+)");
 
+        $(blankRow).datepicker("destroy");
+
         $(blankRow).find("input").each(function(index) {
             if (this.id)
                 this.id = this.id.replace(prefix_regex, "");
@@ -128,6 +130,9 @@ function multiItemTable_functions() {
 
             $(totalForms).val(formCount + 1);
 
+            $(".datepicker").datepicker("destroy");
+            date_picker();
+
             return false;
         });
 
@@ -153,6 +158,7 @@ function multiItemTable_functions() {
         }
 
         $(parentTable).siblings("#id_form-TOTAL_FORMS").val(rows.length - 1);
+
         return false;
     });
 }
