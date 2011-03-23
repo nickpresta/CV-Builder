@@ -64,6 +64,10 @@ def executive(request):
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py
 
+    for form in doeFormset.forms:
+        form.fields['year'].widget.attrs['class'] = 'datepicker'
+        form.fields['year'].widget.attrs['format'] = '%d/%m/%Y'
+
     summaryFormset.fields['executive'].widget.attrs['rows'] = '50'
     summaryFormset.fields['executive'].widget.attrs['cols'] = '40'
 
