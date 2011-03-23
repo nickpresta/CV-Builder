@@ -32,7 +32,7 @@ def executive(request):
 
     # get this user's DoEs or else create a new one
     try:
-        doeData = DistributionOfEffort.objects.filter(user=request.user)
+        doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
     except:
         doeData = DistributionOfEffort()
 
