@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
+from django.forms.formsets import formset_factory
 
 from cv.forms import *
 from cv.models import *
@@ -29,7 +30,7 @@ def executive(request):
     except:
         summaryData = Summary()
 
-    # get this user's DoE or else create a new one
+    # get this user's DoEs or else create a new one
     try:
         doeData = DistributionOfEffort.objects.filter(user=request.user)
     except:
@@ -37,33 +38,31 @@ def executive(request):
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
-        doeFormset = [DistributionOfEffortForm(request.POST, request.FILES, instance=doeData[i], prefix="doe-" + str(i)) for i in range(0,len(doeData))]
+        doeFormset = modelformset_factory(DistributionOfEffort, form=DistributionOfEffortForm)(request.POST, request.FILES, queryset=doeData)
 
-        print filter(lambda f: f.is_valid(), doeFormset)
-
-        if summaryFormset.is_valid() and  not filter(lambda f: not f.is_valid(), doeFormset):
+        if summaryFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
             summary = summaryFormset.save(commit=False)
             summary.user = request.user
             summary.save()
-            summaryFormset.save_m2m()            
+            summaryFormset.save_m2m()
             
-            for doeForm in doeFormset:
-                doe = doeForm.save(commit=False)
-                doe.user = request.user
-                doe.save()
-                doeForm.save_m2m()
+            doe = doeFormset.save(commit=False)
+
+            # save each row seperatley, can't figure out how to do it automatically
+            for d in doe:
+                d.user = request.user
+            doeFormset.save()
+            doeFormset.save_m2m()
             
         return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
-        doeFormset = [DistributionOfEffortForm(instance=doeData[i], prefix="doe-" + str(i)) for i in range(0,len(doeData))]
+        doeFormset = modelformset_factory(DistributionOfEffort, form=DistributionOfEffortForm)(queryset=doeData)
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py
-    for form in doeFormset:
-        form.fields['year'].widget.attrs['class'] = 'datepicker'
 
     summaryFormset.fields['executive'].widget.attrs['rows'] = '50'
     summaryFormset.fields['executive'].widget.attrs['cols'] = '40'

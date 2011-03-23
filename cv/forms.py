@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from cv.models import *
 from django import forms
+from django.forms.models import BaseModelFormSet
 
 class DistributionOfEffortForm(ModelForm):
     """ This form is based on the DoE model and shows the

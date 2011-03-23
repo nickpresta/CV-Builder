@@ -9,7 +9,8 @@
     {% csrf_token %}
     <fieldset id="distribution_fieldset" name="distribution">
         <legend id="distribution">Distribution of Effort</legend>
-        {% with doeFormset as tableFormset %}
+        {{ doeFormset.management_form }}
+        {% with doeFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
