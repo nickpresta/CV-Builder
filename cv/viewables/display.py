@@ -40,7 +40,7 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DistributionOfEffort,
-                form=DistributionOfEffortForm)(request.POST,
+                form=DistributionOfEffortForm, extra=1)(request.POST,
                         request.FILES, queryset=doeData)
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
@@ -57,18 +57,18 @@ def executive(request):
                 d.user = request.user
             doeFormset.save()
             doeFormset.save_m2m()
+            return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DistributionOfEffort,
-                form=DistributionOfEffortForm)(queryset=doeData)
+                form=DistributionOfEffortForm, extra=1)(queryset=doeData)
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py
 
     for form in doeFormset.forms:
         form.fields['year'].widget.attrs['class'] = 'datepicker'
-        form.fields['year'].widget.attrs['format'] = '%d/%m/%Y'
 
     summaryFormset.fields['executive'].widget.attrs['rows'] = '50'
     summaryFormset.fields['executive'].widget.attrs['cols'] = '40'
