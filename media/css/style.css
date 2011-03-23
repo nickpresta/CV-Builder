@@ -187,12 +187,16 @@ div.clear:after {
 }
 
 /** Misc classes and styles **/
+.hidden {
+    display: none;
+}
+
 div.shortcuts {
     display: inline;
 }
 
 fieldset#distribution_fieldset input {
-    width: 10em;
+    width: 80px;
 }
 
 textarea {

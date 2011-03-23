@@ -6,6 +6,8 @@ from django.forms.models import BaseModelFormSet
 class DistributionOfEffortForm(ModelForm):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
+        
+    delete = forms.BooleanField(required=False, widget=forms.HiddenInput(attrs={'class': 'multiitem_delete'}))
 
     class Meta:
         fields = ('year', 'research', 'teaching', 'service')

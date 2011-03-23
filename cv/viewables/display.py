@@ -40,20 +40,25 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DistributionOfEffort, form=DistributionOfEffortForm)(request.POST, request.FILES, queryset=doeData)
 
-        if summaryFormset.is_valid():
+        if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
             summary = summaryFormset.save(commit=False)
             summary.user = request.user
             summary.save()
             summaryFormset.save_m2m()
             
+            
             doe = doeFormset.save(commit=False)
 
             # save each row seperatley, can't figure out how to do it automatically
             for d in doe:
                 d.user = request.user
+                if d['delete']:
+                    print "DELETE BITCH"
             doeFormset.save()
             doeFormset.save_m2m()
+        else:
+            print doeFormset.errors
             
         return HttpResponseRedirect('/executive/')
     else:
