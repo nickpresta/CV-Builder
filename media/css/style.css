@@ -187,8 +187,8 @@ div.clear:after {
 }
 
 /** Misc classes and styles **/
-.hidden {
-    display: none;
+div#content table {
+    width: 90%;
 }
 
 div.shortcuts {
@@ -196,7 +196,7 @@ div.shortcuts {
 }
 
 fieldset#distribution_fieldset input {
-    width: 80px;
+    width: 100%;
 }
 
 textarea {
@@ -299,4 +299,8 @@ span.clickable {
     cursor: pointer;
     color: #777;
     font-size: 11px;
+}
+
+td.error input {
+    border: 3px solid red;
 }

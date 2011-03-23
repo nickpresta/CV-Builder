@@ -2,6 +2,7 @@ tinyMCE.init({
         // General options
         mode: "textareas",
         theme: "advanced",
+        content_css: "/media/css/tinymce_style.css?" + new Date().getTime(),
         plugins:
         "pagebreak,style,layer,table,advhr,advimage,advlink,iespell,inlinepopups,insertdatetime,preview,searchreplace,contextmenu,paste,directionality,fullscreen,noneditable,xhtmlxtras,template",
         theme_advanced_buttons1:
@@ -51,6 +52,7 @@ function expand_menu() {
 
 function date_picker() {
     $(".datepicker").datepicker({
+        dateFormat: 'yy-mm-dd',
         yearRange: "-40:+10",
         changeMonth: true,
         changeYear: true,

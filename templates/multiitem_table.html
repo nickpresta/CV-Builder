@@ -1,7 +1,7 @@
-<span class="clickable additem">add</span>
-<table width="100%" class="multiitem_table">
+<span class="clickable" id="additem">add</span>
+<table>
     <tr>
-        {% for field in tableFormset.0 %}
+        {% for field in tableFormset.0.visible_fields %}
             {% if field.label != "Id" and field.label != "Delete" %}
                 <th>{{ field.label }}</th>
             {% endif %}
@@ -9,18 +9,14 @@
     </tr>
     {% for form in tableFormset %}
         <tr class="multiitem_row">
-            {% for field in form %}
-                {% if field.label != "Id" and field.label != "Delete" %}
-                    <td>
-                        {{ field }}
-                    </td>
-                {% else %}
-                    <td class="hidden">
-                        {{ field }}
-                    </td>
-
-                {% endif %}
-                
+        {% for field in form %}
+            {% if field.errors %}
+            <td class='error'>
+            {% else %}
+            <td>
+            {% endif %}
+                {{ field }}
+            </td>
             {% endfor %}
             <td><span class="clickable removeitem">remove</span></td>
         </tr>

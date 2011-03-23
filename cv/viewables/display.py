@@ -27,18 +27,21 @@ def executive(request):
     # get this user's Summary or else create a new one
     try:
         summaryData = Summary.objects.get(user=request.user)
-    except:
+    except Summary.DoesNotExist:
         summaryData = Summary()
 
     # get this user's DoEs or else create a new one
     try:
         doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
-    except:
+    except DistributionOfEffort.DoesNotExist:
         doeData = DistributionOfEffort()
 
     if request.method == 'POST':
-        summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
-        doeFormset = modelformset_factory(DistributionOfEffort, form=DistributionOfEffortForm)(request.POST, request.FILES, queryset=doeData)
+        summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
+                instance=summaryData, prefix="summary")
+        doeFormset = modelformset_factory(DistributionOfEffort,
+                form=DistributionOfEffortForm)(request.POST,
+                        request.FILES, queryset=doeData)
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
@@ -46,10 +49,9 @@ def executive(request):
             summary.user = request.user
             summary.save()
             summaryFormset.save_m2m()
-            
+
             
             doe = doeFormset.save(commit=False)
-
             # save each row seperatley, can't figure out how to do it automatically
             for d in doe:
                 d.user = request.user
@@ -57,14 +59,11 @@ def executive(request):
                     print "DELETE BITCH"
             doeFormset.save()
             doeFormset.save_m2m()
-        else:
-            print doeFormset.errors
-            
-        return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
-        doeFormset = modelformset_factory(DistributionOfEffort, form=DistributionOfEffortForm)(queryset=doeData)
+        doeFormset = modelformset_factory(DistributionOfEffort,
+                form=DistributionOfEffortForm)(queryset=doeData)
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py

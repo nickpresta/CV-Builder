@@ -3,9 +3,15 @@
 {% block title %}Edit CV{% endblock %}
 
 {% block content %}
+<h2>Executive Summary</h2>
+{% if doeFormset.errors  %}
+{% for error in doeFormset.errors %}
+    {{ error|escape }}
+{% endfor %}
+{% endif %}
+{{ summaryFormset.errors.as_ul }}
 
-<h1>Executive Summary</h1>
-<form method="post" action="/executive/">
+<form method="post" action="{% url cv-executive %}">
     {% csrf_token %}
     <fieldset id="distribution_fieldset" name="distribution">
         <legend id="distribution">Distribution of Effort</legend>

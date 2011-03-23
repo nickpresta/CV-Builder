@@ -35,7 +35,6 @@ class DistributionOfEffortForm(ModelForm):
         return cleaned_data
 
 class ExecutiveSummaryForm(ModelForm):
-        
     class Meta:
         fields = ('executive',)
         model = Summary
