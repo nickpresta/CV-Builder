@@ -39,6 +39,7 @@ class DistributionOfEffort(models.Model):
     teaching = models.IntegerField(default=40)
     service = models.IntegerField(default=20)
 
+# using this model for Demo 2. Didn't have time to adapt models.
 class Summary(models.Model):
     user = models.ForeignKey(User)
     executive = models.TextField()
@@ -52,7 +53,7 @@ class FacultyTable(models.Model):
     Department = models.CharField( max_length=200 ) #TODO: Pre-pop?
     Faculty_Start = models.DateTimeField(  ) #TODO: trigger
     
-class DoETable(models.Model):
+class DoeTable(models.Model):
     #DoE_ID = models.IntegerField() #TODO: 
     Faculty_ID = models.ForeignKey( FacultyTable )
     Year = models.IntegerField( max_length=4 )
@@ -120,7 +121,7 @@ class CourseTable(models.Model):
     Info = models.CharField( max_length=200 )
     NumStudents = models.IntegerField()
  
-class GradTable:
+class GradTable(models.Model):
     #GID = models.IntegerField()
     Faculty_ID = models.IntegerField()
     GName = models.CharField( max_length=200 )
