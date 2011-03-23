@@ -55,8 +55,6 @@ def executive(request):
             # save each row seperatley, can't figure out how to do it automatically
             for d in doe:
                 d.user = request.user
-                if d['delete']:
-                    print "DELETE BITCH"
             doeFormset.save()
             doeFormset.save_m2m()
     else:
