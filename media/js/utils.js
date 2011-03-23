@@ -110,6 +110,7 @@ function multiItemTable_functions() {
                 this.name = this.name.replace(prefix_regex, "");
         });
 
+
         blankRow.hide();
         $(totalForms).val(parseInt($(totalForms).val()) - 1);
 
@@ -163,6 +164,11 @@ function multiItemTable_functions() {
         }
 
         $(parentTable).siblings("#id_form-TOTAL_FORMS").val(rows.length - 1);
+
+            // when inserting a new date picker element, all previous
+            // datepicker's must be destroyed, then recreated
+            $(".datepicker").datepicker("destroy");
+            date_picker();
 
         return false;
     });
