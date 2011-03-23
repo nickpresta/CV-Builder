@@ -101,6 +101,7 @@ function multiItemTable_functions() {
         var totalForms = $(this).siblings("#id_form-TOTAL_FORMS");
         var prefix_regex = new RegExp("((id_form|form)-\\d+)");
 
+        // when inserting a new date picker element, all previous datepicker's must be destroyed, then recreated
         $(blankRow).datepicker("destroy");
 
         $(blankRow).find("input").each(function(index) {
@@ -110,8 +111,9 @@ function multiItemTable_functions() {
                 this.name = this.name.replace(prefix_regex, "");
         });
 
-        $(totalForms).addClass("hidden");
+        //$(totalForms).addClass("hidden");
         blankRow.hide();
+        $(totalForms).val(parseInt($(totalForms).val()) - 1);
 
         $(this).click(function() {
             var newRow = blankRow.clone(true, true);
