@@ -101,9 +101,8 @@ function multiItemTable_functions() {
         var totalForms = $(this).siblings("#id_form-TOTAL_FORMS");
         var prefix_regex = new RegExp("((id_form|form)-\\d+)");
 
-        // when inserting a new date picker element, all previous datepicker's must be destroyed, then recreated
-        $(blankRow).datepicker("destroy");
-
+        // take the last row of the table and make it the "blank row", which will
+        // be cloned to make new rows
         $(blankRow).find("input").each(function(index) {
             if (this.id)
                 this.id = this.id.replace(prefix_regex, "");
@@ -111,13 +110,12 @@ function multiItemTable_functions() {
                 this.name = this.name.replace(prefix_regex, "");
         });
 
-        //$(totalForms).addClass("hidden");
         blankRow.hide();
         $(totalForms).val(parseInt($(totalForms).val()) - 1);
 
         $(this).click(function() {
-            var newRow = blankRow.clone(true, true);
-            var formCount = parseInt($(totalForms).val()) - 1;
+            var newRow = blankRow.clone(true);
+            var formCount = parseInt($(totalForms).val());
             var newPrefix = "form-" + formCount;
 
             $(newRow).find("input").each(function(index) {
@@ -132,6 +130,8 @@ function multiItemTable_functions() {
 
             $(totalForms).val(formCount + 1);
 
+            // when inserting a new date picker element, all previous
+            // datepicker's must be destroyed, then recreated
             $(".datepicker").datepicker("destroy");
             date_picker();
 
@@ -146,7 +146,10 @@ function multiItemTable_functions() {
 
         var rows;
 
+        $(this).parents("tr").hide();
         $(this).parents("tr").addClass("hidden");
+
+        // mark the hidden delete input as true
         $(this).closest("td").siblings().find(".multiitem_delete").val(true);
         rows = $(parentTable).find(".multiitem_row").not(".hidden");
 
@@ -164,28 +167,3 @@ function multiItemTable_functions() {
         return false;
     });
 }
-
-function executive_functions() {
-    var blankRow = $("#distribution_blankrow").detach();
-
-    blankRow.find('.datepicker').datepicker('destroy');
-
-    $("#distribution_addyear").click(function() {
-        var newRow = blankRow.clone(true, true);
-        newRow.find(".distribution_removeyear").click(removeYear);
-        newRow.find(".datepicker").datepicker();
-        newRow.appendTo("#distribution_table");
-        
-        $("#distribution_table tr:first").show();
-
-        date_picker();
-        
-        return false;
-    });
-
-    $(".distribution_removeyear").click(removeYear);
-    
-    if ($("#distribution_table tr").length == 1)
-        $("#distribution_table tr:first").hide();
-}
-

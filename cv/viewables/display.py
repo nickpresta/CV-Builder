@@ -52,7 +52,7 @@ def executive(request):
 
             
             doe = doeFormset.save(commit=False)
-            # save each row seperatley, can't figure out how to do it automatically
+            # add user to each table row
             for d in doe:
                 d.user = request.user
             doeFormset.save()
