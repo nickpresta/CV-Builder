@@ -7,13 +7,13 @@
 <h1>Executive Summary</h1>
 <form method="post" action="/executive/">
     {% csrf_token %}
-    <fieldset id="distribution_fieldset">
+    <fieldset id="distribution_fieldset" name="distribution">
         <legend id="distribution">Distribution of Effort</legend>
         {% with doeFormset as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
-    <fieldset>
+    <fieldset name="summary">
         <legend id="summary">Summary</legend>
         {{ summaryFormset.executive }}
     </fieldset>

@@ -37,29 +37,28 @@ def executive(request):
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES, instance=summaryData, prefix="summary")
-        doeFormset = [DistributionOfEffortForm(prefix="doe-" + str(i), instance=doeData[i]) for i in range(0,len(doeData))]
+        doeFormset = [DistributionOfEffortForm(request.POST, request.FILES, instance=doeData[i], prefix="doe-" + str(i)) for i in range(0,len(doeData))]
 
         print filter(lambda f: f.is_valid(), doeFormset)
 
-        if summaryFormset.is_valid() and  not filter(lambda f: f.is_valid(), doeFormset):
+        if summaryFormset.is_valid() and  not filter(lambda f: not f.is_valid(), doeFormset):
             # Save the form data, ensure they are updating as themselves
             summary = summaryFormset.save(commit=False)
             summary.user = request.user
             summary.save()
-            summaryFormset.save_m2m()
-            
+            summaryFormset.save_m2m()            
             
             for doeForm in doeFormset:
                 doe = doeForm.save(commit=False)
                 doe.user = request.user
                 doe.save()
-                #doeForm.save_m2m()
+                doeForm.save_m2m()
             
         return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
-        doeFormset = [DistributionOfEffortForm(prefix="doe-" + str(i), instance=doeData[i]) for i in range(0,len(doeData))]
+        doeFormset = [DistributionOfEffortForm(instance=doeData[i], prefix="doe-" + str(i)) for i in range(0,len(doeData))]
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py
