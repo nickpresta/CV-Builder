@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
-from django.views.generic.simple import redirect_to
+from django.views.generic.simple import redirect_to, direct_to_template
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
@@ -35,6 +35,7 @@ urlpatterns += patterns('3760.cv.views',
 
 urlpatterns += patterns('',
     (r'^$', redirect_to, {'url': '/index/'}),
+    (r'^export/$', direct_to_template, {'template': 'export.html'}),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
         'login.html'}, name="cv-login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page':
