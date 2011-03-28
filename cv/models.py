@@ -123,7 +123,6 @@ class InvestTable(models.Model):
 class CourseTable(models.Model): 
     #CID = models.IntegerField()
     CCode = models.CharField(max_length=200, blank=True, unique=True )
-    Semester = models.CharField(max_length=200, blank=True )
     Name = models.CharField(max_length=200, blank=True )
     Info = models.CharField(max_length=200, blank=True )
  
@@ -131,6 +130,7 @@ class FacultyCourseJoinTable( models.Model ):
     Faculty_ID = models.ForeignKey( FacultyTable )
     CCode = models.ForeignKey( CourseTable )
     Year = models.DateTimeField( blank=True )
+    Semester = models.CharField(max_length=200, blank=True )
     NumStudents = models.IntegerField( blank=True )
 
 class GradTable(models.Model):
