@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
@@ -24,29 +25,31 @@ def form1(request):
 def executive(request):
     """ Create a form view for the Distribution of Effort """
 
+    facultyId = FacultyTable.objects.get(Username=request.user)
+
     # get this user's Summary or else create a new one
     try:
-        summaryData = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summaryData = Summary()
+        summaryData = SummaryTable.objects.get(Faculty_ID=facultyId)
+    except SummaryTable.DoesNotExist:
+        summaryData = SummaryTable(Faculty_ID=facultyId)    
 
     # get this user's DoEs or else create a new one
     try:
-        doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
-    except DistributionOfEffort.DoesNotExist:
-        doeData = DistributionOfEffort()
+        doeData = DoETable.objects.filter(Faculty_ID=facultyId).order_by('Year')
+    except DoETable.DoesNotExist:
+        doeData = DoETable(Faculty_ID=facultyId)
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix="summary")
-        doeFormset = modelformset_factory(DistributionOfEffort,
-                form=DistributionOfEffortForm, extra=1, can_delete=True)(request.POST,
+        doeFormset = modelformset_factory(DoETable,
+                form=DoEForm, extra=1, can_delete=True)(request.POST,
                         request.FILES, queryset=doeData)
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
             summary = summaryFormset.save(commit=False)
-            summary.user = request.user
+            summary.Faculty_ID = facultyId
             summary.save()
             summaryFormset.save_m2m()
 
@@ -56,7 +59,8 @@ def executive(request):
 
             # add user to each table row
             for d in doe:
-                d.user = request.user
+                #d.Username = request.user
+                d.Faculty_ID = facultyId
                 d.save()
 
             doeFormset.save_m2m()
@@ -64,17 +68,17 @@ def executive(request):
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
-        doeFormset = modelformset_factory(DistributionOfEffort,
-                form=DistributionOfEffortForm, extra=1, can_delete=True)(queryset=doeData)
+        doeFormset = modelformset_factory(DoETable,
+                form=DoEForm, extra=1, can_delete=True)(queryset=doeData)
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py
 
     for form in doeFormset.forms:
-        form.fields['year'].widget.attrs['class'] = 'datepicker'
+        form.fields['Year'].widget.attrs['class'] = 'datepicker'
 
-    summaryFormset.fields['executive'].widget.attrs['rows'] = '50'
-    summaryFormset.fields['executive'].widget.attrs['cols'] = '40'
+    summaryFormset.fields['Executive'].widget.attrs['rows'] = '50'
+    summaryFormset.fields['Executive'].widget.attrs['cols'] = '40'
 
     return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 

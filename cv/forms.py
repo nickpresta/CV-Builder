@@ -1,42 +1,42 @@
+# -*- coding: utf-8 -*-
 from django.forms import ModelForm
 from cv.models import *
 from django import forms
 from django.forms.models import BaseModelFormSet
 import datetime
 
-class DistributionOfEffortForm(ModelForm):
+class DoEForm(ModelForm):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
         
-    #remove = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput(attrs={'class': 'multiitem_delete'}))
-    year = forms.DateField(initial=datetime.date.today)
+    Year = forms.DateField(initial=datetime.date.today)
     
     class Meta:
-        fields = ('year', 'research', 'teaching', 'service')
-        model = DistributionOfEffort
+        fields = ('Year', 'Research', 'Teaching', 'Service')
+        model = DoETable
 
     def clean(self):
         """ Clean the form according to our custom rules """
         cleaned_data = self.cleaned_data
-        research = cleaned_data.get("research")
-        teaching = cleaned_data.get("teaching")
-        service = cleaned_data.get("service")
+        research = cleaned_data.get("Research")
+        teaching = cleaned_data.get("Teaching")
+        service = cleaned_data.get("Service")
 
         # ensure that all 3 fields add up to 100
         if (research + teaching + service) != 100:
             msg = "Research, teaching and service must add up to 100"
-            self._errors['research'] = self.error_class([msg])
-            self._errors['teaching'] = self.error_class([msg])
-            self._errors['service'] = self.error_class([msg])
+            self._errors['Research'] = self.error_class([msg])
+            self._errors['Teaching'] = self.error_class([msg])
+            self._errors['Service'] = self.error_class([msg])
 
             # These fields are no longer valid
-            del cleaned_data['research']
-            del cleaned_data['teaching']
-            del cleaned_data['service']
+            del cleaned_data['Research']
+            del cleaned_data['Teaching']
+            del cleaned_data['Service']
 
         return cleaned_data
 
 class ExecutiveSummaryForm(ModelForm):
     class Meta:
-        fields = ('executive',)
-        model = Summary
+        fields = ('Executive',)
+        model = SummaryTable

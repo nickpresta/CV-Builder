@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 
 from django.db import models
@@ -46,7 +47,7 @@ class Summary(models.Model):
 
 
 class FacultyTable(models.Model):
-    Faculty_ID = models.IntegerField( primary_key=True )
+    Faculty_ID = models.AutoField( primary_key=True )
     
     # This links the already created user (from LDAP login)
     # to our profile
@@ -58,10 +59,10 @@ class FacultyTable(models.Model):
     Department = models.CharField(max_length=200, blank=True )
     Faculty_Start = models.DateTimeField( blank=True )
     
-class DoeTable(models.Model):
+class DoETable(models.Model):
     #DoE_ID = models.IntegerField() #TODO: 
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Year = models.IntegerField(max_length=4, blank=True, unique=True )
+    Year = models.DateField(blank=True, unique=True )
     #These three fields should add up to 100 (%)
     Research = models.IntegerField( default=40 )
     Teaching = models.IntegerField( default=40 )
@@ -69,7 +70,7 @@ class DoeTable(models.Model):
     
 class SummaryTable(models.Model):
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Executive = models.CharField(max_length=10000, blank=True )
+    Executive = models.TextField(max_length=10000, blank=True )
     Research  = models.CharField(max_length=10000, blank=True )
     R_Consulting = models.CharField(max_length=10000, blank=True )
     R_Patents = models.CharField(max_length=10000, blank=True )

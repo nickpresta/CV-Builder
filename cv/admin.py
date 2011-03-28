@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from django.contrib import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
@@ -16,7 +17,7 @@ admin.site.register(User, UserProfileAdmin)
 admin.site.register(DistributionOfEffort)
 admin.site.register(Summary)
 admin.site.register(FacultyTable)
-admin.site.register(DoeTable)
+admin.site.register(DoETable)
 admin.site.register(SummaryTable)
 admin.site.register(AccredTable)
 admin.site.register(HonorTable)

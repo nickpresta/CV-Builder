@@ -22,6 +22,12 @@ $(document).ready(function() {
 {% block content %}
 
 <h1>Biographical Information</h1>
+{% if doeFormset.errors  %}
+{% for error in doeFormset.errors %}
+    {{ error|escape }}
+{% endfor %}
+{% endif %}
+{{ summaryFormset.errors.as_ul }}
 
 <form>
     <fieldset>
