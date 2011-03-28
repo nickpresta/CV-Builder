@@ -46,86 +46,98 @@ class Summary(models.Model):
 
 
 class FacultyTable(models.Model):
-    #Faculty_ID = models.IntegerField()
+    Faculty_ID = models.IntegerField( primary_key=True )
+    
+    # This links the already created user (from LDAP login)
+    # to our profile
+    Username = models.ForeignKey(User, unique=True)
+
     Faculty_GName = models.CharField(max_length=200)
     Faculty_SName = models.CharField(max_length=200)
-    Review_Term = models.IntegerField()
-    Department = models.CharField(max_length=200) #TODO: Pre-pop?
-    Faculty_Start = models.DateTimeField() #TODO: trigger
+    Review_Term = models.IntegerField( blank=True )
+    Department = models.CharField(max_length=200, blank=True )
+    Faculty_Start = models.DateTimeField( blank=True )
     
 class DoeTable(models.Model):
     #DoE_ID = models.IntegerField() #TODO: 
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Year = models.IntegerField(max_length=4)
-    Research = models.IntegerField()
-    Teaching = models.IntegerField()
-    Service = models.IntegerField()
+    Year = models.IntegerField(max_length=4, blank=True, unique=True )
+    #These three fields should add up to 100 (%)
+    Research = models.IntegerField( default=40 )
+    Teaching = models.IntegerField( default=40 )
+    Service = models.IntegerField( default=20 )
     
 class SummaryTable(models.Model):
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Executive = models.CharField(max_length=10000)
-    Research  = models.CharField(max_length=10000)
-    R_Consulting = models.CharField(max_length=10000)
-    R_Patents = models.CharField(max_length=10000)
-    R_Other = models.CharField(max_length=10000)
-    R_Recognition = models.CharField(max_length=10000)
-    Teaching = models.CharField(max_length=10000)
-    T_Counselling = models.CharField(max_length=10000)
-    T_CourseDevel = models.CharField(max_length=10000)
-    T_Recognition = models.CharField(max_length=10000)
-    T_Support = models.CharField(max_length=10000)
-    T_Scholarship = models.CharField(max_length=10000)
-    T_Offer = models.CharField(max_length=10000)
-    OffCampus = models.CharField(max_length=10000)
+    Executive = models.CharField(max_length=10000, blank=True )
+    Research  = models.CharField(max_length=10000, blank=True )
+    R_Consulting = models.CharField(max_length=10000, blank=True )
+    R_Patents = models.CharField(max_length=10000, blank=True )
+    R_Other = models.CharField(max_length=10000, blank=True )
+    R_Recognition = models.CharField(max_length=10000, blank=True )
+    Teaching = models.CharField(max_length=10000, blank=True )
+    T_Counselling = models.CharField(max_length=10000, blank=True )
+    T_CourseDevel = models.CharField(max_length=10000, blank=True )
+    T_Recognition = models.CharField(max_length=10000, blank=True )
+    T_Support = models.CharField(max_length=10000, blank=True )
+    T_Scholarship = models.CharField(max_length=10000, blank=True )
+    T_Offer = models.CharField(max_length=10000, blank=True )
+    OffCampus = models.CharField(max_length=10000, blank=True )
 
 class AccredTable(models.Model):
     #Accred_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Degree = models.CharField(max_length=200)
-    Discipline = models.CharField(max_length=200)
-    Institution = models.CharField(max_length=200)
-    Date = models.DateTimeField() #TODO: Trigger
+    Degree = models.CharField(max_length=200, blank=True )
+    Discipline = models.CharField(max_length=200, blank=True )
+    Institution = models.CharField(max_length=200, blank=True )
+    Date = models.DateTimeField( blank=True )
     
 class HonorTable(models.Model):
     #Honor_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Honor_desc = models.CharField(max_length=500)
+    Honor_desc = models.CharField(max_length=500, blank=True )
     
 class PositionTable(models.Model):
     #Pos_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
-    Rank = models.CharField(max_length=200)
-    StartDate = models.DateTimeField() #TODO: Trigger
-    EndDate = models.DateTimeField()
-    Location = models.CharField(max_length=200)
+    Rank = models.CharField(max_length=200, blank=True )
+    StartDate = models.DateTimeField( blank=True )
+    EndDate = models.DateTimeField( blank=True )
+    Location = models.CharField(max_length=200, blank=True )
     
 class GrantTable(models.Model):
     #Grant_ID = models.IntegerField()
-    PInvest = models.IntegerField()
-    SYear = models.DateTimeField() #TODO: Trigger
-    EYear = models.DateTimeField() #TODO: Trigger
-#TODO:  Amount = Formatted Float
+    Faculty_ID = models.ForeignKey( FacultyTable )
+    PInvest = models.IntegerField( blank=True )
+    SYear = models.DateTimeField( blank=True )
+    EYear = models.DateTimeField( blank=True )
+    Amount = models.FloatField( blank=True )
 
 class InvestTable(models.Model):
     #Invest_ID = models.IntegerField()
-    Invest_Name = models.CharField(max_length=200)
-    Grant_ID = models.IntegerField()
-#TODO:  Portion Formatted Float
- 
+    Faculty_ID = models.ForeignKey( FacultyTable )
+    Invest_Name = models.CharField(max_length=200, blank=True )
+    Grant_ID = models.IntegerField( blank=True )
+    Portion = models.FloatField( blank=True )
+
 class CourseTable(models.Model): 
     #CID = models.IntegerField()
-    CCode = models.CharField(max_length=200)
-    Semester = models.CharField(max_length=200)
-    Year = models.DateTimeField() #TODO: Trigger
-    Name = models.CharField(max_length=200)
-    Info = models.CharField(max_length=200)
-    NumStudents = models.IntegerField()
+    CCode = models.CharField(max_length=200, blank=True, unique=True )
+    Semester = models.CharField(max_length=200, blank=True )
+    Name = models.CharField(max_length=200, blank=True )
+    Info = models.CharField(max_length=200, blank=True )
  
+class FacultyCourseJoinTable( models.Model ):
+    Faculty_ID = models.ForeignKey( FacultyTable )
+    CCode = models.ForeignKey( CourseTable )
+    Year = models.DateTimeField( blank=True )
+    NumStudents = models.IntegerField( blank=True )
+
 class GradTable(models.Model):
     #GID = models.IntegerField()
-    Faculty_ID = models.IntegerField()
-    GName = models.CharField(max_length=200)
-    GDegree = models.CharField(max_length=200)
-    SDate = models.DateTimeField() #TODO: Trigger
-    EDate = models.DateTimeField() #TODO: Trigger
-    Note = models.CharField(max_length=200)
+    Faculty_ID = models.ForeignKey( FacultyTable )
+    GName = models.CharField(max_length=200, blank=True )
+    GDegree = models.CharField(max_length=200, blank=True )
+    SDate = models.DateTimeField( blank=True )
+    EDate = models.DateTimeField( blank=True )
+    Note = models.CharField(max_length=200, blank=True )
