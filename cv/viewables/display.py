@@ -40,7 +40,7 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DistributionOfEffort,
-                form=DistributionOfEffortForm, extra=1)(request.POST,
+                form=DistributionOfEffortForm, extra=1, can_delete=True)(request.POST,
                         request.FILES, queryset=doeData)
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
@@ -50,19 +50,22 @@ def executive(request):
             summary.save()
             summaryFormset.save_m2m()
 
-            
             doe = doeFormset.save(commit=False)
+
+            print doeFormset
+
             # add user to each table row
             for d in doe:
                 d.user = request.user
-            doeFormset.save()
+                d.save()
+
             doeFormset.save_m2m()
             return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DistributionOfEffort,
-                form=DistributionOfEffortForm, extra=1)(queryset=doeData)
+                form=DistributionOfEffortForm, extra=1, can_delete=True)(queryset=doeData)
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py

@@ -2,13 +2,15 @@ from django.forms import ModelForm
 from cv.models import *
 from django import forms
 from django.forms.models import BaseModelFormSet
+import datetime
 
 class DistributionOfEffortForm(ModelForm):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
         
-    delete = forms.BooleanField(required=False, widget=forms.HiddenInput(attrs={'class': 'multiitem_delete'}))
-
+    #remove = forms.BooleanField(required=False, initial=False, widget=forms.HiddenInput(attrs={'class': 'multiitem_delete'}))
+    year = forms.DateField(initial=datetime.date.today)
+    
     class Meta:
         fields = ('year', 'research', 'teaching', 'service')
         model = DistributionOfEffort

@@ -1,8 +1,10 @@
-<span class="clickable additem">add</span>
-<table>
+<table class="multiitem_table">
+    <tr>
+        <td><span class="clickable additem">add</span><td>
+    </tr>
     <tr>
         {% for field in tableFormset.0.visible_fields %}
-            {% if field.label != "Id" and field.label != "Delete" %}
+            {% if field.label != "Delete" %}
                 <th>{{ field.label }}</th>
             {% endif %}
         {% endfor %}
@@ -16,9 +18,11 @@
             <td>
             {% endif %}
                 {{ field }}
+            {% if field.label == "Delete" %}
+                <span class="clickable removeitem">remove</span>
+            {% endif %}
             </td>
             {% endfor %}
-            <td><span class="clickable removeitem">remove</span></td>
         </tr>
     {% endfor %}
 </table>

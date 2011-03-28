@@ -85,19 +85,10 @@ function shortcut_functions() {
     });
 }
 
-function removeYear() {
-    $(this).parents("tr").remove();
-    
-    if ($("#distribution_table tr").length == 1)
-        $("#distribution_table tr:first").hide();
-            
-    return false;
-}
-
 function multiItemTable_functions() {
 
-    $(".additem").each(function(index) {
-        var blankRow = $(this).next().find("tr:last");
+    $(".multiitem_table").each(function(index) {
+        var blankRow = $(this).find("tr:last");
         var totalForms = $(this).siblings("#id_form-TOTAL_FORMS");
         var prefix_regex = new RegExp("((id_form|form)-\\d+)");
 
@@ -110,15 +101,19 @@ function multiItemTable_functions() {
                 this.name = this.name.replace(prefix_regex, "");
         });
 
+        blankRow.hide();        
 
-        blankRow.hide();
+        // decrement the form managers total form count
         $(totalForms).val(parseInt($(totalForms).val()) - 1);
 
-        $(this).click(function() {
+        // add row inserts a duplicate of the last row of the table, which is
+        // hidden
+        $(this).find(".additem").click(function() {
             var newRow = blankRow.clone(true);
             var formCount = parseInt($(totalForms).val());
             var newPrefix = "form-" + formCount;
 
+            // change the name and id of the new row's inputs
             $(newRow).find("input").each(function(index) {
                 if (this.id)
                     this.id = "id_" + newPrefix + this.id;
@@ -126,9 +121,9 @@ function multiItemTable_functions() {
                     this.name = newPrefix + this.name;
             });
 
-            newRow.show();
-            newRow.appendTo($(this).next());
+            newRow.appendTo($(this).parents(".multiitem_table")).show();
 
+            // increment the form manager form count
             $(totalForms).val(formCount + 1);
 
             // when inserting a new date picker element, all previous
@@ -139,37 +134,25 @@ function multiItemTable_functions() {
             return false;
         });
 
+        // replace Django's delete checkboxes with hidden inputs
+        $(this).find("input:checkbox[id $= '-DELETE']").each(function () {
+            $(this).before("<input type='hidden' id='id_" + this.id + "' name='" + this.name + "' />");
+            $(this).remove();
+        });
+
     });
 
+    // delete row marks the hidden delete input as on and hides the row
     $(".removeitem").click(function() {
-        var parentTable = $(this).parents("table");
-        var index_regex = new RegExp("(form-\\d+)");
-
-        var rows;
-
+        $(this).parents("tr").find('input:hidden[id $= "-DELETE"]').val('on');
         $(this).parents("tr").hide();
         $(this).parents("tr").addClass("hidden");
 
-        // mark the hidden delete input as true
-        $(this).closest("td").siblings().find(".multiitem_delete").val(true);
-        rows = $(parentTable).find(".multiitem_row").not(".hidden");
-
-        for (var i = 0, formCount = rows.length; i < formCount; i++) {
-            $(rows.get(i)).not(".hidden").find("input").each(function(index) {
-                if (this.id)
-                    this.id = this.id.replace(index_regex, "form-" + i);
-                if (this.name)
-                    this.name = this.name.replace(index_regex, "form-" + i);
-            });
-        }
-
-        $(parentTable).siblings("#id_form-TOTAL_FORMS").val(rows.length - 1);
-
-            // when inserting a new date picker element, all previous
-            // datepicker's must be destroyed, then recreated
-            $(".datepicker").datepicker("destroy");
-            date_picker();
+        // when inserting a new date picker element, all previous
+        // datepicker's must be destroyed, then recreated
+        $(".datepicker").datepicker("destroy");
+        date_picker();
 
         return false;
-    });
+    });    
 }
