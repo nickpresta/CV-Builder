@@ -8,6 +8,17 @@ from django.forms.formsets import formset_factory
 from cv.forms import *
 from cv.models import *
 
+# utility functions
+
+def getFaculty(user):
+    """ Retrieve a member from the FacultyTable by username, or create one if it
+        does not exist """
+        
+    try:
+        return FacultyTable.objects.get(Username=user)
+    except FacultyTable.DoesNotExist:
+        return FacultyTable(Username=user)
+
 def index(request):
     """ Responsible for showing the index page """
 
@@ -25,45 +36,40 @@ def form1(request):
 def executive(request):
     """ Create a form view for the Distribution of Effort """
 
-    try:
-        facultyId = FacultyTable.objects.get(Username=request.user)
-    except FacultyTable.DoesNotExist:
-        facultyId = FacultyTable(Username=request.user)
+    faculty = getFaculty(request.user)
 
     # get this user's Summary or else create a new one
     try:
-        summaryData = SummaryTable.objects.get(Faculty_ID=facultyId)
+        summaryData = SummaryTable.objects.get(Faculty_ID=faculty)
     except SummaryTable.DoesNotExist:
-        summaryData = SummaryTable(Faculty_ID=facultyId)
+        summaryData = SummaryTable(Faculty_ID=faculty)
 
     # get this user's DoEs or else create a new one
     try:
-        doeData = DoETable.objects.filter(Faculty_ID=facultyId).order_by('Year')
+        doeData = DoETable.objects.filter(Faculty_ID=faculty).order_by('Year')
     except DoETable.DoesNotExist:
-        doeData = DoETable(Faculty_ID=facultyId)
+        doeData = DoETable(Faculty_ID=faculty)
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DoETable,
                 form=DoEForm, extra=1, can_delete=True)(request.POST,
-                        request.FILES, queryset=doeData)
+                        request.FILES, queryset=doeData, prefix="doe")
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
             summary = summaryFormset.save(commit=False)
-            summary.Faculty_ID = facultyId
+            summary.Faculty_ID = faculty
             summary.save()
             summaryFormset.save_m2m()
 
             doe = doeFormset.save(commit=False)
 
-            print doeFormset
-
             # add user to each table row
             for d in doe:
                 #d.Username = request.user
-                d.Faculty_ID = facultyId
+                d.Faculty_ID = faculty
                 d.save()
 
             doeFormset.save_m2m()
@@ -72,7 +78,7 @@ def executive(request):
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True)(queryset=doeData)
+                form=DoEForm, extra=1, can_delete=True)(queryset=doeData, prefix="doe")
 
     # Set up widget HTML properties
     # TODO: not sure if this should be here or in forms.py

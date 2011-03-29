@@ -86,45 +86,43 @@ function shortcut_functions() {
 }
 
 function multiItemTable_functions() {
+    var removeNum_regex = new RegExp("(-\\d+-)");
+    var addNum_regex = new RegExp("(--)");
 
     $(".multiitem_table").each(function(index) {
         var blankRow = $(this).find("tr:last");
-        var totalForms = $(this).siblings("#id_form-TOTAL_FORMS");
-        var prefix_regex = new RegExp("((id_form|form)-\\d+)");
+        var totalFormsElem = $(this).siblings("input:hidden[id $= '-TOTAL_FORMS']");        
 
-        // take the last row of the table and make it the "blank row", which will
-        // be cloned to make new rows
+        // last row of the table is the "blank row", cloned to make new rows
         $(blankRow).find("input").each(function(index) {
             if (this.id)
-                this.id = this.id.replace(prefix_regex, "");
+                this.id = this.id.replace(removeNum_regex, "--");
             if (this.name)
-                this.name = this.name.replace(prefix_regex, "");
+                this.name = this.name.replace(removeNum_regex, "--");
         });
 
         blankRow.hide();        
 
         // decrement the form managers total form count
-        $(totalForms).val(parseInt($(totalForms).val()) - 1);
+        $(totalFormsElem).val(parseInt($(totalFormsElem).val()) - 1);
 
-        // add row inserts a duplicate of the last row of the table, which is
-        // hidden
+        // add new row, insert duplicate of last row (blankRow) in table
         $(this).find(".additem").click(function() {
             var newRow = blankRow.clone(true);
-            var formCount = parseInt($(totalForms).val());
-            var newPrefix = "form-" + formCount;
+            var formCount = parseInt($(totalFormsElem).val());
 
-            // change the name and id of the new row's inputs
+            // change the numbering of the new row's inputs
             $(newRow).find("input").each(function(index) {
                 if (this.id)
-                    this.id = "id_" + newPrefix + this.id;
+                    this.id = this.id.replace(addNum_regex, "-" + formCount + "-");
                 if (this.name)
-                    this.name = newPrefix + this.name;
+                    this.name = this.name.replace(addNum_regex, "-" + formCount + "-");
             });
 
             newRow.appendTo($(this).parents(".multiitem_table")).show();
 
             // increment the form manager form count
-            $(totalForms).val(formCount + 1);
+            $(totalFormsElem).val(formCount + 1);
 
             // when inserting a new date picker element, all previous
             // datepicker's must be destroyed, then recreated
@@ -136,15 +134,18 @@ function multiItemTable_functions() {
 
         // replace Django's delete checkboxes with hidden inputs
         $(this).find("input:checkbox[id $= '-DELETE']").each(function () {
-            $(this).before("<input type='hidden' id='id_" + this.id + "' name='" + this.name + "' />");
+            $(this).before("<input type='hidden' id='" + this.id + "' name='" + this.name + "' />");
             $(this).remove();
         });
 
     });
 
-    // delete row marks the hidden delete input as on and hides the row
+    // delete row
     $(".removeitem").click(function() {
+        // mark hidden delete input as on
         $(this).parents("tr").find('input:hidden[id $= "-DELETE"]').val('on');
+        
+
         $(this).parents("tr").hide();
         $(this).parents("tr").addClass("hidden");
 
