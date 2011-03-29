@@ -9,7 +9,7 @@ class DoEForm(ModelForm):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
         
-    Year = forms.DateField(initial=datetime.date.today)
+    Year = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
     
     class Meta:
         fields = ('Year', 'Research', 'Teaching', 'Service')
@@ -35,8 +35,52 @@ class DoEForm(ModelForm):
             del cleaned_data['Service']
 
         return cleaned_data
+        
+class FacultyNameDeptForm(ModelForm):
+    Faculty_GName = forms.CharField(label='Given Name')
+    Faculty_SName = forms.CharField(label='Surname')
+
+    class Meta:
+        fields = ('Faculty_GName', 'Faculty_SName', 'Department')
+        model = FacultyTable
+        
+class AccredForm(ModelForm):
+    Date = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
+    class Meta:
+        model = AccredTable
+        fields = ('Degree', 'Discipline', 'Institution', 'Date')
+        widgets = {
+            'Degree': forms.Textarea(attrs={'class': 'mceNoEditor'}),
+            'Discipline': forms.Textarea(attrs={'class': 'mceNoEditor'}),
+            'Institution': forms.Textarea(attrs={'class': 'mceNoEditor'}),
+        }
+
+class HonorForm(ModelForm):
+    Honor_desc = forms.CharField(label='Description', widget=forms.Textarea(attrs={'class': 'mceNoEditor'}))
+    
+    class Meta:
+        model = HonorTable
+        fields = ('Honor_desc',)
+    
+class FacultyStartForm(ModelForm):
+    Faculty_Start = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    class Meta:
+        fields = ('Faculty_Start',)
+        model = FacultyTable
 
 class ExecutiveSummaryForm(ModelForm):
     class Meta:
         fields = ('Executive',)
         model = SummaryTable
+        widgets = {
+            'Executive': forms.Textarea(attrs={'rows': '50', 'cols': '40',})
+        }
+        
+class PositionForm(ModelForm):
+    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    class Meta:
+        fields = ('Rank', 'StartDate', 'EndDate', 'Location')
+        
+

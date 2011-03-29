@@ -57,7 +57,7 @@ class FacultyTable(models.Model):
     Faculty_SName = models.CharField(max_length=200)
     Review_Term = models.IntegerField( blank=True )
     Department = models.CharField(max_length=200, blank=True )
-    Faculty_Start = models.DateTimeField( blank=True )
+    Faculty_Start = models.DateField( blank=True )
     
 class DoETable(models.Model):
     #DoE_ID = models.IntegerField() #TODO: 

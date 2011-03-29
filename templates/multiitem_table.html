@@ -18,11 +18,11 @@
             <td>
             {% endif %}
                 {{ field }}
-            {% if field.label == "Delete" %}
-                <span class="clickable removeitem">remove</span>
-            {% endif %}
             </td>
             {% endfor %}
+            <td>
+                <span class="clickable removeitem">remove</span>
+            </td>
         </tr>
     {% endfor %}
 </table>

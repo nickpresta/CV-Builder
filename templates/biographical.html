@@ -6,15 +6,6 @@
 
 <script type="text/javascript">
 
-$(document).ready(function() {
-    $(".mceNoEditor").focus(function() {
-        $(this).parent().parent().find(".mceNoEditor").height(40);
-    });
-    $(".mceNoEditor").blur(function() {
-        $(this).parent().parent().find(".mceNoEditor").height(20);
-    });
-});
-
 </script>
 
 {% endblock %}
@@ -32,75 +23,37 @@ $(document).ready(function() {
 <form>
     <fieldset>
         <legend>a</legend>
-        <div style="clear: both">
-            <div style="float: left; width: 100px;">
-                <label for="name">Name</label>
-            </div>
-            <div style="float: right">
-                <input type="text" id="name" />
-            </div>
-        </div>
-        <div style="clear: both">
-            <div style="float: left; width: 100px;">
-                <label for="department">Department</label>
-            </div>
-            <div style="float: right">
-                <input type="text" id="department" />
-            </div>
-        
-        </div>
-        
-        <div style="clear:both"></div>
-        
+        {% with facultyNameDeptForm as form %}
+            {% include "inline_form.html" %}
+        {% endwith %}
     </fieldset>
     <fieldset>
         <legend>b - Degrees</legend>
-        <span class="clickable" id="degrees_adddegree">Add Degree</span>
-        <table id="degrees_table">
-            <tr>
-                <th>Degree</th>
-                <th>Discipline</th>
-                <th>Universitiy</th>
-                <th>Date</th>
-            </tr>
-            <tr id="degree_blankrow">
-                <td><textarea class="mceNoEditor" style="overflow-y: hidden; height: 20px; resize: none;"></textarea></td>
-                <td><textarea class="mceNoEditor" style="overflow-y: hidden; height: 20px; resize: none;"></textarea></td>
-                <td><textarea class="mceNoEditor" style="overflow-y: hidden; height: 20px; resize: none;"></textarea></td>
-                <td><input type="text" class="datepicker mceNoEditor" style="height: 20px;" size="10em"></td>
-                <td><span class="clickable degrees_removedegree">remove</span></td>
-            </tr>
-        </table>
+        {{ accredFormset.management_form }}
+        {% with accredFormset.forms as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
     </fieldset>
     <fieldset>
         <legend>c - Major Honours & Fellowships</legend>
-        <span class="clickable" id="">Add New</span>
-        <ul>
-            <li><input type="text" /> <span class="clickable" id="">remove</span></li>
-        </ul>
+        {{ honorFormset.management_form }}
+        {% with honorFormset.forms as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
     </fieldset>
     <fieldset>
         <legend>d - Date of first appointment at University of Guelph</legend>
-        <input type="text" class="datepicker" readonly="readonly" size="10em" />
+        {% with facultyStartForm as form %}
+            {% include "inline_form.html" %}
+        {% endwith %}
     </fieldset>
 
     <fieldset>
         <legend>e - Positions held at University of Guelph and dates</legend>
-        <span class="clickable" id="">Add Position</span>
-        <table id="">
-            <tr>
-                <th>Rank</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
-            </tr>
-            <tr id="">
-                <td><input type="text" /></td>
-                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
-                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
-                <td><span class="clickable">remove</span></td>
-            </tr>
-        </table>
+        {{ positionFormset.management_form }}
+        {% with positionFormset.forms as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
     </fieldset>
     
     <fieldset>

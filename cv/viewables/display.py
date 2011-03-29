@@ -52,10 +52,10 @@ def executive(request):
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
-                instance=summaryData, prefix="summary")
+                instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
                 form=DoEForm, extra=1, can_delete=True)(request.POST,
-                        request.FILES, queryset=doeData, prefix="doe")
+                        request.FILES, queryset=doeData, prefix='doe')
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             # Save the form data, ensure they are updating as themselves
@@ -68,7 +68,6 @@ def executive(request):
 
             # add user to each table row
             for d in doe:
-                #d.Username = request.user
                 d.Faculty_ID = faculty
                 d.save()
 
@@ -76,24 +75,58 @@ def executive(request):
             return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
-        summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix="summary")
+        summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True)(queryset=doeData, prefix="doe")
-
-    # Set up widget HTML properties
-    # TODO: not sure if this should be here or in forms.py
-
-    for form in doeFormset.forms:
-        form.fields['Year'].widget.attrs['class'] = 'datepicker'
-
-    summaryFormset.fields['Executive'].widget.attrs['rows'] = '50'
-    summaryFormset.fields['Executive'].widget.attrs['cols'] = '40'
+                form=DoEForm, extra=1, can_delete=True)(queryset=doeData, prefix='doe')
 
     return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 
 @login_required
 def biographical(request):
-    return direct_to_template(request, 'biographical.html', {})
+    faculty = getFaculty(request.user)
+    
+    # get this user's degrees or else create a new one
+    try:
+        accredData = AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date')
+    except AccredTable.DoesNotExist:
+        accredData = AccredTable(Faculty_ID=faculty)
+        
+    try:
+        honorData = HonorTable.objects.filter(Faculty_ID=faculty)    
+    except HonorTable.DoesNotExist:
+        honorData = HonorTable(Faculty_ID=faculty)
+        
+    try:
+        positionData = PositionTable.objects.filter(Faculty_ID=faculty)
+    except PositionTable.DoesNotExist:
+        positionData = PositionTable(FacultyID=faculty)
+    
+    if request.method == 'POST':
+        facultyNameDeptForm = FacultyNameDeptForm(request.POST, request.FILES,
+                instance=faculty, prefix='namedept')
+    else:
+        facultyNameDeptForm = FacultyNameDeptForm(instance=faculty, prefix='namedept')
+        
+        AccredFormset = modelformset_factory(AccredTable, form=AccredForm)
+        accredFormset = AccredFormset(queryset=accredData, prefix='accred')
+        
+        HonorFormset = modelformset_factory(HonorTable, form=HonorForm)
+        honorFormset = HonorFormset(queryset=honorData, prefix='honor')
+        
+        facultyStartForm = FacultyStartForm(instance=faculty, prefix='facultystart')
+        
+        PositionFormset = modelformset_factory(PositionTable, form=PositionForm)
+        positionFormset = PositionFormset(queryset=positionData, prefix='position')
+        
+    #modelformset_factory(FacultyTable, fields=('Faculty_GName', 'Faculty_SName', 'Department'))
+
+    return direct_to_template(request, 'biographical.html', {
+        'facultyNameDeptForm': facultyNameDeptForm,
+        'accredFormset': accredFormset,
+        'honorFormset': honorFormset,
+        'facultyStartForm': facultyStartForm,
+        'positionFormset': positionFormset,
+    })
 
 @login_required
 def offCampusRecognition(request):

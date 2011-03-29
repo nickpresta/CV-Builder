@@ -186,6 +186,44 @@ div.clear:after {
     visibility: hidden;
 }
 
+/** inline_form classes and styles **/
+div.field_label {
+    width: 150px;
+    padding-right: 15px;
+    float: left;
+    text-align: left;
+    font-weight: bold;
+}
+
+div.field_wrapper {
+    float: left;
+}
+
+/** multiitem_table classes and styles **/
+.multiitem_table textarea {
+    height: 20px;
+    overflow: hidden;
+    resize: none;
+    white-space: nowrap;
+}
+
+.multiitem_table input {
+    width: 100px
+}
+
+.multiitem_table textarea:focus {
+    height: 40px;
+    white-space: normal;
+}
+
+.multiitem_table td {
+    vertical-align: top;
+}
+
+.multiitem_table th {
+    text-align: left;
+}
+
 /** Misc classes and styles **/
 div#content table {
     width: 90%;
@@ -193,10 +231,6 @@ div#content table {
 
 div.shortcuts {
     display: inline;
-}
-
-fieldset#distribution_fieldset input {
-    width: 100%;
 }
 
 textarea {
@@ -260,6 +294,10 @@ input.expandlist[type="button"] {
     height: 18px;
     padding: 0px;
     margin-left: -22px;
+}
+
+.datepicker {
+    width: 75px;
 }
 
 /* Firefox hack, removes dotted outline of
