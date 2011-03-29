@@ -29,6 +29,7 @@
             <div id="navigation_wrapper">
                 <img src="/media/img/uog_icon_bot.jpg" width="100" height="50" />
                 <ul id="navlist">
+                    <li><a href="{% url cv-export %}" class="navitem">Export CV</a></li>
                     <li><a href="{% url cv-editcv %}" class="navitem">Edit CV</a></li>
                     <li><a href="{% url cv-form1 %}" class="navitem">Form 1</a></li>
                     {% if user.is_authenticated %}

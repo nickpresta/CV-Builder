@@ -25,13 +25,16 @@ def form1(request):
 def executive(request):
     """ Create a form view for the Distribution of Effort """
 
-    facultyId = FacultyTable.objects.get(Username=request.user)
+    try:
+        facultyId = FacultyTable.objects.get(Username=request.user)
+    except FacultyTable.DoesNotExist:
+        facultyId = FacultyTable(Username=request.user)
 
     # get this user's Summary or else create a new one
     try:
         summaryData = SummaryTable.objects.get(Faculty_ID=facultyId)
     except SummaryTable.DoesNotExist:
-        summaryData = SummaryTable(Faculty_ID=facultyId)    
+        summaryData = SummaryTable(Faculty_ID=facultyId)
 
     # get this user's DoEs or else create a new one
     try:

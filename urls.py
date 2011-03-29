@@ -1,6 +1,7 @@
 from django.conf.urls.defaults import *
 from django.conf import settings
 
+from django.contrib.auth.decorators import login_required
 from django.views.generic.simple import redirect_to, direct_to_template
 
 # Uncomment the next two lines to enable the admin:
@@ -31,11 +32,13 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^Courses/$', 'Courses', name='cv-Courses'),
     url(r'^ResearchActivity/$', 'ResearchActivity', name='cv-ResearchActivity'),
     url(r'^doe/$', 'distribution_of_effort', name='cv-doe'),
+    url(r'^export_download/$', 'export_download', name='cv-export-download'),
 )
 
 urlpatterns += patterns('',
     (r'^$', redirect_to, {'url': '/index/'}),
-    (r'^export/$', direct_to_template, {'template': 'export.html'}),
+    url(r'^export/$', login_required(direct_to_template), {'template': 'export.html'},
+        name="cv-export"),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
         'login.html'}, name="cv-login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page':

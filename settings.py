@@ -103,6 +103,7 @@ INSTALLED_APPS = (
 AUTH_PROFILE_MODULE = "cv.userprofile"
 
 LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
 
 # For LDAP auth
 AUTH_LDAP_SERVER_URI = "ldap://directory.uoguelph.ca"

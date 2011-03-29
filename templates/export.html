@@ -21,6 +21,10 @@
             div#overlay a:hover {
                 text-decoration: none;
             }
+            div#overlay span {
+                position: absolute;
+                left: 1em;
+            }
             div#document {
                 padding: 1em;
             }
@@ -29,40 +33,51 @@
             body {
                 margin: 0;
             }
-
-
+            /* Avoid page break after the last page */
+            div#document:last-child {
+                page-break-after: none;
+            }
             div#cover_page {
                 margin-top: 10em;
                 text-align: center;
             }
             div#cover_page h1 {
+                font-size: 140%;
                 line-height: 2em;
             }
             div#cover_page ul {
-                font-size: 120%;
+                font-size: 110%;
                 width: 50%;
-                margin: 5em auto;
+                margin: 4em auto;
                 list-style: none;
                 text-align: left;
             }
             div#cover_page ul li {
                 margin: 1em 0;
             }
-
             h2 {
                 text-align: center;
                 text-transform: uppercase;
             }
-
-            div#executive_summary {
+            h5 {
+                font-size: 100%;
+                font-weight: normal;
+            }
+            p {
                 text-align: justify;
             }
-
-            div#biographical_information table td {
+            table td {
                 vertical-align: top;
             }
-            div#biographical_information table th {
+            table th {
                 text-align: left;
+            }
+            table tr td em {
+                font-style: normal;
+                text-decoration: underline;
+            }
+            dt {
+                font-weight: bold;
             }
         </style>
         <style type="text/css" media="print" title="Print">
@@ -77,8 +92,9 @@
     </head>
     <body>
         <div id="overlay">
+            <span><a href="{% url cv-index %}">&laquo; Back home</a></span>
             This is a preview of your CV. To export this document, please click
-            <a href="#">here</a>.
+            <a href="{% url cv-export-download %}">here</a>.
         </div>
         <div id="document">
             <div class="page" id="cover_page">
@@ -132,6 +148,7 @@
             <div class="page" id="biographical_information">
                 <h2>Part 2: Biographical Information</h2>
                 <table width="100%">
+                    <col width="1em" />
                     <tr>
                         <td>(a)</td>
                         <td><strong>Name</strong>:</td>
@@ -158,8 +175,316 @@
                         <td>University of Guelph</td>
                         <td>January 1st, 2012</td>
                     </tr>
+                    <tr>
+                        <td>(c)</td>
+                        <th colspan="4">Major Honours &amp; Fellowships</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="4">
+                            <ul>
+                                <li>The Fellowship of the Ring</li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>(d)</td>
+                        <th colspan="3">Date of first appointment at the University of
+                            Guelph:</th>
+                        <td>March 2011</td>
+                    </tr>
+                    <tr>
+                        <td>(e)</td>
+                        <th colspan="4">Positions help at University of Guelph and
+                            dates</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th colspan="2">Rank</th>
+                        <th colspan="2">From</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td colspan="2">Supreme Awesome Overlord</td>
+                        <td colspan="2">Now - Forever</td>
+                    </tr>
+                    <tr>
+                        <td>(f)</td>
+                        <th colspan="4">Experience prior to appointment at Guelph</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <th>Position</th>
+                        <th colspan="2">Location</th>
+                        <th>Dates</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Overlord</td>
+                        <td colspan="2">Toronto, Ontario, Canada</td>
+                        <td>Forever</td>
+                    </tr>
+                    <tr>
+                        <td>(g)</td>
+                        <th colspan="4">Visiting Professorship, etc. elsewhere since
+                            appointment</th>
+                    </tr>
+                     <tr>
+                        <td></td>
+                        <th>Position</th>
+                        <th colspan="2">Location</th>
+                        <th>Dates</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>Overlord</td>
+                        <td colspan="2">Toronto, Ontario, Canada</td>
+                        <td>Forever</td>
+                    </tr>
                 </table>
             </div>
-        </div>
+            <div class="page" id="cummulative_information_record">
+                <h2>Cummulative Information Record</h2>
+                <h3>3A Research</h3>
+                <h4>(a) Summary of Research Activity</h4>
+                <dl>
+                    <dt>Title</dt>
+                    <dd>
+                        <p>Here is some text!</p>
+                    </dd>
+                    <dt>Title</dt>
+                    <dd>
+                        <ul>
+                            <li>Here is a list inside here!</li>
+                        </ul>
+                    </dd>
+                </dl>
+                <h4>(b) Six-year Publication List</h4>
+                <h4>(c) Research Grants and Contracts Held</h4>
+                <table width="100%">
+                    <tr>
+                        <th>Name of Major Investigators</th>
+                        <th>Agency, Type of Support, Project Title</th>
+                        <th>Amount Per Year</th>
+                        <th>Years of Tenure</th>
+                    </tr>
+                    <tr>
+                        <td><em>Nicholas Presta</em>,<br />
+                            Other Guy,<br />
+                            Someone else<br /></td>
+                        <td><strong>Some title</strong></td>
+                        <td>$9,001</td>
+                        <td>2010 - 2011</td>
+                    </tr>
+                </table>
+                <h4>(d) Research Grants Applied For</h4>
+                <table width="100%">
+                    <tr>
+                        <th>Name of Major Investigators</th>
+                        <th>Agency, Type of Support, Project Title</th>
+                        <th>Amount Per Year</th>
+                        <th>Years of Tenure</th>
+                    </tr>
+                    <tr>
+                        <td><em>Nicholas Presta</em>,<br />
+                            Other Guy,<br />
+                            Someone else<br /></td>
+                        <td><strong>Some title</strong></td>
+                        <td>$9,001</td>
+                        <td>2012</td>
+                    </tr>
+                </table>
+                <h4>(e) Professional Consulting</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(f) Patents</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(g) Other Activities</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(h) Recognition of Research and Scholarship</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h3>3B Teaching and Learning</h3>
+                <h4>(a) Report on Teaching</h4>
+                <dl>
+                    <dt>Title</dt>
+                    <dd>
+                        <p>Here is some text!</p>
+                    </dd>
+                    <dt>Title</dt>
+                    <dd>
+                        <ul>
+                            <li>Here is a list inside here!</li>
+                        </ul>
+                    </dd>
+                </dl>
+                <h4>(b) Courses</h4>
+                <table width="100%">
+                    <tr>
+                        <td>Fall</td>
+                        <td>2011</td>
+                        <td>CIS 9001: Principles of Awesome</td>
+                        <td>42</td>
+                    </tr>
+                </table>
+                <h4>(c) Contributions to Student Counselling</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(d) Graduate Advising and Examining</h4>
+                <p>8 PhD students advised to completion (past 6 years)</p>
+                <p>8 MSc students advised to completion (past 6 years)</p>
+                <h5>(i) Advisor (past 6 years)</h5>
+                <table width="100%">
+                    <tr>
+                        <td>Nicholas Presta</td>
+                        <td>Bachelor of Computer Science</td>
+                        <td>Sept. 2008</td>
+                    </tr>
+                </table>
+                <h5>(ii) Advisor committee member</h5>
+                <table width="100%">
+                    <tr>
+                        <td>Nicholas Presta</td>
+                        <td>Bachelor of Computer Science</td>
+                        <td>Sept. 2008</td>
+                    </tr>
+                </table>
+                <h5>(iii) Examining committee member</h5>
+                <table width="100%">
+                    <tr>
+                        <td>Nicholas Presta</td>
+                        <td>Bachelor of Computer Science</td>
+                        <td>Sept. 2008</td>
+                    </tr>
+                </table>
+                <h4>(e) Major Work in Graduate and Undergraduate Course
+                    Development</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(f) Recognition of Teaching Ability and Achievement</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(g) Support Received for Major Teaching Projects </h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(h) Scholarship in Education</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h4>(i) Other Contributions to Education</h4>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+                <h3>3C Service and Administrative Contributions</h3>
+                <h4>(a) Department Committees and Similar Bodies with Dates</h4>
+                <table width="100%">
+                    <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>C</td>
+                        <td></td>
+                        <td>I was an awesome chair</td>
+                    </tr>
+                     <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>M</td>
+                        <td>Someone else</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <h4>(b) College Committees and Similar Bodies with Dates</h4>
+                <table width="100%">
+                    <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>C</td>
+                        <td></td>
+                        <td>I was an awesome chair</td>
+                    </tr>
+                     <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>M</td>
+                        <td>Someone else</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <h4>(c) University Committees and Similar Bodies with Dates</h4>
+                <table width="100%">
+                    <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>C</td>
+                        <td></td>
+                        <td>I was an awesome chair</td>
+                    </tr>
+                     <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>M</td>
+                        <td>Someone else</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <h4>(d) External/Professional Committees and Similar Bodies with
+                Dates</h4>
+                <table width="100%">
+                    <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>C</td>
+                        <td></td>
+                        <td>I was an awesome chair</td>
+                    </tr>
+                     <tr>
+                        <td>Fall/2011 to Winter/2012</td>
+                        <td>Committee of Stuff</td>
+                        <td>M</td>
+                        <td>Someone else</td>
+                        <td></td>
+                    </tr>
+                </table>
+                <h3>3D Off-Campus Recognition</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
+                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
+                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
+                sed ante euismod vitae congue mauris dignissim.</p>
+            </div>
+            <div class="page" id="lifetime_publication_list">
+                <h2>Part 4: Lifetime Publication List</h2>
+            </div>
+        </div> <!-- end doc -->
     </body>
 </html>
