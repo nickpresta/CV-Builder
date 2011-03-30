@@ -5,7 +5,31 @@ from django import forms
 from django.forms.models import BaseModelFormSet
 import datetime
 
-class DoEForm(ModelForm):
+class FormMixin(ModelForm):
+    def save(self, commit=True, Faculty_ID=None):
+        form = super(FormMixin, self).save(commit=False)
+        
+        if Faculty_ID:
+            form.Faculty_ID = Faculty_ID
+        
+        if commit:
+            form.save()
+
+        return form
+        
+        
+class FormsetMixin(BaseModelFormSet):
+    def save(self, commit=True, Faculty_ID=None):
+        forms = super(FormsetMixin, self).save(commit=False)
+        for form in forms:
+            if Faculty_ID:
+                form.Faculty_ID = Faculty_ID
+            if commit:
+                form.save()
+        return forms
+
+
+class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
         
@@ -36,7 +60,7 @@ class DoEForm(ModelForm):
 
         return cleaned_data
         
-class FacultyNameDeptForm(ModelForm):
+class FacultyNameDeptForm(FormMixin):
     Faculty_GName = forms.CharField(label='Given Name')
     Faculty_SName = forms.CharField(label='Surname')
 
@@ -44,7 +68,7 @@ class FacultyNameDeptForm(ModelForm):
         fields = ('Faculty_GName', 'Faculty_SName', 'Department')
         model = FacultyTable
         
-class AccredForm(ModelForm):
+class AccredForm(FormMixin):
     Date = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
@@ -56,20 +80,20 @@ class AccredForm(ModelForm):
             'Institution': forms.Textarea(attrs={'class': 'mceNoEditor'}),
         }
 
-class HonorForm(ModelForm):
+class HonorForm(FormMixin):
     Honor_desc = forms.CharField(label='Description', widget=forms.Textarea(attrs={'class': 'mceNoEditor'}))
     
     class Meta:
         model = HonorTable
         fields = ('Honor_desc',)
     
-class FacultyStartForm(ModelForm):
+class FacultyStartForm(FormMixin):
     Faculty_Start = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
     class Meta:
         fields = ('Faculty_Start',)
         model = FacultyTable
 
-class ExecutiveSummaryForm(ModelForm):
+class ExecutiveSummaryForm(FormMixin):
     class Meta:
         fields = ('Executive',)
         model = SummaryTable
@@ -77,28 +101,28 @@ class ExecutiveSummaryForm(ModelForm):
             'Executive': forms.Textarea(attrs={'rows': '50', 'cols': '40',})
         }
         
-class PositionHeldForm(ModelForm):
+class PositionHeldForm(FormMixin):
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Rank')
         model = PositionHeldTable
 
-class PositionPriorForm(ModelForm):
+class PositionPriorForm(FormMixin):
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Position')
         model = PositionPriorTable
 
-class PositionElsewhereForm(ModelForm):
+class PositionElsewhereForm(FormMixin):
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Position')
         model = PositionElsewhereTable
 
 
-class OffCampusRecognitionForm(ModelForm):
+class OffCampusRecognitionForm(FormMixin):
     class Meta:
         fields = ('OffCampus',)
         model = SummaryTable 
 
-class ResearchActivityForm(ModelForm):
+class ResearchActivityForm(FormMixin):
     class Meta:
         fields = ('Research',)
         model = SummaryTable 

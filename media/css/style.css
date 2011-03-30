@@ -339,7 +339,7 @@ span.clickable {
     font-size: 11px;
 }
 
-td.error input {
+td.error, div.error input {
     border: 3px solid red;
 }
 

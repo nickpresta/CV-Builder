@@ -1,5 +1,11 @@
 {% for field in form %}
     <div class="field_label">{{ field.label_tag }}</div>
-    <div class="field_wrapper">{{ field }}</div>
+    {% if field.errors %}
+        <div class="field_wrapper error">
+    {% else %}
+        <div class="field_wrapper">
+    {% endif %}
+        {{ field }}
+    </div>
     <div class="clear"></div>
 {% endfor %}

@@ -91,7 +91,7 @@ class AccredTable(models.Model):
     Degree = models.CharField(max_length=200, blank=True )
     Discipline = models.CharField(max_length=200, blank=True )
     Institution = models.CharField(max_length=200, blank=True )
-    Date = models.DateTimeField( blank=True )
+    Date = models.DateField( blank=True )
     
 class HonorTable(models.Model):
     #Honor_ID = models.IntegerField()
@@ -102,31 +102,31 @@ class HonorTable(models.Model):
 #    #Pos_ID = models.IntegerField()
 #    Faculty_ID = models.ForeignKey(FacultyTable)
 #    #Rank = models.CharField(max_length=200, blank=True )
-#    StartDate = models.DateTimeField( blank=True )
-#    EndDate = models.DateTimeField( blank=True )
+#    StartDate = models.DateField( blank=True )
+#    EndDate = models.DateField( blank=True )
 #    Location = models.CharField(max_length=200, blank=True )
 
 class PositionHeldTable(models.Model):
     #Pos_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
     Rank = models.CharField(max_length=200, blank=True )
-    StartDate = models.DateTimeField( blank=True )
-    EndDate = models.DateTimeField( blank=True )
+    StartDate = models.DateField( blank=True )
+    EndDate = models.DateField( blank=True )
     Location = models.CharField(max_length=200, blank=True )
 
 class PositionPriorTable(models.Model):
     #Pos_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
-    StartDate = models.DateTimeField( blank=True )
-    EndDate = models.DateTimeField( blank=True )
+    StartDate = models.DateField( blank=True )
+    EndDate = models.DateField( blank=True )
     Location = models.CharField(max_length=200, blank=True )
     Position = models.CharField(max_length=200, blank=True )
 
 class PositionElsewhereTable(models.Model):
     #Pos_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
-    StartDate = models.DateTimeField( blank=True )
-    EndDate = models.DateTimeField( blank=True )
+    StartDate = models.DateField( blank=True )
+    EndDate = models.DateField( blank=True )
     Location = models.CharField(max_length=200, blank=True )
     Position = models.CharField(max_length=200, blank=True )
     
@@ -134,8 +134,8 @@ class GrantTable(models.Model):
     #Grant_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey( FacultyTable )
     PInvest = models.IntegerField( blank=True )
-    SYear = models.DateTimeField( blank=True )
-    EYear = models.DateTimeField( blank=True )
+    SYear = models.DateField( blank=True )
+    EYear = models.DateField( blank=True )
     Amount = models.FloatField( blank=True )
 
 class InvestTable(models.Model):
@@ -154,7 +154,7 @@ class CourseTable(models.Model):
 class FacultyCourseJoinTable( models.Model ):
     Faculty_ID = models.ForeignKey( FacultyTable )
     CCode = models.ForeignKey( CourseTable )
-    Year = models.DateTimeField( blank=True )
+    Year = models.DateField( blank=True )
     Semester = models.CharField(max_length=200, blank=True )
     NumStudents = models.IntegerField( blank=True )
 
@@ -163,8 +163,8 @@ class GradTable(models.Model):
     Faculty_ID = models.ForeignKey( FacultyTable )
     GName = models.CharField(max_length=200, blank=True )
     GDegree = models.CharField(max_length=200, blank=True )
-    SDate = models.DateTimeField( blank=True )
-    EDate = models.DateTimeField( blank=True )
+    SDate = models.DateField( blank=True )
+    EDate = models.DateField( blank=True )
     Note = models.CharField(max_length=200, blank=True )
 
 class ServiceTable(models.Model):

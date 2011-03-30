@@ -13,62 +13,68 @@
 {% block content %}
 
 <h1>Biographical Information</h1>
-{% if doeFormset.errors  %}
-{% for error in doeFormset.errors %}
-    {{ error|escape }}
+
+{% for name, formset in formsets.items %}
+    {% if formset.errors  %}
+        {% for error in formset.errors %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
 {% endfor %}
-{% endif %}
-{{ summaryFormset.errors.as_ul }}
+{% for name, form in forms.items %}
+    {{ form.errors.as_ul }}
+{% endfor %}
 
-<form>
-    <fieldset>
+<form method="post" action="{% url cv-biographical %}">
+    {% csrf_token %}
+    <fieldset id="name">
         <legend>a</legend>
-        {% with facultyNameDeptForm as form %}
+        {% with forms.facultyNameDeptForm as form %}
             {% include "inline_form.html" %}
         {% endwith %}
     </fieldset>
-    <fieldset>
+    <fieldset id="degrees">
         <legend>b - Degrees</legend>
-        {{ accredFormset.management_form }}
-        {% with accredFormset.forms as tableFormset %}
+        {{ formsets.accredFormset.management_form }}
+        {% with formsets.accredFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
-    <fieldset>
+    <fieldset id="honours">
         <legend>c - Major Honours & Fellowships</legend>
-        {{ honorFormset.management_form }}
-        {% with honorFormset.forms as tableFormset %}
+        {{ formsets.honorFormset.management_form }}
+        {% with formsets.honorFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
-    <fieldset>
+    <fieldset id="appointed">
         <legend>d - Date of first appointment at University of Guelph</legend>
-        {% with facultyStartForm as form %}
+        {% with forms.facultyStartForm as form %}
             {% include "inline_form.html" %}
         {% endwith %}
     </fieldset>
-
-    <fieldset>
+    <fieldset id="positions">
         <legend>e - Positions held at University of Guelph and dates</legend>
-        {{ positionHeldFormset.management_form }}
-        {% with positionHeldFormset.forms as tableFormset %}
+        {{ formsets.positionHeldFormset.management_form }}
+        {% with formsets.positionHeldFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     
-    <fieldset>
+    <fieldset id="experience">
         <legend>f - Experince prior to appointment at Guelph</legend>
-        {{ positionPriorFormset.management_form }}
-        {% with positionPriorFormset.forms as tableFormset %}
+        {{ formsets.positionPriorFormset.management_form }}
+        {% with formsets.positionPriorFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}    </fieldset>
-    <fieldset>
+    <fieldset id="elsewhere">
         <legend>g - Visiting Professorships, etc. elsewhere since appointment</legend>
-        {{ positionElsewhereFormset.management_form }}
-        {% with positionElsewhereFormset.forms as tableFormset %}
+        {{ formsets.positionElsewhereFormset.management_form }}
+        {% with formsets.positionElsewhereFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
+    <input type="submit" value="Save" />
 </form>
 
 

@@ -58,30 +58,19 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True)(request.POST,
+                form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(request.POST,
                         request.FILES, queryset=doeData, prefix='doe')
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
-            # Save the form data, ensure they are updating as themselves
-            summary = summaryFormset.save(commit=False)
-            summary.Faculty_ID = faculty
-            summary.save()
-            summaryFormset.save_m2m()
+            summaryFormset.save(Faculty_ID=faculty)
+            doeFormset.save(Faculty_ID=faculty)
 
-            doe = doeFormset.save(commit=False)
-
-            # add user to each table row
-            for d in doe:
-                d.Faculty_ID = faculty
-                d.save()
-
-            doeFormset.save_m2m()
             return HttpResponseRedirect('/executive/')
     else:
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True)(queryset=doeData, prefix='doe')
+                form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(queryset=doeData, prefix='doe')
 
     return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 
@@ -89,64 +78,87 @@ def executive(request):
 def biographical(request):
     faculty = getFaculty(request.user)
     
-    # get this user's degrees or else create a new one
-    try:
-        accredData = AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date')
-    except AccredTable.DoesNotExist:
-        accredData = AccredTable(Faculty_ID=faculty)
-        
-    try:
-        honorData = HonorTable.objects.filter(Faculty_ID=faculty)    
-    except HonorTable.DoesNotExist:
-        honorData = HonorTable(Faculty_ID=faculty)
+    formInfo = {
+        'facultyNameDeptForm': (
+            FacultyNameDeptForm,
+            faculty,
+            'namedept',
+        ),
+        'facultyStartForm': (
+            FacultyStartForm,
+            faculty,
+            'facultystart'
+        )
+    }
 
-    try:
-        positionHeldData = PositionHeldTable.objects.filter(Faculty_ID=faculty)
-    except PositionHeldTable.DoesNotExist:
-        positionHeldData = PositionHeldTable(Faculty_ID=faculty)
-
-    try:
-        positionPriorData = PositionPriorTable.objects.filter(Faculty_ID=faculty)
-    except PositionPriorTable.DoesNotExist:
-        positionPriorData = PositionPriorTable(Faculty_ID=faculty)
-
-    try:
-        positionElsewhereData = PositionElsewhereTable.objects.filter(Faculty_ID=faculty)
-    except PositionElsewhereTable.DoesNotExist:
-        positionElsewhereData = PositionElsewhereTable(Faculty_ID=faculty)
+    formsetInfo = {
+        'accredFormset': (
+            modelformset_factory(AccredTable, form=AccredForm, extra=1, formset=FormsetMixin, can_delete=True),
+            AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date'),
+            'accred'
+        ),
+        'honorFormset': (
+            modelformset_factory(HonorTable, form=HonorForm, extra=1, formset=FormsetMixin, can_delete=True),
+            HonorTable.objects.filter(Faculty_ID=faculty),
+            'honor'
+        ),
+        'positionHeldFormset': (
+            modelformset_factory(PositionHeldTable, form=PositionHeldForm, extra=1, formset=FormsetMixin, can_delete=True),
+            PositionHeldTable.objects.filter(Faculty_ID=faculty),
+            'positionheld'
+        ),
+        'positionPriorFormset': (
+            modelformset_factory(PositionPriorTable, form=PositionPriorForm, extra=1, formset=FormsetMixin, can_delete=True),
+            PositionPriorTable.objects.filter(Faculty_ID=faculty),
+            'positionprior'
+        ),
+        'positionElsewhereFormset': (
+            modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm, extra=1, formset=FormsetMixin, can_delete=True),
+            PositionElsewhereTable.objects.filter(Faculty_ID=faculty),
+            'positionelsewhere'
+        )
+    }
     
     if request.method == 'POST':
-        facultyNameDeptForm = FacultyNameDeptForm(request.POST, request.FILES,
-                instance=faculty, prefix='namedept')
+        formsets = dict((
+            formsetName, 
+            Formset(request.POST, request.FILES, queryset=qs, prefix=pf)
+        ) for formsetName, (Formset, qs, pf) in formsetInfo.iteritems())
+        forms = dict((
+            formName,
+            Form(request.POST, request.FILES, instance=ins, prefix=pf)
+        ) for formName, (Form, ins, pf) in formInfo.iteritems())
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+        
+        print context
+        
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save(Faculty_ID=faculty)
+                print formset
+                
+            return HttpResponseRedirect('/biographical/')
+            
     else:
-        facultyNameDeptForm = FacultyNameDeptForm(instance=faculty, prefix='namedept')
+        formsets = dict((
+            formsetName,
+            Formset(queryset=qs, prefix=pf)
+        ) for formsetName, (Formset, qs, pf) in formsetInfo.iteritems())
+        forms = dict((
+            formName,
+            Form(instance=ins, prefix=pf)
+        ) for formName, (Form, ins, pf) in formInfo.iteritems())
         
-        AccredFormset = modelformset_factory(AccredTable, form=AccredForm)
-        accredFormset = AccredFormset(queryset=accredData, prefix='accred')
-        
-        HonorFormset = modelformset_factory(HonorTable, form=HonorForm)
-        honorFormset = HonorFormset(queryset=honorData, prefix='honor')
-        
-        facultyStartForm = FacultyStartForm(instance=faculty, prefix='facultystart')
-        
-        PositionHeldFormset = modelformset_factory(PositionHeldTable, form=PositionHeldForm)
-        positionHeldFormset = PositionHeldFormset(queryset=positionHeldData, prefix='positionheld')
+        context = dict([('forms', forms), ('formsets', formsets)])
 
-        PositionPriorFormset = modelformset_factory(PositionPriorTable, form=PositionPriorForm)
-        positionPriorFormset = PositionPriorFormset(queryset=positionPriorData, prefix='positionprior')
-
-        PositionElsewhereFormset = modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm)
-        positionElsewhereFormset = PositionElsewhereFormset(queryset=positionElsewhereData, prefix='positionelsewhere')
-
-    return direct_to_template(request, 'biographical.html', {
-        'facultyNameDeptForm': facultyNameDeptForm,
-        'accredFormset': accredFormset,
-        'honorFormset': honorFormset,
-        'facultyStartForm': facultyStartForm,
-        'positionHeldFormset': positionHeldFormset,
-        'positionPriorFormset': positionPriorFormset,
-        'positionElsewhereFormset': positionElsewhereFormset,
-    })
+    return direct_to_template(request, 'biographical.html', context)
 
 @login_required
 def offCampusRecognition(request):
