@@ -31,7 +31,6 @@
                 <ul id="navlist">
                     <li><a href="{% url cv-export %}" class="navitem">Export CV</a></li>
                     <li><a href="{% url cv-editcv %}" class="navitem">Edit CV</a></li>
-                    <li><a href="{% url cv-form1 %}" class="navitem">Form 1</a></li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url cv-login %}" class="navitem">Logout</a></li>
                     {% else %}
