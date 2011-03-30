@@ -77,11 +77,20 @@ class ExecutiveSummaryForm(ModelForm):
             'Executive': forms.Textarea(attrs={'rows': '50', 'cols': '40',})
         }
         
-class PositionForm(ModelForm):
-    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+class PositionHeldForm(ModelForm):
     class Meta:
-        fields = ('Rank', 'StartDate', 'EndDate', 'Location')
+        fields = ('StartDate', 'EndDate', 'Location', 'Rank')
+        model = PositionHeldTable
+
+class PositionPriorForm(ModelForm):
+    class Meta:
+        fields = ('StartDate', 'EndDate', 'Location', 'Position')
+        model = PositionPriorTable
+
+class PositionElsewhereForm(ModelForm):
+    class Meta:
+        fields = ('StartDate', 'EndDate', 'Location', 'Position')
+        model = PositionElsewhereTable
 
 
 class OffCampusRecognitionForm(ModelForm):
@@ -92,5 +101,4 @@ class OffCampusRecognitionForm(ModelForm):
 class ResearchActivityForm(ModelForm):
     class Meta:
         fields = ('Research',)
-        model = SummaryTable       
-
+        model = SummaryTable 

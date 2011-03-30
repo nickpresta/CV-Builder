@@ -55,9 +55,9 @@ class FacultyTable(models.Model):
 
     Faculty_GName = models.CharField(max_length=200, blank=True)
     Faculty_SName = models.CharField(max_length=200, blank=True)
-    Review_Term = models.IntegerField( blank=True )
+    Review_Term = models.IntegerField(null=True, blank=True)
     Department = models.CharField(max_length=200, blank=True )
-    Faculty_Start = models.DateField( blank=True )
+    Faculty_Start = models.DateField( blank=True, null=True )
     
 class DoETable(models.Model):
     #DoE_ID = models.IntegerField() #TODO: 
@@ -98,13 +98,37 @@ class HonorTable(models.Model):
     Faculty_ID = models.ForeignKey(FacultyTable)
     Honor_desc = models.CharField(max_length=500, blank=True )
     
-class PositionTable(models.Model):
+#class PositionTable(models.Model):
+#    #Pos_ID = models.IntegerField()
+#    Faculty_ID = models.ForeignKey(FacultyTable)
+#    #Rank = models.CharField(max_length=200, blank=True )
+#    StartDate = models.DateTimeField( blank=True )
+#    EndDate = models.DateTimeField( blank=True )
+#    Location = models.CharField(max_length=200, blank=True )
+
+class PositionHeldTable(models.Model):
     #Pos_ID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
     Rank = models.CharField(max_length=200, blank=True )
     StartDate = models.DateTimeField( blank=True )
     EndDate = models.DateTimeField( blank=True )
     Location = models.CharField(max_length=200, blank=True )
+
+class PositionPriorTable(models.Model):
+    #Pos_ID = models.IntegerField()
+    Faculty_ID = models.ForeignKey(FacultyTable)
+    StartDate = models.DateTimeField( blank=True )
+    EndDate = models.DateTimeField( blank=True )
+    Location = models.CharField(max_length=200, blank=True )
+    Position = models.CharField(max_length=200, blank=True )
+
+class PositionElsewhereTable(models.Model):
+    #Pos_ID = models.IntegerField()
+    Faculty_ID = models.ForeignKey(FacultyTable)
+    StartDate = models.DateTimeField( blank=True )
+    EndDate = models.DateTimeField( blank=True )
+    Location = models.CharField(max_length=200, blank=True )
+    Position = models.CharField(max_length=200, blank=True )
     
 class GrantTable(models.Model):
     #Grant_ID = models.IntegerField()

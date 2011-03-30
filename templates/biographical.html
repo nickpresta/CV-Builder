@@ -50,51 +50,24 @@
 
     <fieldset>
         <legend>e - Positions held at University of Guelph and dates</legend>
-        {{ positionFormset.management_form }}
-        {% with positionFormset.forms as tableFormset %}
+        {{ positionHeldFormset.management_form }}
+        {% with positionHeldFormset.forms as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     
     <fieldset>
         <legend>f - Experince prior to appointment at Guelph</legend>
-        <span class="clickable" id="">Add Experience</span>
-        <table id="">
-            <tr>
-                <th>Position</th>
-                <th>Location</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
-            </tr>
-            <tr id="">
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
-                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
-                <td><span class="clickable">remove</span></td>
-            </tr>
-        </table>
-    </fieldset>
+        {{ positionPriorFormset.management_form }}
+        {% with positionPriorFormset.forms as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}    </fieldset>
     <fieldset>
         <legend>g - Visiting Professorships, etc. elsewhere since appointment</legend>
-        <span class="clickable" id="">Add New</span>
-        <table id="">
-            <tr>
-                <th>Position</th>
-                <th>Location</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th></th>
-            </tr>
-            <tr id="">
-                <td><input type="text" /></td>
-                <td><input type="text" /></td>
-                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
-                <td><input type="text" class="datepicker" readonly="readonly" size="10em" /></td>
-                <td><span class="clickable">remove</span></td>
-            </tr>
-        </table>
+        {{ positionElsewhereFormset.management_form }}
+        {% with positionElsewhereFormset.forms as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
     </fieldset>
 </form>
 

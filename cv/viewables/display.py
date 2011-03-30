@@ -3,7 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
 from django.forms.models import modelformset_factory
+from django.forms.models import inlineformset_factory
 from django.forms.formsets import formset_factory
+
 
 from cv.forms import *
 from cv.models import *
@@ -17,7 +19,9 @@ def getFaculty(user):
     try:
         return FacultyTable.objects.get(Username=user)
     except FacultyTable.DoesNotExist:
-        return FacultyTable(Username=user)
+        fac = FacultyTable(Username=user)
+        fac.save()
+        return fac
 
 def index(request):
     """ Responsible for showing the index page """
@@ -95,11 +99,21 @@ def biographical(request):
         honorData = HonorTable.objects.filter(Faculty_ID=faculty)    
     except HonorTable.DoesNotExist:
         honorData = HonorTable(Faculty_ID=faculty)
-        
+
     try:
-        positionData = PositionTable.objects.filter(Faculty_ID=faculty)
-    except PositionTable.DoesNotExist:
-        positionData = PositionTable(FacultyID=faculty)
+        positionHeldData = PositionHeldTable.objects.filter(Faculty_ID=faculty)
+    except PositionHeldTable.DoesNotExist:
+        positionHeldData = PositionHeldTable(Faculty_ID=faculty)
+
+    try:
+        positionPriorData = PositionPriorTable.objects.filter(Faculty_ID=faculty)
+    except PositionPriorTable.DoesNotExist:
+        positionPriorData = PositionPriorTable(Faculty_ID=faculty)
+
+    try:
+        positionElsewhereData = PositionElsewhereTable.objects.filter(Faculty_ID=faculty)
+    except PositionElsewhereTable.DoesNotExist:
+        positionElsewhereData = PositionElsewhereTable(Faculty_ID=faculty)
     
     if request.method == 'POST':
         facultyNameDeptForm = FacultyNameDeptForm(request.POST, request.FILES,
@@ -115,17 +129,23 @@ def biographical(request):
         
         facultyStartForm = FacultyStartForm(instance=faculty, prefix='facultystart')
         
-        PositionFormset = modelformset_factory(PositionTable, form=PositionForm)
-        positionFormset = PositionFormset(queryset=positionData, prefix='position')
-        
-    #modelformset_factory(FacultyTable, fields=('Faculty_GName', 'Faculty_SName', 'Department'))
+        PositionHeldFormset = modelformset_factory(PositionHeldTable, form=PositionHeldForm)
+        positionHeldFormset = PositionHeldFormset(queryset=positionHeldData, prefix='positionheld')
+
+        PositionPriorFormset = modelformset_factory(PositionPriorTable, form=PositionPriorForm)
+        positionPriorFormset = PositionPriorFormset(queryset=positionPriorData, prefix='positionprior')
+
+        PositionElsewhereFormset = modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm)
+        positionElsewhereFormset = PositionElsewhereFormset(queryset=positionElsewhereData, prefix='positionelsewhere')
 
     return direct_to_template(request, 'biographical.html', {
         'facultyNameDeptForm': facultyNameDeptForm,
         'accredFormset': accredFormset,
         'honorFormset': honorFormset,
         'facultyStartForm': facultyStartForm,
-        'positionFormset': positionFormset,
+        'positionHeldFormset': positionHeldFormset,
+        'positionPriorFormset': positionPriorFormset,
+        'positionElsewhereFormset': positionElsewhereFormset,
     })
 
 @login_required
