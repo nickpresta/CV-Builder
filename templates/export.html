@@ -85,6 +85,11 @@
                 page-break-after: always;
                 page-break-inside: avoid;
             }
+            table.one_page {
+                -pdf-keep-in-frame-mode: truncate;
+                text-align: justify;
+                padding-bottom: 1.1em;
+            }
             div#overlay {
                 display: none;
             }
@@ -111,18 +116,24 @@
                 </ul>
             </div>
             <div class="page" id="executive_summary">
-                <h2>Part 1: Executive Summary</h2>
-                <h3>Distribution of Effort</h3>
-                {% for data in doe %}
-                <p>Year {{ data.Year|date:"Y" }}:
-                    <strong>Research</strong>: {{ data.Research }}%,
-                    <strong>Teaching</strong>: {{ data.Teaching }}%,
-                    <strong>Service</strong>: {{ data.Service }}%
-                </p>
-                {% endfor %}
+                <table width="100%" class="one_page">
+                    <tr>
+                        <td>
+                            <h2>Part 1: Executive Summary</h2>
+                            <h3>Distribution of Effort</h3>
+                            {% for data in doe %}
+                                <p>Year {{ data.Year|date:"Y" }}:
+                                <strong>Research</strong>: {{ data.Research }}%,
+                                <strong>Teaching</strong>: {{ data.Teaching }}%,
+                                <strong>Service</strong>: {{ data.Service }}%
+                            </p>
+                            {% endfor %}
 
-                <h3>Research, Teaching, and Service</h3>
-                {{ summary.Executive|safe }}
+                            <h3>Research, Teaching, and Service</h3>
+                            {{ summary.Executive|safe }}
+                        </td>
+                    </tr>
+                </table>
             </div>
             <div class="page" id="biographical_information">
                 <h2>Part 2: Biographical Information</h2>
@@ -231,10 +242,18 @@
                 </table>
             </div>
             <div class="page" id="cummulative_information_record">
-                <h2>Cummulative Information Record</h2>
-                <h3>3A Research</h3>
-                <h4>(a) Summary of Research Activity</h4>
-                {{ summary.Research|safe }}
+                <table width="100%" class="one_page">
+                    <tr>
+                        <td>
+                            <h2>Cummulative Information Record</h2>
+                            <h3>3A Research</h3>
+                            <h4>(a) Summary of Research Activity</h4>
+                            {{ summary.Research|safe }}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="page">
                 <h4>(b) Six-year Publication List</h4>
                 <h4>(c) Research Grants and Contracts Held</h4>
                 <table width="100%">
@@ -294,20 +313,30 @@
                 arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
                 cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
                 sed ante euismod vitae congue mauris dignissim.</p>
-                <h3>3B Teaching and Learning</h3>
-                <h4>(a) Report on Teaching</h4>
-                <dl>
-                    <dt>Title</dt>
-                    <dd>
-                        <p>Here is some text!</p>
-                    </dd>
-                    <dt>Title</dt>
-                    <dd>
-                        <ul>
-                            <li>Here is a list inside here!</li>
-                        </ul>
-                    </dd>
-                </dl>
+            </div>
+            <div class="page">
+                <table width="100%" class="one_page">
+                    <tr>
+                        <td>
+                            <h3>3B Teaching and Learning</h3>
+                            <h4>(a) Report on Teaching</h4>
+                            <dl>
+                                <dt>Title</dt>
+                                <dd>
+                                <p>Here is some text!</p>
+                                </dd>
+                                <dt>Title</dt>
+                                <dd>
+                                <ul>
+                                    <li>Here is a list inside here!</li>
+                                </ul>
+                                </dd>
+                            </dl>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="page">
                 <h4>(b) Courses</h4>
                 <table width="100%">
                     <tr>
