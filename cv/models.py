@@ -48,7 +48,7 @@ class Summary(models.Model):
 
 class FacultyTable(models.Model):
     Faculty_ID = models.AutoField( primary_key=True )
-    
+
     # This links the already created user (from LDAP login)
     # to our profile
     Username = models.ForeignKey(User, unique=True)
@@ -58,7 +58,10 @@ class FacultyTable(models.Model):
     Review_Term = models.IntegerField(null=True, blank=True)
     Department = models.CharField(max_length=200, blank=True )
     Faculty_Start = models.DateField( blank=True, null=True )
-    
+
+    def get_full_name(self):
+        return "%s %s" % (self.Faculty_GName, self.Faculty_SName)
+
 class DoETable(models.Model):
     #DoE_ID = models.IntegerField() #TODO: 
     Faculty_ID = models.ForeignKey(FacultyTable)

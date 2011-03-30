@@ -6,22 +6,10 @@ from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.forms.formsets import formset_factory
 
-
 from cv.forms import *
 from cv.models import *
 
-# utility functions
-
-def getFaculty(user):
-    """ Retrieve a member from the FacultyTable by username, or create one if it
-        does not exist """
-        
-    try:
-        return FacultyTable.objects.get(Username=user)
-    except FacultyTable.DoesNotExist:
-        fac = FacultyTable(Username=user)
-        fac.save()
-        return fac
+from common import *
 
 def index(request):
     """ Responsible for showing the index page """
@@ -77,7 +65,7 @@ def executive(request):
 @login_required
 def biographical(request):
     faculty = getFaculty(request.user)
-    
+
     formInfo = {
         'facultyNameDeptForm': (
             FacultyNameDeptForm,
@@ -118,7 +106,7 @@ def biographical(request):
             'positionelsewhere'
         )
     }
-    
+
     if request.method == 'POST':
         formsets = dict((
             formsetName, 
@@ -128,24 +116,21 @@ def biographical(request):
             formName,
             Form(request.POST, request.FILES, instance=ins, prefix=pf)
         ) for formName, (Form, ins, pf) in formInfo.iteritems())
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
-        
-        print context
-        
+
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save(Faculty_ID=faculty)
-                print formset
-                
+
             return HttpResponseRedirect('/biographical/')
-            
+
     else:
         formsets = dict((
             formsetName,
@@ -155,7 +140,7 @@ def biographical(request):
             formName,
             Form(instance=ins, prefix=pf)
         ) for formName, (Form, ins, pf) in formInfo.iteritems())
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
     return direct_to_template(request, 'biographical.html', context)

@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
     <head>
-        <title>Nicholas Presta - CV (exported March 24th, 2011)</title>
+        <title>{{ faculty_info.get_full_name }} - CV</title>
         <style type="text/css" media="screen" title="Screen">
             div#overlay {
                 position: fixed;
@@ -102,7 +102,7 @@
                     COLLEGE OF PHYSICAL AND ENGINEERING SCIENCE<br>
                     FACULTY CURRICULUM VITAE<br>
                     for<br>
-                    Nicholas Presta</h1>
+                    {{ faculty_info.get_full_name }}</h1>
 
                 <ul>
                     <li>Part 1: Basic Biographical Information</li>
@@ -113,52 +113,28 @@
             <div class="page" id="executive_summary">
                 <h2>Part 1: Executive Summary</h2>
                 <h3>Distribution of Effort</h3>
-                <p>Year: 2011:
-                    <strong>Research</strong>: 40%,
-                    <strong>Teaching</strong>: 40%,
-                    <strong>Service</strong>: 20%
+                {% for data in doe %}
+                <p>Year {{ data.Year|date:"Y" }}:
+                    <strong>Research</strong>: {{ data.Research }}%,
+                    <strong>Teaching</strong>: {{ data.Teaching }}%,
+                    <strong>Service</strong>: {{ data.Service }}%
                 </p>
-                <p>Year: 2010:
-                    <strong>Research</strong>: 40%,
-                    <strong>Teaching</strong>: 40%,
-                    <strong>Service</strong>: 20%
-                </p>
+                {% endfor %}
 
-                <h3>Research</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
-
-                <h3>Teaching</h3>
-                <p>Sed augue leo, iaculis lacinia bibendum sed, semper a odio.
-                Donec luctus sapien ut quam facilisis feugiat. Maecenas eu
-                imperdiet elit. Pellentesque quis enim dignissim nunc mattis
-                tincidunt. Vestibulum ac ante nulla, at molestie diam.</p>
-
-                <h3>Service</h3>
-                <p>Mauris laoreet, nulla id feugiat molestie, lorem sapien laoreet
-                libero, id interdum nisl nulla eu nisl. Fusce lectus urna,
-                pellentesque et consequat sed, pharetra at magna. Class aptent
-                taciti sociosqu ad litora torquent per conubia nostra, per
-                inceptos himenaeos. Quisque ipsum libero, sollicitudin nec
-                ullamcorper volutpat, ullamcorper vel sapien.</p>
+                <h3>Research, Teaching, and Service</h3>
+                {{ summary.Executive|safe }}
             </div>
             <div class="page" id="biographical_information">
                 <h2>Part 2: Biographical Information</h2>
                 <table width="100%">
-                    <col width="1em" />
                     <tr>
-                        <td>(a)</td>
+                        <td style="width: 30px">(a)</td>
                         <td><strong>Name</strong>:</td>
-                        <td colspan="2">Nicholas Presta</td>
+                        <td colspan="2">{{ faculty_info.get_full_name }}</td>
                         <td colspan="2"><strong>Department</strong>:
-                            School of Computer Science<br>
-                            School of Engineering<br>
-                            Chemistry<br>
-                            Physics<br>
-                            Mathematics and Statistics
+                            {% for dept in faculty_info.Department %}
+                                {{ dept }}<br />
+                            {% endfor %}
                         </td>
                     </tr>
                     <tr>
@@ -168,13 +144,15 @@
                         <th>University</th>
                         <th>Date</th>
                     </tr>
+                    {% for degree in degree_info %}
                     <tr>
                         <td></td>
-                        <td>Bachelor of Computing</td>
-                        <td>Something</td>
-                        <td>University of Guelph</td>
-                        <td>January 1st, 2012</td>
+                        <td>{{ degree.Degree }}</td>
+                        <td>{{ degree.Discipline }}</td>
+                        <td>{{ degree.Institution }}</td>
+                        <td>{{ degree.Date|date:"Y" }}</td>
                     </tr>
+                    {% endfor %}
                     <tr>
                         <td>(c)</td>
                         <th colspan="4">Major Honours &amp; Fellowships</th>
@@ -183,7 +161,9 @@
                         <td></td>
                         <td colspan="4">
                             <ul>
-                                <li>The Fellowship of the Ring</li>
+                            {% for honor in honors_info %}
+                                <li>{{ honor.Honor_desc }}</li>
+                            {% endfor %}
                             </ul>
                         </td>
                     </tr>
@@ -191,11 +171,11 @@
                         <td>(d)</td>
                         <th colspan="3">Date of first appointment at the University of
                             Guelph:</th>
-                        <td>March 2011</td>
+                        <td>{{ faculty_info.Faculty_Start|date:"M Y" }}</td>
                     </tr>
                     <tr>
                         <td>(e)</td>
-                        <th colspan="4">Positions help at University of Guelph and
+                        <th colspan="4">Positions held at University of Guelph and
                             dates</th>
                     </tr>
                     <tr>
@@ -203,11 +183,14 @@
                         <th colspan="2">Rank</th>
                         <th colspan="2">From</th>
                     </tr>
+                    {% for position in position_held_info %}
                     <tr>
                         <td></td>
-                        <td colspan="2">Supreme Awesome Overlord</td>
-                        <td colspan="2">Now - Forever</td>
+                        <td colspan="2">{{ position.Rank }}</td>
+                        <td colspan="2">{{ position.StartDate}} -
+                            {{ position.EndDate }}</td>
                     </tr>
+                    {% endfor %}
                     <tr>
                         <td>(f)</td>
                         <th colspan="4">Experience prior to appointment at Guelph</th>
@@ -218,12 +201,14 @@
                         <th colspan="2">Location</th>
                         <th>Dates</th>
                     </tr>
+                    {% for position in position_prior_info %}
                     <tr>
                         <td></td>
-                        <td>Overlord</td>
-                        <td colspan="2">Toronto, Ontario, Canada</td>
-                        <td>Forever</td>
+                        <td>{{ position.Position }}</td>
+                        <td colspan="2">{{ position.Location }}</td>
+                        <td>{{ position.StartDate }} - {{ position.EndDate }}</td>
                     </tr>
+                    {% endfor %}
                     <tr>
                         <td>(g)</td>
                         <th colspan="4">Visiting Professorship, etc. elsewhere since
@@ -235,12 +220,14 @@
                         <th colspan="2">Location</th>
                         <th>Dates</th>
                     </tr>
+                    {% for position in position_elsewhere_info %}
                     <tr>
                         <td></td>
-                        <td>Overlord</td>
-                        <td colspan="2">Toronto, Ontario, Canada</td>
-                        <td>Forever</td>
+                        <td>{{ position.Position }}</td>
+                        <td colspan="2">{{ position.Location }}</td>
+                        <td>{{ position.StartDate }} - {{ position.EndDate }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
             </div>
             <div class="page" id="cummulative_information_record">
