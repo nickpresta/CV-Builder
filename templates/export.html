@@ -234,18 +234,7 @@
                 <h2>Cummulative Information Record</h2>
                 <h3>3A Research</h3>
                 <h4>(a) Summary of Research Activity</h4>
-                <dl>
-                    <dt>Title</dt>
-                    <dd>
-                        <p>Here is some text!</p>
-                    </dd>
-                    <dt>Title</dt>
-                    <dd>
-                        <ul>
-                            <li>Here is a list inside here!</li>
-                        </ul>
-                    </dd>
-                </dl>
+                {{ summary.Research|safe }}
                 <h4>(b) Six-year Publication List</h4>
                 <h4>(c) Research Grants and Contracts Held</h4>
                 <table width="100%">
@@ -463,11 +452,7 @@
                     </tr>
                 </table>
                 <h3>3D Off-Campus Recognition</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.OffCampus|safe }}
             </div>
             <div class="page" id="lifetime_publication_list">
                 <h2>Part 4: Lifetime Publication List</h2>
