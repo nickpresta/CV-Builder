@@ -142,3 +142,17 @@ class GradTable(models.Model):
     SDate = models.DateTimeField( blank=True )
     EDate = models.DateTimeField( blank=True )
     Note = models.CharField(max_length=200, blank=True )
+
+class ServiceTable(models.Model):
+    #GID = models.IntegerField()
+    Faculty_ID = models.ForeignKey( FacultyTable )
+    S_ID = models.IntegerField(blank=True)
+    SSem = models.CharField(max_length=200, blank=True)
+    SYear = models.IntegerField(blank=True)
+    ESem = models.CharField(max_length=200, blank=True)
+    EYear = models.IntegerField(blank=True)
+    Committee = models.CharField(max_length=200, blank=True)
+    Role = models.CharField(max_length=200, blank=True)
+    Chair = models.CharField(max_length=200, blank=True)
+    Other = models.CharField(max_length=200, blank=True)
+    Level = models.CharField(max_length=200, blank=True)
