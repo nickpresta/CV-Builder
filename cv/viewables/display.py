@@ -130,7 +130,32 @@ def biographical(request):
 
 @login_required
 def offCampusRecognition(request):
-    return direct_to_template(request, 'OffCampusRecognition.html', {})
+
+    """ Create a form view for the off campus recognition """
+
+    faculty = getFaculty(request.user)
+
+
+    try:
+        offCampusData = SummaryTable.objects.get(Faculty_ID = faculty)
+    except SummaryTable.DoesNotExist:
+        offCampusData = SummaryTable(Faculty_ID = faculty)
+
+
+    if request.method == 'POST':
+        offCampusFormset =  OffCampusRecognitionForm(request.POST, request.FILES, instance=offCampusData, prefix="OffCampus")
+
+
+        if offCampusFormset.is_valid():
+            offcampus = offCampusFormset.save(commit=False)
+            offcampus.user = request.user
+            offcampus.save()
+            offCampusFormset.save_m2m()
+
+    else:
+        offCampusFormset = OffCampusRecognitionForm(instance=offCampusData, prefix="OffCampus")
+
+    return direct_to_template(request, 'OffCampusRecognition.html', {'offCampusForm': offCampusFormset})
 
 @login_required
 def ServiceAndAdmin(request):
@@ -150,7 +175,32 @@ def Courses(request):
 
 @login_required
 def ResearchActivity(request):
-    return direct_to_template(request, 'ResearchActivity.html', {})
+
+    """ Create a form view for Research Activity """
+
+    faculty = getFaculty(request.user)
+
+
+    try:
+        ResearchData = SummaryTable.objects.get(Faculty_ID = faculty)
+    except SummaryTable.DoesNotExist:
+        ResearchData = SummaryTable(Faculty_ID = faculty)
+
+
+    if request.method == 'POST':
+        ResearchFormset =  ResearchActivityForm(request.POST, request.FILES, instance=ResearchData, prefix="Research")
+
+
+        if ResearchFormset.is_valid():
+            Research = ResearchFormset.save(commit=False)
+            Research.user = request.user
+            Research.save()
+            ResearchFormset.save_m2m()
+
+    else:
+        ResearchFormset = ResearchActivityForm(instance=ResearchData, prefix="Research")
+
+    return direct_to_template(request, 'ResearchActivity.html', {'ResearchActivityForm': ResearchFormset})
 
 @login_required
 def distribution_of_effort(request):

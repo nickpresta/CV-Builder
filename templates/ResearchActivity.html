@@ -4,14 +4,13 @@
 <h3>Summary Of Research Activity</h3>
 
 <h3>Title 1</h3>
-<textarea rows="10" cols="110">
-title 1 info.....
-</textarea>
 
+<form method="post" action="{% url cv-ResearchActivity %}">
+    {% csrf_token %}
 
-<h3>Title 2</h3>
-<textarea rows="10" cols="110">
-title 2 info.....
-</textarea>
+    {{ ResearchActivityForm.Research }}
+
+    <input type="submit" value="Save" />
+</form>
 
 {% endblock %}

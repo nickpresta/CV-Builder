@@ -26,7 +26,7 @@ class UserProfile(models.Model):
     # to our profile
     user = models.ForeignKey(User, unique=True)
 
-    review_term = models.IntegerField(default=2)
+    review_term = models.IntegerField(default=2, blank=True)
     faculty_start = models.DateField()
     department = models.CharField(max_length=100, choices=DEPARTMENT_CHOICES)
 
@@ -53,8 +53,8 @@ class FacultyTable(models.Model):
     # to our profile
     Username = models.ForeignKey(User, unique=True)
 
-    Faculty_GName = models.CharField(max_length=200)
-    Faculty_SName = models.CharField(max_length=200)
+    Faculty_GName = models.CharField(max_length=200, blank=True)
+    Faculty_SName = models.CharField(max_length=200, blank=True)
     Review_Term = models.IntegerField( blank=True )
     Department = models.CharField(max_length=200, blank=True )
     Faculty_Start = models.DateField( blank=True )
@@ -71,7 +71,7 @@ class DoETable(models.Model):
 class SummaryTable(models.Model):
     Faculty_ID = models.ForeignKey(FacultyTable)
     Executive = models.TextField(max_length=10000, blank=True )
-    Research  = models.CharField(max_length=10000, blank=True )
+    Research  = models.TextField(max_length=10000, blank=True )
     R_Consulting = models.CharField(max_length=10000, blank=True )
     R_Patents = models.CharField(max_length=10000, blank=True )
     R_Other = models.CharField(max_length=10000, blank=True )
@@ -83,7 +83,7 @@ class SummaryTable(models.Model):
     T_Support = models.CharField(max_length=10000, blank=True )
     T_Scholarship = models.CharField(max_length=10000, blank=True )
     T_Offer = models.CharField(max_length=10000, blank=True )
-    OffCampus = models.CharField(max_length=10000, blank=True )
+    OffCampus = models.TextField(max_length=10000, blank=True )
 
 class AccredTable(models.Model):
     #Accred_ID = models.IntegerField()

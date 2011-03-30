@@ -82,5 +82,15 @@ class PositionForm(ModelForm):
     EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
     class Meta:
         fields = ('Rank', 'StartDate', 'EndDate', 'Location')
-        
+
+
+class OffCampusRecognitionForm(ModelForm):
+    class Meta:
+        fields = ('OffCampus',)
+        model = SummaryTable 
+
+class ResearchActivityForm(ModelForm):
+    class Meta:
+        fields = ('Research',)
+        model = SummaryTable       
 
