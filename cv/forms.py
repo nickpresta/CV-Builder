@@ -6,28 +6,34 @@ from django.forms.models import BaseModelFormSet
 import datetime
 
 class FormMixin(ModelForm):
-    def save(self, commit=True, Faculty_ID=None):
+    def __init__(self, *args, **kwargs):
+        self.pk = kwargs.pop('pk', None)
+        super(FormMixin, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
         form = super(FormMixin, self).save(commit=False)
-        
-        if Faculty_ID:
-            form.Faculty_ID = Faculty_ID
+
+        if self.pk:
+            form.setPK(self.pk)
         
         if commit:
             form.save()
 
-        return form
-        
+        return form        
         
 class FormsetMixin(BaseModelFormSet):
-    def save(self, commit=True, Faculty_ID=None):
+    def __init__(self, *args, **kwargs):
+        self.pk = kwargs.pop('pk', None)
+        super(FormsetMixin, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
         forms = super(FormsetMixin, self).save(commit=False)
         for form in forms:
-            if Faculty_ID:
-                form.Faculty_ID = Faculty_ID
+            if self.pk:
+                form.setPK(self.pk)
             if commit:
                 form.save()
         return forms
-
 
 class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
@@ -38,6 +44,9 @@ class DoEForm(FormMixin):
     class Meta:
         fields = ('Year', 'Research', 'Teaching', 'Service')
         model = DoETable
+
+    def setPK(self, form):
+        form.Faculty_ID = self.pk
 
     def clean(self):
         """ Clean the form according to our custom rules """
@@ -102,16 +111,25 @@ class ExecutiveSummaryForm(FormMixin):
         }
         
 class PositionHeldForm(FormMixin):
+    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Rank')
         model = PositionHeldTable
 
 class PositionPriorForm(FormMixin):
+    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Position')
         model = PositionPriorTable
 
 class PositionElsewhereForm(FormMixin):
+    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Position')
         model = PositionElsewhereTable
@@ -124,5 +142,21 @@ class OffCampusRecognitionForm(FormMixin):
 
 class ResearchActivityForm(FormMixin):
     class Meta:
-        fields = ('Research',)
         model = SummaryTable 
+        fields = ('Research',)
+        widgets = {
+            'Research': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
+class ReportOnTeachingForm(FormMixin):
+    class Meta:
+        model = SummaryTable
+        fields = ('Teaching',)
+        widgets = {
+            'Teaching': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
+class InvestigatorForm(FormMixin):
+    class Meta:
+        model = InvestigatorTable
+        fields = ('Name', 'Amount', 'Role')

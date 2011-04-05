@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>3A Research</h2>
+
+{% for name, formset in formsets.items %}
+    {% if formset.errors  %}
+        {% for error in formset.errors %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+{% for name, form in forms.items %}
+    {{ form.errors.as_ul }}
+{% endfor %}
+
+<form method="post" action="{% url cv-biographical %}">
+    {% csrf_token %}
+    <fieldset id="grantsheld">
+        <legend>c - Research Grants and Contracts Held</legend>
+        {{ formsets.grantsHeld.management_form }}
+        {% with formsets.grantsHeld as form %}
+            {% include "inline_form.html" %}
+        {% endwith %}
+    </fieldset>
+    <fieldset id="grantsapplied">
+        <legend>d - Research Grants Applied For</legend>
+        {{ formsets.grantsApplied.management_form }}
+        {% with formsets.grantsApplied as form %}
+            {% include "inline_form.html" %}
+        {% endwith %}
+    </fieldset>
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}
+

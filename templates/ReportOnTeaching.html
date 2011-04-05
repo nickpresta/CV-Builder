@@ -1,18 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
+<h2>3B Teaching and Learning</h2>
 
-<h3>Report on Teaching</h3>
+{% for name, formset in formsets.items %}
+    {% if formset.errors  %}
+        {% for error in formset.errors %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+{% for name, form in forms.items %}
+    {{ form.errors.as_ul }}
+{% endfor %}
 
-<h3>Title 1</h3>
-<textarea rows="10" cols="110">
-title 1 info.....
-</textarea>
+<form method="post" action="{% url cv-reportOnTeaching %}">
+    {% csrf_token %}
 
+    <fieldset>
+        <legend>a - Report on Teaching</legend>
 
-<h3>Title 2</h3>
-<textarea rows="10" cols="110">
-title 2 info.....
-</textarea>
-
+        {{ forms.reportOnTeaching.Teaching }}
+    </fieldset>
+    <input type="submit" value="Save" />
+</form>
 {% endblock %}
+
+

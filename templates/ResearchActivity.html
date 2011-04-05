@@ -1,15 +1,16 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h3>Summary Of Research Activity</h3>
-
-<h3>Title 1</h3>
+<h2>3A Research</h2>
 
 <form method="post" action="{% url cv-ResearchActivity %}">
     {% csrf_token %}
 
-    {{ ResearchActivityForm.Research }}
+    <fieldset>
+        <legend>a - Summary of Research Activity</legend>
 
+        {{ ResearchActivityForm.Research }}
+    </fieldset>
     <input type="submit" value="Save" />
 </form>
 

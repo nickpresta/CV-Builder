@@ -11,6 +11,31 @@ from cv.models import *
 
 from common import *
 
+# utility functions
+
+def getFaculty(user):
+    """ Retrieve a member from the FacultyTable by username, or create one if it
+        does not exist """
+        
+    try:
+        return FacultyTable.objects.gzet(Username=user)
+    except FacultyTable.DoesNotExist:
+        fac = FacultyTable(Username=user)
+        fac.save()
+        return fac
+
+def createContext(formsetInfo, formInfo, postData=None, files=None):
+    formsets = dict((
+        formsetName, 
+        Formset(postData, files, pk=key, queryset=qs, prefix=pf)
+    ) for formsetName, (Formset, qs, pf, key) in formsetInfo.iteritems())
+    
+    forms = dict((
+        formName,
+        Form(postData, files, pk=key, instance=ins, prefix=pf)
+    ) for formName, (Form, ins, pf, key) in formInfo.iteritems())
+    return formsets, forms
+
 def index(request):
     """ Responsible for showing the index page """
 
@@ -46,12 +71,13 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(request.POST,
-                        request.FILES, queryset=doeData, prefix='doe')
+                form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(
+                    request.POST, request.FILES, queryset=doeData, 
+                    prefix='doe')
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
-            summaryFormset.save(Faculty_ID=faculty)
-            doeFormset.save(Faculty_ID=faculty)
+            summaryFormset.save()
+            doeFormset.save()
 
             return HttpResponseRedirect('/executive/')
     else:
@@ -65,17 +91,19 @@ def executive(request):
 @login_required
 def biographical(request):
     faculty = getFaculty(request.user)
-
+    
     formInfo = {
         'facultyNameDeptForm': (
             FacultyNameDeptForm,
             faculty,
             'namedept',
+            None
         ),
         'facultyStartForm': (
             FacultyStartForm,
             faculty,
-            'facultystart'
+            'facultystart',
+            None
         )
     }
 
@@ -83,64 +111,53 @@ def biographical(request):
         'accredFormset': (
             modelformset_factory(AccredTable, form=AccredForm, extra=1, formset=FormsetMixin, can_delete=True),
             AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date'),
-            'accred'
+            'accred',
+            faculty
         ),
         'honorFormset': (
             modelformset_factory(HonorTable, form=HonorForm, extra=1, formset=FormsetMixin, can_delete=True),
             HonorTable.objects.filter(Faculty_ID=faculty),
-            'honor'
+            'honor',
+            faculty
         ),
         'positionHeldFormset': (
             modelformset_factory(PositionHeldTable, form=PositionHeldForm, extra=1, formset=FormsetMixin, can_delete=True),
             PositionHeldTable.objects.filter(Faculty_ID=faculty),
-            'positionheld'
+            'positionheld',
+            faculty
         ),
         'positionPriorFormset': (
             modelformset_factory(PositionPriorTable, form=PositionPriorForm, extra=1, formset=FormsetMixin, can_delete=True),
             PositionPriorTable.objects.filter(Faculty_ID=faculty),
-            'positionprior'
+            'positionprior',
+            faculty
         ),
         'positionElsewhereFormset': (
             modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm, extra=1, formset=FormsetMixin, can_delete=True),
             PositionElsewhereTable.objects.filter(Faculty_ID=faculty),
-            'positionelsewhere'
+            'positionelsewhere',
+            faculty
         )
     }
-
+    
     if request.method == 'POST':
-        formsets = dict((
-            formsetName, 
-            Formset(request.POST, request.FILES, queryset=qs, prefix=pf)
-        ) for formsetName, (Formset, qs, pf) in formsetInfo.iteritems())
-        forms = dict((
-            formName,
-            Form(request.POST, request.FILES, instance=ins, prefix=pf)
-        ) for formName, (Form, ins, pf) in formInfo.iteritems())
-
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)
-
+        allForms.update(forms)        
+        
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
-                formset.save(Faculty_ID=faculty)
-
+                formset.save()
+                
             return HttpResponseRedirect('/biographical/')
-
+            
     else:
-        formsets = dict((
-            formsetName,
-            Formset(queryset=qs, prefix=pf)
-        ) for formsetName, (Formset, qs, pf) in formsetInfo.iteritems())
-        forms = dict((
-            formName,
-            Form(instance=ins, prefix=pf)
-        ) for formName, (Form, ins, pf) in formInfo.iteritems())
-
+        formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
     return direct_to_template(request, 'biographical.html', context)
@@ -179,12 +196,98 @@ def ServiceAndAdmin(request):
     return direct_to_template(request, 'ServiceAndAdministrativeContributions.html', {})
 
 @login_required
-def ReportOnTeaching(request):
-    return direct_to_template(request, 'ReportOnTeaching.html', {})
+def reportOnTeaching(request):
+    faculty = getFaculty(request.user)
+    
+    formsetInfo = { }
+    formInfo = {
+        'reportOnTeaching': (
+            ReportOnTeachingForm,
+            SummaryTable.objects.get(Faculty_ID=faculty),
+            'report',
+            faculty
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/ReportOnTeaching/')
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+    
+    return direct_to_template(request, 'ReportOnTeaching.html', context)
 
 @login_required
-def ResearchGrants(request):
-    return direct_to_template(request, 'ResearchGrants.html', {})
+def researchGrants(request):
+    faculty = getFaculty(request.user)
+    formInfo = {
+
+    }
+    formsetInfo = {
+        'grantHeldInvestigatorFormset': (
+            modelformset_factory(InvestigatorTable, form=InvestigatorForm, extra=1, formset=FormsetMixin, can_delete=True),
+            InvestigatorTable.objects.filter(Grant__Faculty_ID=faculty).filter(Grant__Held=True),
+            'grantsheldinvest',
+            GrantTable.objects.filter(Faculty_ID=faculty)            
+        )
+    }
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save(pk=faculty)
+                
+            return HttpResponseRedirect('/researchgrants/')
+            
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+    return direct_to_template(request, 'researchgrants.html', context)
+
+#    formInfo = {
+#        'facultyNameDeptForm': (
+#            FacultyNameDeptForm,
+#            faculty,
+#            'namedept',
+#        ),
+#        'facultyStartForm': (
+#            FacultyStartForm,
+#            faculty,
+#            'facultystart'
+#        )
+#    }
+
+#    formsetInfo = {
+#        'accredFormset': (
+#            modelformset_factory(AccredTable, form=AccredForm, extra=1, formset=FormsetMixin, can_delete=True),
+#            AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date'),
+#            'accred'
+#        ),
+#    
+    return direct_to_template(request, 'researchgrants.html', {})
 
 @login_required
 def Courses(request):
