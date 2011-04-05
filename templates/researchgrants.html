@@ -15,14 +15,31 @@
     {{ form.errors.as_ul }}
 {% endfor %}
 
-<form method="post" action="{% url cv-biographical %}">
+<form method="post" action="{% url cv-researchGrants %}">
     {% csrf_token %}
     <fieldset id="grantsheld">
         <legend>c - Research Grants and Contracts Held</legend>
+
         {{ formsets.grantsHeld.management_form }}
-        {% with formsets.grantsHeld as form %}
-            {% include "inline_form.html" %}
+        {% with formsets.grantsHeld.forms as tableFormset %}
+            {% include "multiitem_table.html" %}
         {% endwith %}
+        
+        {% for grant in formsets.grantsHeld.forms %}
+                <div>
+                {{ grant.nested.0.management_form }}
+                {% with grant.nested.0.forms as tableFormset %}
+                    {% include "multiitem_table.html" %}
+                {% endwith %}
+                </div>
+                <div>
+                {{ grant.nested.1.management_form }}
+                {% with grant.nested.1.forms as tableFormset %}
+                    {% include "multiitem_table.html" %}
+                {% endwith %}
+                </div>
+
+        {% endfor %}
     </fieldset>
     <fieldset id="grantsapplied">
         <legend>d - Research Grants Applied For</legend>

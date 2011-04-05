@@ -3,6 +3,9 @@ from django.forms import ModelForm
 from cv.models import *
 from django import forms
 from django.forms.models import BaseModelFormSet
+from django.forms.models import BaseInlineFormSet
+from django.forms.models import inlineformset_factory
+from django.forms.formsets import DELETION_FIELD_NAME
 import datetime
 
 class FormMixin(ModelForm):
@@ -29,6 +32,22 @@ class FormsetMixin(BaseModelFormSet):
     def save(self, commit=True):
         forms = super(FormsetMixin, self).save(commit=False)
         for form in forms:
+
+            if self.pk:
+                form.setPK(self.pk)
+            if commit:
+                form.save()
+        return forms
+        
+class InlineFormsetMixin(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.pk = kwargs.pop('pk', None)
+        super(InlineFormsetMixin, self).__init__(*args, **kwargs)
+
+    def save(self, commit=True):
+        forms = super(InlineFormsetMixin, self).save(commit=False)
+        for form in forms:
+
             if self.pk:
                 form.setPK(self.pk)
             if commit:
@@ -160,3 +179,87 @@ class InvestigatorForm(FormMixin):
     class Meta:
         model = InvestigatorTable
         fields = ('Name', 'Amount', 'Role')
+
+class GrantYearForm(FormMixin):
+    class Meta:
+        model = GrantYearTable
+        fields = ('Amount', 'StartYear', 'EndYear', 'ProjectTitle')
+
+InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=1)
+GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=1)
+
+class GrantForm(FormMixin):
+
+    class Meta:
+        model = GrantTable
+        fields = ('Agency', 'SupportType', 'Held')
+
+class GrantFormset(FormsetMixin):
+    def __init__(self, *args, **kwargs):
+        super(GrantFormset, self).__init__(*args, **kwargs)
+
+    def add_fields(self, form, index):
+        super(GrantFormset, self).add_fields(form, index)
+        
+        try:
+            instance = self.get_queryset()[index]
+            pk_value = instance.pk
+        except IndexError:
+            instance = None
+            pk_value = hash(form.prefix)
+            
+        form.nested = [
+            InvestigatorFormset(data=self.data, instance=instance,
+                prefix='invest_%s' % pk_value, pk=instance),                
+            GrantYearFormset(data=self.data, instance=instance,
+                prefix='gyear_%s' % pk_value, pk=instance)
+        ]
+    def is_valid(self):
+        result = super(GrantFormset, self).is_valid()
+        
+        for form in self.forms:
+            if hasattr(form, 'nested'):
+                for nestedForm in form.nested:
+                    result = result and nestedForm.is_valid()
+        return result
+    def save_new(self, form, commit=True):
+
+        instance = super(GrantFormset, self).save_new(form, commit=commit)
+        
+        form.instance = instance
+        
+        for nested in form.nested:
+            nested.instance = instance
+            
+            for cdata in nested.cleaned_data:
+                cdata[nested.fk.name] = instance
+                
+        return instance
+        
+    def should_delete(self, form):    
+        if self.can_delete:
+            raw_delete_value = form._raw_value(DELETION_FIELD_NAME)
+            should_delete = form.fields[DELETION_FIELD_NAME].clean(raw_delete_value)
+            
+            return should_delete
+        return False
+
+    def save_all(self, commit=True):
+        objects = self.save(commit=False)
+        
+        if commit:
+            for o in objects:
+                print self.pk
+                if self.pk:
+                    o.setPK(self.pk)
+                o.save()
+                
+        if not commit:
+            self.save_m2m()
+            
+        for form in set(self.initial_forms + self.saved_forms):
+            if self.should_delete(form):
+                continue
+                
+            for nested in form.nested:
+                nested.save(commit=commit)

@@ -238,13 +238,14 @@ def researchGrants(request):
 
     }
     formsetInfo = {
-        'grantsHeldInvestigators': (
-            modelformset_factory(InvestigatorTable, form=InvestigatorForm, extra=1, formset=FormsetMixin, can_delete=True),
-            InvestigatorTable.objects.filter(Grant__Faculty_ID=faculty).filter(Grant__Held=True),
-            'grantsheldinvest',
-            GrantTable.objects.filter(Faculty_ID=faculty)            
+        'grantsHeld': (
+            modelformset_factory(GrantTable, form=GrantForm, extra=1, formset=GrantFormset, can_delete=True),
+            GrantTable.objects.filter(Faculty_ID=faculty).filter(Held=True),
+            'gheld',
+            faculty
         )
-    }
+    }   
+    
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -257,7 +258,7 @@ def researchGrants(request):
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
-                formset.save()
+                formset.save_all()
                 
             return HttpResponseRedirect('/research/grants/')
             

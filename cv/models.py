@@ -21,6 +21,10 @@ class FacultyKeyMixin:
     def setPK(self, pk):
         self.Faculty_ID = pk
 
+class GrantKeyMixin:
+    def setPK(self, pk):
+        self.Grant = pk
+
 class UserProfile(models.Model):
     """ This class is used to hold additional information
         related to the user itself """
@@ -143,7 +147,7 @@ class GrantTable(models.Model, FacultyKeyMixin):
     SupportType = models.CharField(max_length=200, blank=True)
     Held = models.BooleanField()
 
-class GrantYearTable(models.Model):
+class GrantYearTable(models.Model, GrantKeyMixin):
     Grant = models.ForeignKey(GrantTable)
     Amount = models.FloatField(blank=True)
     StartYear = models.DateField(blank=True)
@@ -157,7 +161,7 @@ class GrantYearTable(models.Model):
 #    EYear = models.DateField(blank=True)
 #    Amount = models.FloatField(blank=True)
 
-class InvestigatorTable(models.Model):
+class InvestigatorTable(models.Model, GrantKeyMixin):
     Grant = models.ForeignKey(GrantTable)
     Name = models.CharField(max_length=200, blank=True)
     Amount = models.FloatField(blank=True)
