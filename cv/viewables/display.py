@@ -18,7 +18,7 @@ def getFaculty(user):
         does not exist """
         
     try:
-        return FacultyTable.objects.gzet(Username=user)
+        return FacultyTable.objects.get(Username=user)
     except FacultyTable.DoesNotExist:
         fac = FacultyTable(Username=user)
         fac.save()
