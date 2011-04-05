@@ -73,7 +73,7 @@ def executive(request):
         doeFormset = modelformset_factory(DoETable,
                 form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(
                     request.POST, request.FILES, queryset=doeData, 
-                    prefix='doe')
+                    prefix='doe', pk=faculty)
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             summaryFormset.save()
