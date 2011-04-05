@@ -238,7 +238,7 @@ def researchGrants(request):
 
     }
     formsetInfo = {
-        'grantHeldInvestigatorFormset': (
+        'grantsHeldInvestigators': (
             modelformset_factory(InvestigatorTable, form=InvestigatorForm, extra=1, formset=FormsetMixin, can_delete=True),
             InvestigatorTable.objects.filter(Grant__Faculty_ID=faculty).filter(Grant__Held=True),
             'grantsheldinvest',
@@ -257,37 +257,15 @@ def researchGrants(request):
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
-                formset.save(pk=faculty)
+                formset.save()
                 
-            return HttpResponseRedirect('/researchgrants/')
+            return HttpResponseRedirect('/research/grants/')
             
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
     return direct_to_template(request, 'researchgrants.html', context)
-
-#    formInfo = {
-#        'facultyNameDeptForm': (
-#            FacultyNameDeptForm,
-#            faculty,
-#            'namedept',
-#        ),
-#        'facultyStartForm': (
-#            FacultyStartForm,
-#            faculty,
-#            'facultystart'
-#        )
-#    }
-
-#    formsetInfo = {
-#        'accredFormset': (
-#            modelformset_factory(AccredTable, form=AccredForm, extra=1, formset=FormsetMixin, can_delete=True),
-#            AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date'),
-#            'accred'
-#        ),
-#    
-    return direct_to_template(request, 'researchgrants.html', {})
 
 @login_required
 def Courses(request):
