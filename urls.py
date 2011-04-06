@@ -31,7 +31,6 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^research/grants/$', 'researchGrants', name='cv-researchGrants'),
     url(r'^Courses/$', 'Courses', name='cv-Courses'),
     url(r'^ResearchActivity/$', 'ResearchActivity', name='cv-ResearchActivity'),
-    url(r'^doe/$', 'distribution_of_effort', name='cv-doe'),
     url(r'^export/$', 'export_download', {'download': False}, name='cv-export'),
     url(r'^export_download/$', 'export_download', {'download': True},
         name='cv-export-download'),
@@ -39,8 +38,6 @@ urlpatterns += patterns('3760.cv.views',
 
 urlpatterns += patterns('',
     (r'^$', redirect_to, {'url': '/index/'}),
-    #url(r'^export/$', login_required(direct_to_template), {'template': 'export.html'},
-    #    name="cv-export"),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
         'login.html'}, name="cv-login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page':
