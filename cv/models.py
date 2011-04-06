@@ -188,6 +188,9 @@ class CourseTable(models.Model):
     CCode = models.CharField(max_length=200, blank=True, unique=True)
     Name = models.CharField(max_length=200, blank=True)
     Info = models.CharField(max_length=200, blank=True)
+    
+    def __unicode__(self):
+        return self.CCode + ': ' + self.Name
  
 class FacultyCourseJoinTable(models.Model, FacultyKeyMixin):
     Faculty_ID = models.ForeignKey(FacultyTable)

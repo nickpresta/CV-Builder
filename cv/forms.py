@@ -55,6 +55,8 @@ class InlineFormsetMixin(BaseInlineFormSet):
                 form.save()
         return forms
 
+
+
 class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
@@ -218,14 +220,18 @@ class GrantYearForm(FormMixin):
         model = GrantYearTable
         fields = ('Title', 'Amount', 'StartYear', 'EndYear')
 
+class CourseJoinForm(FormMixin):
+    class Meta:
+        model = FacultyCourseJoinTable
+        fields = ('CCode', 'Year', 'Semester', 'NumStudents')
+
+class CourseForm(FormMixin):
+    class Meta:
+        model = CourseTable
+        fields = ('CCode', 'Name', 'Info')
+
 InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
 GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
-
-#class GrantForm(FormMixin):
-
-#    class Meta:
-#        model = GrantTable
-#        fields = ('Agency', 'SupportType', 'Held')
 
 class GrantForm(FormMixin):
     class Meta:

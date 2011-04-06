@@ -394,9 +394,46 @@ def researchGrants(request):
     return direct_to_template(request, 'researchgrants.html', context)
 
 @login_required
-def Courses(request):
-    return direct_to_template(request, 'Courses.html', {})
+def courses(request):
+    faculty = getFaculty(request.user)
+    formInfo = {
+        'coursesJoined': (
+            inlineformset_factory(FacultyTable, FacultyCourseJoinTable, form=CourseJoinForm, extra=0, formset=InlineFormsetMixin, can_delete=True),
+            faculty,
+            'cjoin',
+            faculty
+        )
+    }    
+    formsetInfo = {
+        'courses': (
+            modelformset_factory(CourseTable, form=CourseForm, extra=0, formset=FormsetMixin, can_delete=True),
+            CourseTable.objects.all(),
+            'courses',
+            None
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        context = dict([('forms', forms), ('formsets', formsets)])
 
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/courses/')
+            
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+    return direct_to_template(request, 'courses.html', context)
 @login_required
 def ResearchActivity(request):
 
