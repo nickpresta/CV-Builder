@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from django.forms import ModelForm
+from django.forms import ModelForm, Form
 from cv.models import *
 from django import forms
 from django.forms.models import BaseModelFormSet
@@ -7,6 +7,7 @@ from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.forms.formsets import DELETION_FIELD_NAME
 import datetime
+import re
 
 class FormMixin(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -58,7 +59,7 @@ class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
         
-    Year = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    Year = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
     
     class Meta:
         fields = ('Year', 'Research', 'Teaching', 'Service')
@@ -97,7 +98,7 @@ class FacultyNameDeptForm(FormMixin):
         model = FacultyTable
         
 class AccredForm(FormMixin):
-    Date = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    Date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
         model = AccredTable
@@ -130,24 +131,24 @@ class ExecutiveSummaryForm(FormMixin):
         }
         
 class PositionHeldForm(FormMixin):
-    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
     
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Rank')
         model = PositionHeldTable
 
 class PositionPriorForm(FormMixin):
-    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Position')
         model = PositionPriorTable
 
 class PositionElsewhereForm(FormMixin):
-    StartDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    EndDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
         fields = ('StartDate', 'EndDate', 'Location', 'Position')
@@ -185,8 +186,8 @@ class GrantYearForm(FormMixin):
         model = GrantYearTable
         fields = ('Title', 'Amount', 'StartYear', 'EndYear')
 
-InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=1)
-GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=1)
+InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
+GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
 
 #class GrantForm(FormMixin):
 
@@ -195,30 +196,39 @@ GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantY
 #        fields = ('Agency', 'SupportType', 'Held')
 
 class GrantForm(FormMixin):
-    choice = None
     class Meta:
         model = GrantTable
         fields = ('Held', 'Agency', 'SupportType', 'ProjectTitle')
 
+class GrantSelectForm(Form):
+    pass
+
 class GrantFormset(FormsetMixin):
-    def __init__(self, *args, **kwargs):
-        super(GrantFormset, self).__init__(*args, **kwargs)
+
+    def _get_empty_form(self):
+        return super(GrantFormset, self)._get_empty_form()
 
     def add_fields(self, form, index):
         super(GrantFormset, self).add_fields(form, index)
         
         try:
             instance = self.get_queryset()[index]
-            pk_value = instance.pk
+            #pk_value = instance.pk
+            prefix = re.sub(r'-(?!.*-)', '_', form.prefix)
         except IndexError:
             instance = None
-            pk_value = hash(form.prefix)
+            #pk_value = hash(form.prefix)
+            #prefix = re.sub(r'-__prefix__', '___nested_prefix__', form.prefix)
+            prefix = re.sub(r'-(?!.*-)', '_', form.prefix)
+        except TypeError:
+            instance = None
+            prefix = re.sub(r'-__prefix__', '___nested_prefix__', form.prefix)
             
         form.nested = [
             InvestigatorFormset(data=self.data, instance=instance,
-                prefix='invest_%s' % pk_value, pk=instance),                
+                prefix='%s_invest' % prefix, pk=instance),                
             GrantYearFormset(data=self.data, instance=instance,
-                prefix='gyear_%s' % pk_value, pk=instance)
+                prefix='%s_gyear' % prefix, pk=instance)
         ]
     def is_valid(self):
         result = super(GrantFormset, self).is_valid()
@@ -255,9 +265,6 @@ class GrantFormset(FormsetMixin):
         
         if commit:
             for o in objects:
-                print self.pk
-                if self.pk:
-                    o.setPK(self.pk)
                 o.save()
                 
         if not commit:

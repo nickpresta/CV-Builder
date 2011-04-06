@@ -49,7 +49,7 @@ def executive(request):
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(
+                form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
                     request.POST, request.FILES, queryset=doeData, 
                     prefix='doe', pk=faculty)
 
@@ -62,7 +62,7 @@ def executive(request):
         # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=1, can_delete=True, formset=FormsetMixin)(queryset=doeData, prefix='doe')
+                form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(queryset=doeData, prefix='doe')
 
     return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 
@@ -87,31 +87,31 @@ def biographical(request):
 
     formsetInfo = {
         'accredFormset': (
-            modelformset_factory(AccredTable, form=AccredForm, extra=1, formset=FormsetMixin, can_delete=True),
+            modelformset_factory(AccredTable, form=AccredForm, extra=0, formset=FormsetMixin, can_delete=True),
             AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date'),
             'accred',
             faculty
         ),
         'honorFormset': (
-            modelformset_factory(HonorTable, form=HonorForm, extra=1, formset=FormsetMixin, can_delete=True),
+            modelformset_factory(HonorTable, form=HonorForm, extra=0, formset=FormsetMixin, can_delete=True),
             HonorTable.objects.filter(Faculty_ID=faculty),
             'honor',
             faculty
         ),
         'positionHeldFormset': (
-            modelformset_factory(PositionHeldTable, form=PositionHeldForm, extra=1, formset=FormsetMixin, can_delete=True),
+            modelformset_factory(PositionHeldTable, form=PositionHeldForm, extra=0, formset=FormsetMixin, can_delete=True),
             PositionHeldTable.objects.filter(Faculty_ID=faculty),
             'positionheld',
             faculty
         ),
         'positionPriorFormset': (
-            modelformset_factory(PositionPriorTable, form=PositionPriorForm, extra=1, formset=FormsetMixin, can_delete=True),
+            modelformset_factory(PositionPriorTable, form=PositionPriorForm, extra=0, formset=FormsetMixin, can_delete=True),
             PositionPriorTable.objects.filter(Faculty_ID=faculty),
             'positionprior',
             faculty
         ),
         'positionElsewhereFormset': (
-            modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm, extra=1, formset=FormsetMixin, can_delete=True),
+            modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm, extra=0, formset=FormsetMixin, can_delete=True),
             PositionElsewhereTable.objects.filter(Faculty_ID=faculty),
             'positionelsewhere',
             faculty
@@ -216,20 +216,16 @@ def researchGrants(request):
 
     }    
     formsetInfo = {
-        'grantsHeld': (
-            modelformset_factory(GrantTable, form=GrantForm, extra=1, formset=GrantFormset, can_delete=True),
-            GrantTable.objects.filter(Faculty_ID=faculty).filter(Held=True),
-            'gheld',
+        'grants': (
+            modelformset_factory(GrantTable, form=GrantForm, extra=0, formset=GrantFormset, can_delete=True),
+            GrantTable.objects.filter(Faculty_ID=faculty),
+            'grant',
             faculty
         )
     }
     
-    grantForm = GrantForm()
-    grantForm.fields['Grant'] = ModelChoiceField(queryset=GrantTable.objects.filter(Faculty_ID=faculty).filter(Held=True))
-    
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        forms['grantsHeld'] = grantForm
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
@@ -246,12 +242,10 @@ def researchGrants(request):
             
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
-        forms['grantsHeld'] = grantForm
         context = dict([('forms', forms), ('formsets', formsets)])
 
-    context['grantData'] = serializers.serialize('json', GrantTable.objects.filter(Faculty_ID=faculty), fields=('Held', 'Agency', 'SupportType', 'ProjectTitle'))
-    context['investigatorData'] = serializers.serialize('json', InvestigatorTable.objects.filter(Grant__Faculty_ID=faculty), fields=('Name', 'Amount', 'Role'))
-    context['grantYearData'] = serializers.serialize('json', GrantYearTable.objects.filter(Grant__Faculty_ID=faculty), fields=('Title', 'Amount', 'StartYear', 'EndYear'))
+    forms['grants'] = GrantSelectForm()
+    forms['grants'].fields['grantSelect'] = ModelChoiceField(queryset=GrantTable.objects.filter(Faculty_ID=faculty), label="Grant")
 
     return direct_to_template(request, 'researchgrants.html', context)
 

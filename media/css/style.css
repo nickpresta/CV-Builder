@@ -197,6 +197,7 @@ div.field_label {
 
 div.field_wrapper {
     float: left;
+    margin-left: 25px;
 }
 
 /** multiitem_table classes and styles **/
@@ -339,8 +340,13 @@ span.clickable {
     font-size: 11px;
 }
 
-td.error, div.error input {
+td.error, div.error input, select.error {
     border: 3px solid red;
+}
+
+option.error {
+    color: red;
+    font-weight: bold;
 }
 
 .hidden {

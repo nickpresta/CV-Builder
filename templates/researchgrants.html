@@ -1,18 +1,134 @@
 {% extends "base.html" %}
 
 {% block morehead %}
+{% autoescape off %}
+<script type="text/javascript">
+var grantData = eval('{{ grantData }}');
+var investigatorData = eval('{{ investigatorData }}');
+var grantYearData = eval('{{ grantYearData }}');
+
+function renumberElement(regexp, repl, elem) {
+    if (elem.id)
+        elem.id = elem.id.replace(regexp, repl);
+    if (elem.name)
+        elem.name = elem.name.replace(regexp, repl);
+}
+
+$(document).ready(function() {
+    var blankGrant = $(".grants > .grant_wrapper:last");
+    var errorGrants = $(".grant_wrapper:has(.error)");
+    var removeNum_regex;
+    var totalGrantsElem = $(".grants > .management > input[name$=\"-TOTAL_FORMS\"]");
+    var totalGrants = parseInt(totalGrantsElem.val());
+    
+    $(".grant_wrapper").hide();
+    
+    // reduce grant count by to compensate for the extra form
+    // $(totalGrantsElem).val(totalGrants);
+
+    if (errorGrants.length > 0) {
+        var first = $(errorGrants).first();
+
+        $(first).show();
+        $("#id_grantSelect").val($(first).children("[name$=\"-id\"]").val());
+        
+        $("#id_grantSelect").addClass("error");
+    }   
+    
+    $(errorGrants).each(function() {
+        var grantID = $(this).children("[name$=\"-id\"]").val();
+
+        // mark option in select element
+        $("#id_grantSelect > [value=\"" + grantID + "\"]").addClass("error");
+    });
+    
+    // remove numbering from blank grant form inputs
+    //removeNum_regex = new RegExp("(-\\d+-)");
+    //$(blankGrant).find("[name ^= \"grant-\"]").each(function() {
+    //    renumberElement(removeNum_regex, "--", this);
+    //});
+    
+    // remove numbering from blank grant form nested inputs
+    //removeNum_regex = new RegExp("(_\\d+_)");
+    //$(blankGrant).find("[name ^= \"grant_\"]").each(function() {
+    //    renumberElement(removeNum_regex, "__", this);
+    //});
+
+    // name each grant_wrapper by their id value (primary key)
+    $(".grant_wrapper").each(function () {
+        var id = $(this).children("[name$=\"-id\"]").val();
+        $(this).attr("name", id);
+    });
+    
+    // grant select changed
+    $("#id_grantSelect").change(function() {
+        var selectedID = $(this).val();
+        var prevGrant = $(".grant_wrapper:visible");
+
+        $(prevGrant).hide();
+
+        if (selectedID)
+            $(".grant_wrapper[name=\"" + selectedID + "\"]").show();
+    });
+    
+    // update select element option string to reflect new values
+    $("[name $= \"Agency\"], [name $= \"SupportType\"], [name $= \"ProjectTitle\"]").keyup(function() {
+        var curGrant = $(".grant_wrapper:visible");
+        
+        if (curGrant.length > 0) {
+            var newOptStr = "";
+            var tmpstr;
+    
+            newOptStr = $(curGrant).find("[name $= \"Agency\"]").val();
+            tmpstr = $(curGrant).find("[name $= \"SupportType\"]").val();
+            
+            if (tmpstr)
+                newOptStr += ", " + tmpstr;
+            tmpstr = $(curGrant).find("[name $= \"ProjectTitle\"]").val();
+            if (tmpstr)
+                newOptStr += ": " + tmpstr;
+                
+            $("#id_grantSelect > [value = \"" + $(curGrant).attr("name") + "\"]").html(newOptStr);
+        }        
+    });
+    
+    $(".addgrant").click(function () {
+        var newGrant = $(blankGrant).clone(true);
+        //var newInvest = $(blankGrant).children("fieldset:first > table").clone(true);
+        //var newYears = $(blankGrant).children("fieldset:last > table").clone(true);
+        var newGrantOpt = $("<option value=\"new-" + totalGrants + "\">new</option>");
+        
+        //$(newGrant).children("fieldset:first > table").replaceWith(newInvest);
+        //$(newGrant).children("fieldset:last > table").replaceWith(newYears);
+        
+        $(".grant_wrapper:visible").hide();
+        
+        ($(newGrant).children("[name *= \"__prefix__\"]").add($(newGrant).children("div").find("[name *= \"__prefix__\"]"))).each(function() {
+            renumberElement(new RegExp("(__prefix__)"), totalGrants, this);
+        });
+        
+        $(newGrant).find("[name *= \"__prefix__\"]").each(function() {
+            renumberElement(new RegExp("(__prefix__)"), "0", this);
+        });
+        
+        $(newGrant).find("[name *= \"__nested_prefix__\"]").each(function() {
+            renumberElement(new RegExp("(__nested_prefix__)"), totalGrants, this);
+        });
+        
+        $(totalGrantsElem).val(++totalGrants);
+        $(newGrant).insertBefore(".grant_wrapper:last").show();
+        $(newGrant).attr("name", "new-" + totalGrants);
+        $("#id_grantSelect").append(newGrantOpt);
+        $("#id_grantSelect").val(newGrantOpt.val());
+
+    });
+});
+</script>
+{% endautoescape %}
 
 {% endblock %}
 
 {% block content %}
-{% autoescape off %}
-<script type="text/javascript">
-var grantData = eval('{{ grantData }}');
-var investigatorData = eval("{{ investigatorData }}");
-var grantYearData = eval("{{ grantYearData }}");
-document.write(grantData);
-</script>
-{% endautoescape %}
 <h2>3A Research</h2>
 
 {% for name, formset in formsets.items %}
@@ -21,54 +137,96 @@ document.write(grantData);
             {{ error|escape }}
         {% endfor %}
     {% endif %}
+    {% for form in formset.forms %}
+        {% for nestedFormset in form.nested %}
+            {% if nestedFormset.errors %}
+                {% for error in nestedFormset.errors %}
+                    {{ error|escape }}
+                {% endfor %}
+            {% endif %}
+        {% empty %}
+            no nested list
+            {{ formset.forms.nested }}
+        {% endfor %}
+    {% endfor %}
 {% endfor %}
+
 {% for name, form in forms.items %}
     {{ form.errors.as_ul }}
 {% endfor %}
 
-<div>
-{{ grantData }}
-</div>
-
 <form method="post" action="{% url cv-researchGrants %}">
     {% csrf_token %}
-    <fieldset id="grantsheld">
-        <legend>c - Research Grants and Contracts Held</legend>
+    <fieldset id="grants">
+        <legend>c-d - Research Grants and Contracts</legend>
 
-        {% with forms.grantsHeld as form %}
-            {% include "inline_form.html" %}
-        {% endwith %}
+        <div>        
+            <div class="field_label">{{ forms.grants.grantSelect.label_tag }}</div>
+            <div class="field_wrapper">{{ forms.grants.grantSelect }}</div>
+            <div class="field_wrapper"><span class="clickable addgrant">add</span></div>
+            <div class="clear"></div>
+        </div>
+        <div class="grants">
+            <div class="management">
+                {{ formsets.grants.management_form }}  
+            </div>
+            {% for form in formsets.grants.forms %}
+            <div class="grant_wrapper">
+                {% include "inline_form.html" %}
 
-        {{ formsets.grantsHeld.management_form }}
-        {% with formsets.grantsHeld.forms as tableFormset %}
-            {% include "multiitem_table.html" %}
-        {% endwith %}
-        
-        {% for grant in formsets.grantsHeld.forms %}
-                <div>
-                {{ grant.nested.0.management_form }}
-                {% with grant.nested.0.forms as tableFormset %}
-                    {% include "multiitem_table.html" %}
+                {% with form.nested.0 as formset %}
+                <fieldset>
+  
+                    <legend>Investigators</legend>
+                    {{ formset.management_form }}
+                    {% with formset as tableFormset %}
+                        {% include "multiitem_table.html" %}
+                    {% endwith %}
+                </fieldset>
                 {% endwith %}
-                </div>
-                <div>
-                {{ grant.nested.1.management_form }}
-                {% with grant.nested.1.forms as tableFormset %}
-                    {% include "multiitem_table.html" %}
+
+                {% with form.nested.1 as formset %}
+                <fieldset>
+                    <legend>Years of Tenure</legend>
+                    {{ formset.management_form }}
+                    {% with formset as tableFormset %}
+                        {% include "multiitem_table.html" %}
+                    {% endwith %}
+                </fieldset>
                 {% endwith %}
-                </div>
+            </div>
+            {% endfor %}
+            {% with formsets.grants.empty_form as form %}
+            <div class="grant_wrapper">
+                {% include "inline_form.html" %}
 
-        {% endfor %}
+                {% with form.nested.0 as formset %}
+                <fieldset>
+  
+                    <legend>Investigators</legend>
+                    {{ formset.management_form }}
+                    {% with formset as tableFormset %}
+                        {% include "multiitem_table.html" %}
+                    {% endwith %}
+                </fieldset>
+                {% endwith %}
 
-    </fieldset>
-    <fieldset id="grantsapplied">
-        <legend>d - Research Grants Applied For</legend>
-        {{ formsets.grantsApplied.management_form }}
-        {% with formsets.grantsApplied as form %}
-            {% include "inline_form.html" %}
-        {% endwith %}
+                {% with form.nested.1 as formset %}
+                <fieldset>
+                    <legend>Years of Tenure</legend>
+                    {{ formset.management_form }}
+                    {% with formset as tableFormset %}
+                        {% include "multiitem_table.html" %}
+                    {% endwith %}
+                </fieldset>
+                {% endwith %}
+            </div>
+            {% endwith %}
+        </div>
     </fieldset>
     <input type="submit" value="Save" />
+    
+
 </form>
 {% endblock %}
 

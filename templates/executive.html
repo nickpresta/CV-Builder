@@ -16,7 +16,7 @@
     <fieldset id="distribution_fieldset" name="distribution">
         <legend id="distribution">Distribution of Effort</legend>
         {{ doeFormset.management_form }}
-        {% with doeFormset.forms as tableFormset %}
+        {% with doeFormset as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>

@@ -101,24 +101,24 @@ function shortcut_functions() {
 
 function multiItemTable_functions() {
     var removeNum_regex = new RegExp("(-\\d+-)");
-    var addNum_regex = new RegExp("(--)");
+    var addNum_regex = new RegExp("(__prefix__)");
 
     $(".multiitem_table").each(function(index) {
         var blankRow = $(this).find("tr:last");
         var totalFormsElem = $(this).siblings("input:hidden[id $= '-TOTAL_FORMS']");
 
         // last row of the table is the "blank row", cloned to make new rows
-        $(blankRow).find("input").each(function(index) {
-            if (this.id)
-                this.id = this.id.replace(removeNum_regex, "--");
-            if (this.name)
-                this.name = this.name.replace(removeNum_regex, "--");
-        });
+//        $(blankRow).find("input").each(function(index) {
+//            if (this.id)
+//                this.id = this.id.replace(removeNum_regex, "--");
+//            if (this.name)
+//                this.name = this.name.replace(removeNum_regex, "--");
+//        });
 
         blankRow.hide();
 
         // decrement the form managers total form count
-        $(totalFormsElem).val(parseInt($(totalFormsElem).val()) - 1);
+        //$(totalFormsElem).val(parseInt($(totalFormsElem).val()) - 1);
 
         // add new row, insert duplicate of last row (blankRow) in table
         $(this).find(".additem").click(function() {
@@ -126,11 +126,11 @@ function multiItemTable_functions() {
             var formCount = parseInt($(totalFormsElem).val());
 
             // change the numbering of the new row's inputs
-            $(newRow).find("input").each(function(index) {
+            $(newRow).find("[name *= \"__prefix__\"]").each(function(index) {
                 if (this.id)
-                    this.id = this.id.replace(addNum_regex, "-" + formCount + "-");
+                    this.id = this.id.replace(addNum_regex, formCount);
                 if (this.name)
-                    this.name = this.name.replace(addNum_regex, "-" + formCount + "-");
+                    this.name = this.name.replace(addNum_regex, formCount);
             });
 
             newRow.appendTo($(this).parents(".multiitem_table")).show();
@@ -170,4 +170,7 @@ function multiItemTable_functions() {
 
         return false;
     });
+    
+    // show all rows with errors
+    $(".multiitem_table tr:has(td.error)").show();
 }

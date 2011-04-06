@@ -149,7 +149,12 @@ class GrantTable(models.Model, FacultyKeyMixin):
     Held = models.BooleanField()
 
     def __unicode__(self):
-        return self.ProjectTitle
+        rv = self.Agency
+        if self.SupportType:
+            rv += ", " + self.SupportType
+        if self.ProjectTitle:
+            rv += ": " + self.ProjectTitle
+        return rv
 
 class GrantYearTable(models.Model, GrantKeyMixin):
     Grant = models.ForeignKey(GrantTable)

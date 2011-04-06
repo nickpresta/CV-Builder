@@ -3,27 +3,37 @@
         <td><span class="clickable additem">add</span><td>
     </tr>
     <tr>
-        {% for field in tableFormset.0.visible_fields %}
+        {% for field in tableFormset.empty_form.visible_fields %}
             {% if field.label != "Delete" %}
-                <th>{{ field.label }}</th>
+            <th>{{ field.label }}</th>
             {% endif %}
         {% endfor %}
     </tr>
-    {% for form in tableFormset %}
-        <tr class="multiitem_row">
-        {% for field in form %}
-            {% if field.errors %}
-            <td class='error'>
-            {% else %}
-            <td>
-            {% endif %}
-                {{ field }}
-            </td>
-            {% endfor %}
-            <td>
-                <span class="clickable removeitem">remove</span>
-            </td>
-        </tr>
+    {% for form in tableFormset.forms %}
+    <tr class="multiitem_row">
+    {% for field in form %}
+        {% if field.errors %}
+        <td class='error'>
+        {% else %}
+        <td>
+        {% endif %}
+        {{ field }}
+        </td>
+        {% endfor %}
+        <td>
+            <span class="clickable removeitem">remove</span>
+        </td>
+    </tr>
     {% endfor %}
+    <tr class="multiitem_row">
+        {% for field in tableFormset.empty_form %}
+        <td>{{ field }}</td>
+        {% endfor %}
+        <td>
+            <span class="clickable removeitem">remove</span>
+        </td>
+    </tr>
+
+        
 </table>
 
