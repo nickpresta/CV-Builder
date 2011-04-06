@@ -3,6 +3,8 @@
 {% block title %}Edit CV{% endblock %}
 
 {% block content %}
+<p>Please select a section from the list below to edit.</p>
+<p><a id="expand_all" href="#">Expand All</a> / <a id="collapse_all" href="#">Collapse All</a></p>
 <dl class="expandlist">
     <dt class="expandable">
         <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
@@ -28,7 +30,7 @@
             <li><a href="{% url cv-biographical %}#experience">Experience prior to appointment at Guelph</a></li>
             <li><a href="{% url cv-biographical %}#elsewhere">Visiting Professorships, etc. elsewhere since appointment</a></li>
         </ol>
-            
+
     </dd>
     <dt class="expandable">
         <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />

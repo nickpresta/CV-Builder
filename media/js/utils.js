@@ -50,6 +50,20 @@ function expand_menu() {
     });
 }
 
+function expand_collapse_all() {
+    $("#expand_all").click(function() {
+        $("img.expandlist").removeClass("plus");
+        $("img.expandlist").addClass("minus");
+        $("img.expandlist").parent().nextAll("dd").show();
+    });
+    $("#collapse_all").click(function() {
+        $("img.expandlist").removeClass("minus");
+        $("img.expandlist").addClass("plus");
+        $("img.expandlist").parent().nextAll("dd").hide();
+    });
+
+}
+
 function date_picker() {
     $(".datepicker").datepicker({
         dateFormat: 'yy-mm-dd',

@@ -9,32 +9,8 @@ from django.forms.formsets import formset_factory
 from cv.forms import *
 from cv.models import *
 
+# These are utility functions that we need through all views
 from common import *
-
-# utility functions
-
-def getFaculty(user):
-    """ Retrieve a member from the FacultyTable by username, or create one if it
-        does not exist """
-        
-    try:
-        return FacultyTable.objects.get(Username=user)
-    except FacultyTable.DoesNotExist:
-        fac = FacultyTable(Username=user)
-        fac.save()
-        return fac
-
-def createContext(formsetInfo, formInfo, postData=None, files=None):
-    formsets = dict((
-        formsetName, 
-        Formset(postData, files, pk=key, queryset=qs, prefix=pf)
-    ) for formsetName, (Formset, qs, pf, key) in formsetInfo.iteritems())
-    
-    forms = dict((
-        formName,
-        Form(postData, files, pk=key, instance=ins, prefix=pf)
-    ) for formName, (Form, ins, pf, key) in formInfo.iteritems())
-    return formsets, forms
 
 def index(request):
     """ Responsible for showing the index page """

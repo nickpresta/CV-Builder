@@ -19,7 +19,17 @@ def write_pdf(template_src, context_dict, request):
     context = Context(context_dict)
     html  = template.render(context)
     result = StringIO.StringIO()
-    pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)
+    try:
+        pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)
+    except RuntimeError:
+        # Is is a runtime error because the maximum recursion depth has been
+        # exceeded. Raising the recursion limit is a bad idea in this case
+        # This happens when the DOM of the document is seriously nested or
+        # otherwise screwed up. This shouldn't normally happen, but happened in
+        # our stress testing
+        return HttpResponse("Your document is too long to convert to a PDF. "
+                            "Please try reducing the content in the free-form "
+                            "fields.")
     if not pdf.err:
         response = HttpResponse(mimetype='application/pdf')
         response['Content-Disposition'] = 'attachment; filename=cv_%s_%s.pdf' % (
