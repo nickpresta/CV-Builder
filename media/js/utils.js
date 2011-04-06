@@ -105,7 +105,7 @@ function multiItemTable_functions() {
 
     $(".multiitem_table").each(function(index) {
         var blankRow = $(this).find("tr:last");
-        var totalFormsElem = $(this).siblings("input:hidden[id $= '-TOTAL_FORMS']");        
+        var totalFormsElem = $(this).siblings("input:hidden[id $= '-TOTAL_FORMS']");
 
         // last row of the table is the "blank row", cloned to make new rows
         $(blankRow).find("input").each(function(index) {
@@ -115,7 +115,7 @@ function multiItemTable_functions() {
                 this.name = this.name.replace(removeNum_regex, "--");
         });
 
-        blankRow.hide();        
+        blankRow.hide();
 
         // decrement the form managers total form count
         $(totalFormsElem).val(parseInt($(totalFormsElem).val()) - 1);
@@ -158,7 +158,7 @@ function multiItemTable_functions() {
     $(".removeitem").click(function() {
         // mark hidden delete input as on
         $(this).parents("tr").find('input:hidden[id $= "-DELETE"]').val('on');
-        
+
 
         $(this).parents("tr").hide();
         $(this).parents("tr").addClass("hidden");
@@ -169,5 +169,5 @@ function multiItemTable_functions() {
         date_picker();
 
         return false;
-    });    
+    });
 }
