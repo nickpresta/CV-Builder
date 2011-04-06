@@ -208,6 +208,150 @@ def reportOnTeaching(request):
         context = dict([('forms', forms), ('formsets', formsets)])
     
     return direct_to_template(request, 'ReportOnTeaching.html', context)
+    
+@login_required
+def researchConsulting(request):
+    faculty = getFaculty(request.user)
+    
+    formsetInfo = { }
+    formInfo = {
+        'consulting': (
+            ConsultingResearchForm,
+            SummaryTable.objects.get(Faculty_ID=faculty),
+            'consulting',
+            faculty
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/research/consulting/')
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+    
+    return direct_to_template(request, 'researchconsulting.html', context)
+
+@login_required
+def researchPatents(request):
+    faculty = getFaculty(request.user)
+    
+    formsetInfo = { }
+    formInfo = {
+        'patents': (
+            PatentsResearchForm,
+            SummaryTable.objects.get(Faculty_ID=faculty),
+            'consulting',
+            faculty
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/research/patents/')
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+    
+    return direct_to_template(request, 'researchpatents.html', context)
+
+@login_required
+def researchOther(request):
+    faculty = getFaculty(request.user)
+    
+    formsetInfo = { }
+    formInfo = {
+        'other': (
+            OtherResearchForm,
+            SummaryTable.objects.get(Faculty_ID=faculty),
+            'other',
+            faculty
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/research/other/')
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+    
+    return direct_to_template(request, 'researchother.html', context)
+
+@login_required
+def researchRecognition(request):
+    faculty = getFaculty(request.user)
+    
+    formsetInfo = { }
+    formInfo = {
+        'recognition': (
+            RecognitionResearchForm,
+            SummaryTable.objects.get(Faculty_ID=faculty),
+            'recognition',
+            faculty
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/research/recognition/')
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+    
+    return direct_to_template(request, 'researchrecognition.html', context)
 
 @login_required
 def researchGrants(request):

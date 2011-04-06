@@ -176,6 +176,38 @@ class ReportOnTeachingForm(FormMixin):
             'Teaching': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
+class ConsultingResearchForm(FormMixin):
+    class Meta:
+        model = SummaryTable
+        fields = ('R_Consulting',)
+        widgets = {
+            'R_Consulting': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+        
+class PatentsResearchForm(FormMixin):
+    class Meta:
+        model = SummaryTable
+        fields = ('R_Patents',)
+        widgets = {
+            'R_Patents': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
+class OtherResearchForm(FormMixin):
+    class Meta:
+        model = SummaryTable
+        fields = ('R_Other',)
+        widgets = {
+            'R_Other': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
+class RecognitionResearchForm(FormMixin):
+    class Meta:
+        model = SummaryTable
+        fields = ('R_Recognition',)
+        widgets = {
+            'R_Recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
 class InvestigatorForm(FormMixin):
     class Meta:
         model = InvestigatorTable
