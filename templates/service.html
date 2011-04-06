@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Edit CV{% endblock %}
+
+{% block content %}
+{% for name, formset in formsets.items %}
+    {% if formset.errors  %}
+        {% for error in formset.errors %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+{% for name, form in forms.items %}
+    {{ form.errors.as_ul }}
+{% endfor %}
+
+<form method="post" action="{% url cv-service %}">
+    {% csrf_token %}
+    <fieldset id="department">
+        <legend>a - Department Committees and Similar Bodies with Dates</legend>
+        {{ formsets.department.management_form }}
+        {% with formsets.department as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
+    </fieldset>
+    <fieldset id="college">
+        <legend>b - College Committees and Similar Bodies with Dates</legend>
+        {{ formsets.college.management_form }}
+        {% with formsets.college as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
+    </fieldset>
+    <fieldset id="university">
+        <legend>c - University Committees and Similar Bodies with Dates</legend>
+        {{ formsets.university.management_form }}
+        {% with formsets.university as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
+    </fieldset>
+    <fieldset id="external">
+        <legend>d - External Committees and Similar Bodies with Dates</legend>
+        {{ formsets.external.management_form }}
+        {% with formsets.external as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
+    </fieldset>
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}

@@ -208,16 +208,21 @@ class GradTable(models.Model, FacultyKeyMixin):
     EDate = models.DateField(blank=True)
     Note = models.CharField(max_length=200, blank=True)
 
+
 class ServiceTable(models.Model, FacultyKeyMixin):
+    service_levels = [('u', 'University'), ('d', 'Department'), ('c', 'College'), ('e', 'External')]
+    roles = [('c', 'Chair'), ('m', 'Member')]
+    semesters = [('f', 'Fall'), ('w', 'Winter'), ('s', 'Summer')]
+
     #GID = models.IntegerField()
     Faculty_ID = models.ForeignKey(FacultyTable)
-    S_ID = models.IntegerField(blank=True)
-    SSem = models.CharField(max_length=200, blank=True)
+    #S_ID = models.IntegerField(blank=True)
+    SSem = models.CharField(max_length=200, blank=True, choices=semesters)
     SYear = models.IntegerField(blank=True)
-    ESem = models.CharField(max_length=200, blank=True)
+    ESem = models.CharField(max_length=200, blank=True, choices=semesters)
     EYear = models.IntegerField(blank=True)
     Committee = models.CharField(max_length=200, blank=True)
-    Role = models.CharField(max_length=200, blank=True)
+    Role = models.CharField(max_length=200, blank=True, choices=roles)
     Chair = models.CharField(max_length=200, blank=True)
     Other = models.CharField(max_length=200, blank=True)
-    Level = models.CharField(max_length=200, blank=True)
+    Level = models.CharField(max_length=200, blank=True, choices=service_levels)

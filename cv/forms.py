@@ -238,6 +238,11 @@ class CourseForm(FormMixin):
         model = CourseTable
         fields = ('CCode', 'Name', 'Info')
 
+class ServiceForm(FormMixin):
+    class Meta:
+        model = ServiceTable
+        fields = ('SSem', 'SYear', 'ESem', 'EYear', 'Committee', 'Role', 'Chair', 'Other', 'Level')
+
 InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
 GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
 
