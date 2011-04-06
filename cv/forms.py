@@ -210,6 +210,14 @@ class RecognitionResearchForm(FormMixin):
             'R_Recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
+class CounsellingForm(FormMixin):
+    class Meta:
+        model = SummaryTable
+        fields = ('T_Counselling',)
+        widgets = {
+            'T_Counselling': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
 class InvestigatorForm(FormMixin):
     class Meta:
         model = InvestigatorTable

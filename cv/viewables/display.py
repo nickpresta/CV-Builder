@@ -177,11 +177,16 @@ def ServiceAndAdmin(request):
 def reportOnTeaching(request):
     faculty = getFaculty(request.user)
     
+    try:
+        summary = SummaryTable.objects.get(Faculty_ID=faculty)
+    except SummaryTable.DoesNotExist:
+        summary = SummaryTable(Faculty_ID=faculty)
+    
     formsetInfo = { }
     formInfo = {
         'reportOnTeaching': (
             ReportOnTeachingForm,
-            SummaryTable.objects.get(Faculty_ID=faculty),
+            summary,
             'report',
             faculty
         )
@@ -213,11 +218,16 @@ def reportOnTeaching(request):
 def researchConsulting(request):
     faculty = getFaculty(request.user)
     
+    try:
+        summary = SummaryTable.objects.get(Faculty_ID=faculty)
+    except SummaryTable.DoesNotExist:
+        summary = SummaryTable(Faculty_ID=faculty)
+    
     formsetInfo = { }
     formInfo = {
         'consulting': (
             ConsultingResearchForm,
-            SummaryTable.objects.get(Faculty_ID=faculty),
+            summary,
             'consulting',
             faculty
         )
@@ -246,14 +256,60 @@ def researchConsulting(request):
     return direct_to_template(request, 'researchconsulting.html', context)
 
 @login_required
+def counselling(request):
+    faculty = getFaculty(request.user)
+    
+    try:
+        summary = SummaryTable.objects.get(Faculty_ID=faculty)
+    except SummaryTable.DoesNotExist:
+        summary = SummaryTable(Faculty_ID=faculty)
+    
+    formsetInfo = { }
+    formInfo = {
+        'counselling': (
+            CounsellingForm,
+            summary,
+            'counselling',
+            faculty
+        )
+    }
+    
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)        
+        
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+                
+            return HttpResponseRedirect('/teaching/counselling')
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+    
+    return direct_to_template(request, 'counselling.html', context)
+
+@login_required
 def researchPatents(request):
     faculty = getFaculty(request.user)
+    
+    try:
+        summary = SummaryTable.objects.get(Faculty_ID=faculty)
+    except SummaryTable.DoesNotExist:
+        summary = SummaryTable(Faculty_ID=faculty)
     
     formsetInfo = { }
     formInfo = {
         'patents': (
             PatentsResearchForm,
-            SummaryTable.objects.get(Faculty_ID=faculty),
+            summary,
             'consulting',
             faculty
         )
@@ -285,11 +341,16 @@ def researchPatents(request):
 def researchOther(request):
     faculty = getFaculty(request.user)
     
+    try:
+        summary = SummaryTable.objects.get(Faculty_ID=faculty)
+    except SummaryTable.DoesNotExist:
+        summary = SummaryTable(Faculty_ID=faculty)
+    
     formsetInfo = { }
     formInfo = {
         'other': (
             OtherResearchForm,
-            SummaryTable.objects.get(Faculty_ID=faculty),
+            summary,
             'other',
             faculty
         )
@@ -321,11 +382,16 @@ def researchOther(request):
 def researchRecognition(request):
     faculty = getFaculty(request.user)
     
+    try:
+        summary = SummaryTable.objects.get(Faculty_ID=faculty)
+    except SummaryTable.DoesNotExist:
+        summary = SummaryTable(Faculty_ID=faculty)
+    
     formsetInfo = { }
     formInfo = {
         'recognition': (
             RecognitionResearchForm,
-            SummaryTable.objects.get(Faculty_ID=faculty),
+            summary,
             'recognition',
             faculty
         )
@@ -427,7 +493,7 @@ def courses(request):
             for formset in formsets.values():
                 formset.save()
                 
-            return HttpResponseRedirect('/courses/')
+            return HttpResponseRedirect('/teaching/courses/')
             
     else:
         formsets, forms = createContext(formsetInfo, formInfo)

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>3B Teaching and Learning</h2>
+
+{% for name, formset in formsets.items %}
+    {% if formset.errors  %}
+        {% for error in formset.errors %}
+            {{ error|escape }}
+        {% endfor %}
+    {% endif %}
+{% endfor %}
+{% for name, form in forms.items %}
+    {{ form.errors.as_ul }}
+{% endfor %}
+
+<form method="post" action="{% url cv-counselling %}">
+    {% csrf_token %}
+
+    <fieldset>
+        <legend>c - Contributions to Student Counselling</legend>
+
+        {{ forms.counselling.T_Counselling }}
+    </fieldset>
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}
+
+
