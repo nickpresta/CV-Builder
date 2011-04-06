@@ -183,16 +183,22 @@ class InvestigatorForm(FormMixin):
 class GrantYearForm(FormMixin):
     class Meta:
         model = GrantYearTable
-        fields = ('Amount', 'StartYear', 'EndYear', 'ProjectTitle')
+        fields = ('Title', 'Amount', 'StartYear', 'EndYear')
 
 InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=1)
 GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=1)
 
-class GrantForm(FormMixin):
+#class GrantForm(FormMixin):
 
+#    class Meta:
+#        model = GrantTable
+#        fields = ('Agency', 'SupportType', 'Held')
+
+class GrantForm(FormMixin):
+    choice = None
     class Meta:
         model = GrantTable
-        fields = ('Agency', 'SupportType', 'Held')
+        fields = ('Held', 'Agency', 'SupportType', 'ProjectTitle')
 
 class GrantFormset(FormsetMixin):
     def __init__(self, *args, **kwargs):

@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 
-{% block content %}
+{% block morehead %}
 
+{% endblock %}
+
+{% block content %}
+{% autoescape off %}
+<script type="text/javascript">
+var grantData = eval('{{ grantData }}');
+var investigatorData = eval("{{ investigatorData }}");
+var grantYearData = eval("{{ grantYearData }}");
+document.write(grantData);
+</script>
+{% endautoescape %}
 <h2>3A Research</h2>
 
 {% for name, formset in formsets.items %}
@@ -15,10 +26,18 @@
     {{ form.errors.as_ul }}
 {% endfor %}
 
+<div>
+{{ grantData }}
+</div>
+
 <form method="post" action="{% url cv-researchGrants %}">
     {% csrf_token %}
     <fieldset id="grantsheld">
         <legend>c - Research Grants and Contracts Held</legend>
+
+        {% with forms.grantsHeld as form %}
+            {% include "inline_form.html" %}
+        {% endwith %}
 
         {{ formsets.grantsHeld.management_form }}
         {% with formsets.grantsHeld.forms as tableFormset %}
@@ -40,6 +59,7 @@
                 </div>
 
         {% endfor %}
+
     </fieldset>
     <fieldset id="grantsapplied">
         <legend>d - Research Grants Applied For</legend>

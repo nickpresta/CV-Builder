@@ -2,9 +2,11 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.views.generic.simple import direct_to_template
 from django.contrib.auth.decorators import login_required
+from django.forms import ModelChoiceField
 from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.forms.formsets import formset_factory
+from django.core import serializers
 
 from cv.forms import *
 from cv.models import *
@@ -212,7 +214,7 @@ def researchGrants(request):
     faculty = getFaculty(request.user)
     formInfo = {
 
-    }
+    }    
     formsetInfo = {
         'grantsHeld': (
             modelformset_factory(GrantTable, form=GrantForm, extra=1, formset=GrantFormset, can_delete=True),
@@ -220,10 +222,14 @@ def researchGrants(request):
             'gheld',
             faculty
         )
-    }   
+    }
+    
+    grantForm = GrantForm()
+    grantForm.fields['Grant'] = ModelChoiceField(queryset=GrantTable.objects.filter(Faculty_ID=faculty).filter(Held=True))
     
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        forms['grantsHeld'] = grantForm
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
@@ -240,7 +246,12 @@ def researchGrants(request):
             
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
+        forms['grantsHeld'] = grantForm
         context = dict([('forms', forms), ('formsets', formsets)])
+
+    context['grantData'] = serializers.serialize('json', GrantTable.objects.filter(Faculty_ID=faculty), fields=('Held', 'Agency', 'SupportType', 'ProjectTitle'))
+    context['investigatorData'] = serializers.serialize('json', InvestigatorTable.objects.filter(Grant__Faculty_ID=faculty), fields=('Name', 'Amount', 'Role'))
+    context['grantYearData'] = serializers.serialize('json', GrantYearTable.objects.filter(Grant__Faculty_ID=faculty), fields=('Title', 'Amount', 'StartYear', 'EndYear'))
 
     return direct_to_template(request, 'researchgrants.html', context)
 

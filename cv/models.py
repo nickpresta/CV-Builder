@@ -145,14 +145,18 @@ class GrantTable(models.Model, FacultyKeyMixin):
     Faculty_ID = models.ForeignKey(FacultyTable)
     Agency = models.CharField(max_length=200, blank=True)
     SupportType = models.CharField(max_length=200, blank=True)
+    ProjectTitle = models.CharField(max_length=200, blank=True)
     Held = models.BooleanField()
+
+    def __unicode__(self):
+        return self.ProjectTitle
 
 class GrantYearTable(models.Model, GrantKeyMixin):
     Grant = models.ForeignKey(GrantTable)
     Amount = models.FloatField(blank=True)
     StartYear = models.DateField(blank=True)
     EndYear = models.DateField(blank=True)    
-    ProjectTitle = models.CharField(max_length=200, blank=True)
+    Title = models.CharField(max_length=200, blank=True)
     
 #class GrantTable(models.Model):
 #    Faculty_ID = models.ForeignKey(FacultyTable)
