@@ -99,30 +99,30 @@ class PositionElsewhereTable(models.Model, FacultyKeyMixin):
     Location = models.CharField(max_length=200, blank=True)
     Position = models.CharField(max_length=200, blank=True)
 
-class GrantTable(models.Model, FacultyKeyMixin):
+class Grant(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    Agency = models.CharField(max_length=200, blank=True)
-    SupportType = models.CharField(max_length=200, blank=True)
-    ProjectTitle = models.CharField(max_length=200, blank=True)
-    Held = models.BooleanField()
+    agency = models.CharField(max_length=200, blank=True)
+    support_type = models.CharField(max_length=200, blank=True)
+    project_title = models.CharField(max_length=200, blank=True)
+    held = models.BooleanField()
 
     def __unicode__(self):
-        rv = self.Agency
-        if self.SupportType:
-            rv += ", " + self.SupportType
-        if self.ProjectTitle:
-            rv += ": " + self.ProjectTitle
+        rv = self.agency
+        if self.support_type:
+            rv += ", " + self.support_type
+        if self.project_title:
+            rv += ": " + self.project_title
         return rv
 
 class GrantYearTable(models.Model, GrantKeyMixin):
-    Grant = models.ForeignKey(GrantTable)
+    Grant = models.ForeignKey(Grant)
     Amount = models.FloatField(blank=True)
     StartYear = models.DateField(blank=True)
     EndYear = models.DateField(blank=True)
     Title = models.CharField(max_length=200, blank=True)
 
 class InvestigatorTable(models.Model, GrantKeyMixin):
-    Grant = models.ForeignKey(GrantTable)
+    Grant = models.ForeignKey(Grant)
     Name = models.CharField(max_length=200, blank=True)
     Amount = models.FloatField(blank=True)
     Role = models.CharField(max_length=2, choices=(('p', 'Principle'), ('s', 'Other')))

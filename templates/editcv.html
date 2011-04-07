@@ -45,9 +45,11 @@
             <dd>
                 <ol class="expandlist">
                     <li><a href="{% url cv-ResearchActivity %}#SummaryOfResearchActivity">Summary of Research Activity</a></li>
-                    <li><a>Six-year Publication List</a></li>
-                    <li><a href="{% url cv-researchGrants %}#ResearchGrantsAndContractsHeld">Research Grants and Contracts Held</a></li>
-                    <li><a href="{% url cv-researchGrants %}#ResearchGrantsAppliedFor">Research Grants Applied For</a></li>
+                    <li>Six-year Publication List</li>
+                    <li><a href="{% url cv-research-grants %}#research_grants_and_contracts_held">
+                        Research Grants and Contracts Held</a></li>
+                    <li><a href="{% url cv-research-grants %}#research_grants_applied_for">
+                        Research Grants Applied For</a></li>
                     <li><a href="{% url cv-researchConsulting %}">Professional Consulting</a></li>
                     <li><a href="{% url cv-researchPatents %}">Patents</a></li>
                     <li><a href="{% url cv-researchOther %}">Other Activities</a></li>
@@ -73,18 +75,22 @@
             </dd>
             <dt class="expandable">
                 <img src="/media/img/cleardot.gif" class="expandlist plus" role="button" />
-                <a href="{% url cv-service %}#ServiceAndAdmin">3C: Service and Administrative Contributions</a>
+                <a href="{% url cv-service %}#service_and_admin">3C: Service and Administrative Contributions</a>
             </dt>
             <dd>
                 <ol class="expandlist">
-                    <li><a href="{% url cv-service %}#DepartmentCommitteesAndSimilarBodies">Department Committees and Similar Bodies with Dates</a></li>
-                    <li><a href="{% url cv-service %}#CollegeCommitteesAndSimilarBodies">College Committees and Similar Bodies with Dates</a></li>
-                    <li><a href="{% url cv-service %}#UniversityCommitteesAndSimilarBodies">University Committees and Similar Bodies with Dates</a></li>
-                    <li><a href="{% url cv-service %}#ExternalCommitteesAndSimilarBodies">External/Professional Committees and Similar Bodies with Dates</a></li>
+                    <li><a href="{% url cv-service %}#department_committees_and_similar_bodies">
+                        Department Committees and Similar Bodies with Dates</a></li>
+                    <li><a href="{% url cv-service %}#college_committees_and_similar_bodies">
+                        College Committees and Similar Bodies with Dates</a></li>
+                    <li><a href="{% url cv-service %}#university_committees_and_similar_bodies">
+                        University Committees and Similar Bodies with Dates</a></li>
+                    <li><a href="{% url cv-service %}#external_committees_and_similar_bodies">
+                        External/Professional Committees and Similar Bodies with Dates</a></li>
                 </ol>
             </dd>
             <dt>
-                <a href="{% url cv-offCampusRecognition %}#offCampusRecognition">3D: Off-Campus Recognition</a>
+                <a href="{% url cv-off-campus-recognition %}#off_campus_recognition">3D: Off-Campus Recognition</a>
             </dt>
         </dl>
     </dd>

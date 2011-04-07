@@ -142,7 +142,7 @@ def biographical(request):
     return direct_to_template(request, 'biographical.html', context)
 
 @login_required
-def offCampusRecognition(request):
+def off_campus_recognition(request):
     """ Create a form view for the off campus recognition """
 
     try:
@@ -152,8 +152,8 @@ def offCampusRecognition(request):
 
 
     if request.method == 'POST':
-        offCampusFormset =  OffCampusRecognitionForm(request.POST, request.FILES, instance=offCampusData, prefix="OffCampus")
-
+        offCampusFormset =  OffCampusRecognitionForm(request.POST, request.FILES,
+                instance=offCampusData, prefix="OffCampus")
 
         if offCampusFormset.is_valid():
             offcampus = offCampusFormset.save(commit=False)
@@ -164,11 +164,12 @@ def offCampusRecognition(request):
     else:
         offCampusFormset = OffCampusRecognitionForm(instance=offCampusData, prefix="OffCampus")
 
-    return direct_to_template(request, 'OffCampusRecognition.html', {'offCampusForm': offCampusFormset})
+    return direct_to_template(request, 'off_campus_recognition.html',
+            {'offCampusForm': offCampusFormset})
 
 @login_required
-def ServiceAndAdmin(request):
-    return direct_to_template(request, 'ServiceAndAdministrativeContributions.html', {})
+def service_and_admin(request):
+    return direct_to_template(request, 'service_and_administrative_contributions.html', {})
 
 @login_required
 def reportOnTeaching(request):
@@ -186,7 +187,7 @@ def reportOnTeaching(request):
             request.user
         )
     }
-    
+
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
         
@@ -405,42 +406,42 @@ def researchRecognition(request):
     return direct_to_template(request, 'researchrecognition.html', context)
 
 @login_required
-def researchGrants(request):
-    formInfo = { }
+def research_grants(request):
+    formInfo = {}
     formsetInfo = {
         'grants': (
-            modelformset_factory(GrantTable, form=GrantForm, extra=0, formset=GrantFormset, can_delete=True),
-            GrantTable.objects.filter(user=request.user),
+            modelformset_factory(Grant, form=GrantForm, extra=0, formset=GrantFormset, can_delete=True),
+            Grant.objects.filter(user=request.user),
             'grant',
-            request.user
+            request.user.id
         )
     }
-    
+
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save_all()
-                
+
             return HttpResponseRedirect('/research/grants/')
-            
+
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
     forms['grants'] = GrantSelectForm()
-    forms['grants'].fields['grantSelect'] = ModelChoiceField(queryset=GrantTable.objects.filter(
+    forms['grants'].fields['grantSelect'] = ModelChoiceField(queryset=Grant.objects.filter(
         user=request.user), label="Grant")
 
-    return direct_to_template(request, 'researchgrants.html', context)
+    return direct_to_template(request, 'research_grants.html', context)
 
 @login_required
 def courses(request):

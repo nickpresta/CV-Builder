@@ -168,7 +168,7 @@ class PositionElsewhereForm(FormMixin):
 
 class OffCampusRecognitionForm(FormMixin):
     class Meta:
-        fields = ('OffCampus',)
+        fields = ('off_campus',)
         model = Summary
 
 class ResearchActivityForm(FormMixin):
@@ -252,13 +252,15 @@ class ServiceForm(FormMixin):
         model = ServiceTable
         fields = ('SSem', 'SYear', 'ESem', 'EYear', 'Committee', 'Role', 'Chair', 'Other', 'Level')
 
-InvestigatorFormset = inlineformset_factory(GrantTable, InvestigatorTable, form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
-GrantYearFormset = inlineformset_factory(GrantTable, GrantYearTable, form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
+InvestigatorFormset = inlineformset_factory(Grant, InvestigatorTable,
+        form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
+GrantYearFormset = inlineformset_factory(Grant, GrantYearTable,
+        form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
 
 class GrantForm(FormMixin):
     class Meta:
-        model = GrantTable
-        fields = ('Held', 'Agency', 'SupportType', 'ProjectTitle')
+        model = Grant
+        fields = ('held', 'agency', 'support_type', 'project_title')
 
 class GrantSelectForm(Form):
     pass
@@ -273,12 +275,9 @@ class GrantFormset(FormsetMixin):
 
         try:
             instance = self.get_queryset()[index]
-            #pk_value = instance.pk
             prefix = re.sub(r'-(?!.*-)', '_', form.prefix)
         except IndexError:
             instance = None
-            #pk_value = hash(form.prefix)
-            #prefix = re.sub(r'-__prefix__', '___nested_prefix__', form.prefix)
             prefix = re.sub(r'-(?!.*-)', '_', form.prefix)
         except TypeError:
             instance = None
@@ -290,6 +289,7 @@ class GrantFormset(FormsetMixin):
             GrantYearFormset(data=self.data, instance=instance,
                 prefix='%s_gyear' % prefix, pk=instance)
         ]
+
     def is_valid(self):
         result = super(GrantFormset, self).is_valid()
 
@@ -298,8 +298,8 @@ class GrantFormset(FormsetMixin):
                 for nestedForm in form.nested:
                     result = result and nestedForm.is_valid()
         return result
-    def save_new(self, form, commit=True):
 
+    def save_new(self, form, commit=True):
         instance = super(GrantFormset, self).save_new(form, commit=commit)
 
         form.instance = instance
