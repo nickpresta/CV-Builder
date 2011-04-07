@@ -150,21 +150,20 @@ class PositionHeldForm(FormMixin):
         model = PositionHeld
 
 class PositionPriorForm(FormMixin):
-    StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
-        fields = ('StartDate', 'EndDate', 'Location', 'Position')
-        model = PositionPriorTable
+        fields = ('start_date', 'end_date', 'location', 'position')
+        model = PositionPrior
 
 class PositionElsewhereForm(FormMixin):
-    StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
-        fields = ('StartDate', 'EndDate', 'Location', 'Position')
-        model = PositionElsewhereTable
-
+        fields = ('start_date', 'end_date', 'location', 'position')
+        model = PositionElsewhere
 
 class OffCampusRecognitionForm(FormMixin):
     class Meta:
@@ -182,9 +181,9 @@ class ResearchActivityForm(FormMixin):
 class ReportOnTeachingForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('Teaching',)
+        fields = ('teaching',)
         widgets = {
-            'Teaching': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'teaching': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class ConsultingResearchForm(FormMixin):
@@ -222,25 +221,26 @@ class RecognitionResearchForm(FormMixin):
 class CounsellingForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('T_Counselling',)
+        fields = ('teaching_counselling',)
         widgets = {
-            'T_Counselling': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'teaching_counselling': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class CourseJoinForm(FormMixin):
     class Meta:
-        model = FacultyCourseJoinTable
-        fields = ('CCode', 'Year', 'Semester', 'NumStudents')
+        model = FacultyCourseJoin
+        fields = ('course', 'year', 'semester', 'num_students')
 
 class CourseForm(FormMixin):
     class Meta:
-        model = CourseTable
-        fields = ('CCode', 'Name', 'Info')
+        model = Course
+        fields = ('code', 'name', 'info')
 
 class ServiceForm(FormMixin):
     class Meta:
-        model = ServiceTable
-        fields = ('SSem', 'SYear', 'ESem', 'EYear', 'Committee', 'Role', 'Chair', 'Other', 'Level')
+        model = Service
+        fields = ('start_semester', 'start_year', 'end_semester', 'end_year',
+                'committee', 'role', 'chair', 'other', 'level')
 
 class GrantForm(FormMixin):
     class Meta:

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import datetime
+import re
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -85,19 +86,19 @@ class PositionHeld(models.Model, FacultyKeyMixin):
     end_date = models.DateField(blank=True)
     location = models.CharField(max_length=200, blank=True)
 
-class PositionPriorTable(models.Model, FacultyKeyMixin):
+class PositionPrior(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    StartDate = models.DateField(blank=True)
-    EndDate = models.DateField(blank=True)
-    Location = models.CharField(max_length=200, blank=True)
-    Position = models.CharField(max_length=200, blank=True)
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField(blank=True)
+    location = models.CharField(max_length=200, blank=True)
+    position = models.CharField(max_length=200, blank=True)
 
-class PositionElsewhereTable(models.Model, FacultyKeyMixin):
+class PositionElsewhere(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    StartDate = models.DateField(blank=True)
-    EndDate = models.DateField(blank=True)
-    Location = models.CharField(max_length=200, blank=True)
-    Position = models.CharField(max_length=200, blank=True)
+    start_date = models.DateField(blank=True)
+    end_date = models.DateField(blank=True)
+    location = models.CharField(max_length=200, blank=True)
+    position = models.CharField(max_length=200, blank=True)
 
 class Grant(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
@@ -127,42 +128,55 @@ class Investigator(models.Model, GrantKeyMixin):
     amount = models.FloatField(blank=True)
     role = models.CharField(max_length=2, choices=(('p', 'Principle'), ('s', 'Other')))
 
-class CourseTable(models.Model):
-    CCode = models.CharField(max_length=200, blank=True, unique=True)
-    Name = models.CharField(max_length=200, blank=True)
-    Info = models.CharField(max_length=200, blank=True)
+class Course(models.Model):
+    code = models.CharField(max_length=200, blank=True, unique=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
+    info = models.CharField(max_length=200, blank=True, null=True)
 
     def __unicode__(self):
-        return self.CCode + ': ' + self.Name
+        return self.code + ': ' + self.name
 
-class FacultyCourseJoinTable(models.Model, FacultyKeyMixin):
+    def save(self, *args, **kwargs):
+        """ We need to ensure that there is some form of uniformity when storing
+            course codes """
+
+        # replace multiple spaces with one
+        self.code = re.sub("\s+", "", self.code)
+        self.code = self.code.replace("*", "")
+        # Ensure that course codes of CIS375 get saved as CIS3750
+        num = re.split("(\D)", self.code)
+        if len(num[-1]) < 4:
+            self.code = self.code + "0"
+        # call the "real" save
+        super(Course, self).save(*args, **kwargs)
+
+class FacultyCourseJoin(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    CCode = models.ForeignKey(CourseTable)
-    Year = models.DateField(blank=True)
-    Semester = models.CharField(max_length=200, blank=True)
-    NumStudents = models.IntegerField(blank=True)
+    course = models.ForeignKey(Course)
+    year = models.DateField(blank=True, null=True)
+    semester = models.CharField(max_length=200, blank=True, null=True)
+    num_students = models.IntegerField(blank=True, null=True)
 
 class GradTable(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    GName = models.CharField(max_length=200, blank=True)
-    GDegree = models.CharField(max_length=200, blank=True)
-    SDate = models.DateField(blank=True)
-    EDate = models.DateField(blank=True)
-    Note = models.CharField(max_length=200, blank=True)
+    grad_name = models.CharField(max_length=200, blank=True)
+    grad_degree = models.CharField(max_length=200, blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
+    note = models.CharField(max_length=200, blank=True)
 
-
-class ServiceTable(models.Model, FacultyKeyMixin):
+class Service(models.Model, FacultyKeyMixin):
     service_levels = [('u', 'University'), ('d', 'Department'), ('c', 'College'), ('e', 'External')]
     roles = [('c', 'Chair'), ('m', 'Member')]
     semesters = [('f', 'Fall'), ('w', 'Winter'), ('s', 'Summer')]
 
     user = models.ForeignKey(User)
-    SSem = models.CharField(max_length=200, blank=True, choices=semesters)
-    SYear = models.IntegerField(blank=True)
-    ESem = models.CharField(max_length=200, blank=True, choices=semesters)
-    EYear = models.IntegerField(blank=True)
-    Committee = models.CharField(max_length=200, blank=True)
-    Role = models.CharField(max_length=200, blank=True, choices=roles)
-    Chair = models.CharField(max_length=200, blank=True)
-    Other = models.CharField(max_length=200, blank=True)
-    Level = models.CharField(max_length=200, blank=True, choices=service_levels)
+    start_semester = models.CharField(max_length=200, blank=True, choices=semesters)
+    start_year = models.DateField(blank=True, null=True)
+    end_semester = models.CharField(max_length=200, blank=True, choices=semesters)
+    end_year = models.DateField(blank=True, null=True)
+    committee = models.CharField(max_length=200, blank=True)
+    role = models.CharField(max_length=200, blank=True, choices=roles)
+    chair = models.CharField(max_length=200, blank=True)
+    other = models.CharField(max_length=200, blank=True)
+    level = models.CharField(max_length=200, blank=True, choices=service_levels)

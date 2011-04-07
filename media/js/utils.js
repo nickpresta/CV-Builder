@@ -55,11 +55,13 @@ function expand_collapse_all() {
         $("img.expandlist").removeClass("plus");
         $("img.expandlist").addClass("minus");
         $("img.expandlist").parent().nextAll("dd").show();
+        sessionStorage.setItem('menu', 'expanded');
     });
     $("#collapse_all").click(function() {
         $("img.expandlist").removeClass("minus");
         $("img.expandlist").addClass("plus");
         $("img.expandlist").parent().nextAll("dd").hide();
+        sessionStorage.setItem('menu', 'collapsed');
     });
 
 }
@@ -170,7 +172,15 @@ function multiItemTable_functions() {
 
         return false;
     });
-    
+
     // show all rows with errors
     $(".multiitem_table tr:has(td.error)").show();
+}
+
+function settings() {
+    if (sessionStorage.getItem("menu")) {
+        if (sessionStorage.getItem("menu") == "expanded") {
+            $("#expand_all").trigger("click");
+        }
+    }
 }

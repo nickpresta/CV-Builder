@@ -3,7 +3,7 @@
 {% block title %}Edit CV{% endblock %}
 
 {% block content %}
-<h2>Executive Summary</h2>
+<h2>3B Teaching</h2>
 {% for name, formset in formsets.items %}
     {% if formset.errors  %}
         {% for error in formset.errors %}
@@ -15,7 +15,7 @@
     {{ form.errors.as_ul }}
 {% endfor %}
 
-<form method="post" action="{% url cv-courses %}">
+<form method="post" action="{% url cv-teaching-courses %}">
     {% csrf_token %}
     <fieldset>
         <legend>Courses Offered</legend>

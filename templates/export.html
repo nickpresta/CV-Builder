@@ -182,7 +182,7 @@
                         <td>(d)</td>
                         <th colspan="3">Date of first appointment at the University of
                             Guelph:</th>
-                        <td>{{ user.faculty_start|date:"M Y" }}</td>
+                        <td>{{ faculty_info.faculty_start|date:"M Y" }}</td>
                     </tr>
                     <tr>
                         <td>(e)</td>
@@ -215,9 +215,9 @@
                     {% for position in position_prior_info %}
                     <tr>
                         <td></td>
-                        <td>{{ position.Position }}</td>
-                        <td colspan="2">{{ position.Location }}</td>
-                        <td>{{ position.StartDate }} - {{ position.EndDate }}</td>
+                        <td>{{ position.position }}</td>
+                        <td colspan="2">{{ position.location }}</td>
+                        <td>{{ position.start_date }} - {{ position.end_date }}</td>
                     </tr>
                     {% endfor %}
                     <tr>
@@ -234,9 +234,9 @@
                     {% for position in position_elsewhere_info %}
                     <tr>
                         <td></td>
-                        <td>{{ position.Position }}</td>
-                        <td colspan="2">{{ position.Location }}</td>
-                        <td>{{ position.StartDate }} - {{ position.EndDate }}</td>
+                        <td>{{ position.position }}</td>
+                        <td colspan="2">{{ position.location }}</td>
+                        <td>{{ position.start_date }} - {{ position.end_date }}</td>
                     </tr>
                     {% endfor %}
                 </table>
@@ -342,18 +342,7 @@
                         <td>
                             <h3>3B Teaching and Learning</h3>
                             <h4>(a) Report on Teaching</h4>
-                            <dl>
-                                <dt>Title</dt>
-                                <dd>
-                                <p>Here is some text!</p>
-                                </dd>
-                                <dt>Title</dt>
-                                <dd>
-                                <ul>
-                                    <li>Here is a list inside here!</li>
-                                </ul>
-                                </dd>
-                            </dl>
+                            {{ summary.teaching|safe }}
                         </td>
                     </tr>
                 </table>
@@ -361,19 +350,17 @@
             <div class="page">
                 <h4>(b) Courses</h4>
                 <table width="100%">
+                    {% for course in courses_info %}
                     <tr>
-                        <td>Fall</td>
-                        <td>2011</td>
-                        <td>CIS 9001: Principles of Awesome</td>
-                        <td>42</td>
+                        <td>{{ course.semester }}</td>
+                        <td>{{ course.year }}</td>
+                        <td>{{ course.course }}</td>
+                        <td>{{ course.num_students }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
                 <h4>(c) Contributions to Student Counselling</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.teaching_counselling|safe }}
                 <h4>(d) Graduate Advising and Examining</h4>
                 <p>8 PhD students advised to completion (past 6 years)</p>
                 <p>8 MSc students advised to completion (past 6 years)</p>
@@ -435,72 +422,84 @@
                 <h3>3C Service and Administrative Contributions</h3>
                 <h4>(a) Department Committees and Similar Bodies with Dates</h4>
                 <table width="100%">
+                    {% for service in dept_service_contribution_info %}
                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>C</td>
+                        <td style="width: 20%">
+                            {{ service.get_start_semester_display }}/{{ service.start_year|date:"Y" }}
+                            to
+                            {{ service.get_end_semester_display }}/{{ service.end_year|date:"Y" }}
+                        </td>
+                        <td style="width: 25%">{{ service.committee }}</td>
+                        <td style="width: 12%">{{ service.get_role_display }}</td>
+                        {% if service.role != "c" %}
+                        <td style="width: 18%">{{ service.chair }}</td>
+                        {% else %}
                         <td></td>
-                        <td>I was an awesome chair</td>
+                        {% endif %}
+                        <td style="width: 25%">{{ service.other }}</td>
                     </tr>
-                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>M</td>
-                        <td>Someone else</td>
-                        <td></td>
-                    </tr>
+                    {% endfor %}
                 </table>
                 <h4>(b) College Committees and Similar Bodies with Dates</h4>
                 <table width="100%">
+                    {% for service in coll_service_contribution_info %}
                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>C</td>
+                        <td style="width: 20%">
+                            {{ service.get_start_semester_display }}/{{ service.start_year|date:"Y" }}
+                            to
+                            {{ service.get_end_semester_display }}/{{ service.end_year|date:"Y" }}
+                        </td>
+                        <td style="width: 25%">{{ service.committee }}</td>
+                        <td style="width: 12%">{{ service.get_role_display }}</td>
+                        {% if service.role != "c" %}
+                        <td style="width: 18%">{{ service.chair }}</td>
+                        {% else %}
                         <td></td>
-                        <td>I was an awesome chair</td>
+                        {% endif %}
+                        <td style="width: 25%">{{ service.other }}</td>
                     </tr>
-                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>M</td>
-                        <td>Someone else</td>
-                        <td></td>
-                    </tr>
+                    {% endfor %}
                 </table>
                 <h4>(c) University Committees and Similar Bodies with Dates</h4>
                 <table width="100%">
+                    {% for service in uni_service_contribution_info %}
                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>C</td>
+                        <td style="width: 20%">
+                            {{ service.get_start_semester_display }}/{{ service.start_year|date:"Y" }}
+                            to
+                            {{ service.get_end_semester_display }}/{{ service.end_year|date:"Y" }}
+                        </td>
+                        <td style="width: 25%">{{ service.committee }}</td>
+                        <td style="width: 12%">{{ service.get_role_display }}</td>
+                        {% if service.role != "c" %}
+                        <td style="width: 18%">{{ service.chair }}</td>
+                        {% else %}
                         <td></td>
-                        <td>I was an awesome chair</td>
+                        {% endif %}
+                        <td style="width: 25%">{{ service.other }}</td>
                     </tr>
-                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>M</td>
-                        <td>Someone else</td>
-                        <td></td>
-                    </tr>
+                    {% endfor %}
                 </table>
                 <h4>(d) External/Professional Committees and Similar Bodies with
                 Dates</h4>
-                <table width="100%">
+                    <table width="100%">
+                    {% for service in ext_service_contribution_info %}
                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>C</td>
+                        <td style="width: 20%">
+                            {{ service.get_start_semester_display }}/{{ service.start_year|date:"Y" }}
+                            to
+                            {{ service.get_end_semester_display }}/{{ service.end_year|date:"Y" }}
+                        </td>
+                        <td style="width: 25%">{{ service.committee }}</td>
+                        <td style="width: 12%">{{ service.get_role_display }}</td>
+                        {% if service.role != "c" %}
+                        <td style="width: 18%">{{ service.chair }}</td>
+                        {% else %}
                         <td></td>
-                        <td>I was an awesome chair</td>
+                        {% endif %}
+                        <td style="width: 25%">{{ service.other }}</td>
                     </tr>
-                     <tr>
-                        <td>Fall/2011 to Winter/2012</td>
-                        <td>Committee of Stuff</td>
-                        <td>M</td>
-                        <td>Someone else</td>
-                        <td></td>
-                    </tr>
+                    {% endfor %}
                 </table>
                 <h3>3D Off-Campus Recognition</h3>
                 {{ summary.OffCampus|safe }}

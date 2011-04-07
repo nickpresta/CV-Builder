@@ -7,6 +7,7 @@ from django.forms.models import modelformset_factory
 from django.forms.models import inlineformset_factory
 from django.forms.formsets import formset_factory
 from django.core import serializers
+from django.core.urlresolvers import reverse
 
 from cv.forms import *
 from cv.models import *
@@ -51,7 +52,7 @@ def executive(request):
             summaryFormset.save()
             doeFormset.save()
 
-            return HttpResponseRedirect('/executive/')
+            return HttpResponseRedirect(reverse('cv-executive'))
     else:
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DistributionOfEffort,
@@ -106,14 +107,15 @@ def biographical(request):
             request.user.id
         ),
         'positionPriorFormset': (
-            modelformset_factory(PositionPriorTable, form=PositionPriorForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionPriorTable.objects.filter(user=request.user),
+            modelformset_factory(PositionPrior, form=PositionPriorForm, extra=0, formset=FormsetMixin, can_delete=True),
+            PositionPrior.objects.filter(user=request.user),
             'positionprior',
             request.user.id
         ),
         'positionElsewhereFormset': (
-            modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionElsewhereTable.objects.filter(user=request.user),
+            modelformset_factory(PositionElsewhere, form=PositionElsewhereForm,
+                extra=0, formset=FormsetMixin, can_delete=True),
+            PositionElsewhere.objects.filter(user=request.user),
             'positionelsewhere',
             request.user.id
         )
@@ -134,7 +136,7 @@ def biographical(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/biographical/')
+            return HttpResponseRedirect(reverse('cv-biographical'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -184,7 +186,7 @@ def report_on_teaching(request):
             ReportOnTeachingForm,
             summary,
             'report',
-            request.user
+            request.user.id
         )
     }
 
@@ -203,12 +205,12 @@ def report_on_teaching(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/ReportOnTeaching/')
+            return HttpResponseRedirect(reverse('cv-report-on-teaching'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
-    return direct_to_template(request, 'ReportOnTeaching.html', context)
+    return direct_to_template(request, 'report_on_teaching.html', context)
 
 @login_required
 def research_consulting(request):
@@ -243,7 +245,7 @@ def research_consulting(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/research/consulting/')
+            return HttpResponseRedirect(reverse('cv-research-consulting'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -263,7 +265,7 @@ def counselling(request):
             CounsellingForm,
             summary,
             'counselling',
-            request.user
+            request.user.id
         )
     }
 
@@ -282,7 +284,7 @@ def counselling(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/teaching/counselling')
+            return HttpResponseRedirect(reverse('cv-teaching-counselling'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -302,7 +304,7 @@ def research_patents(request):
             PatentsResearchForm,
             summary,
             'consulting',
-            request.user
+            request.user.id
         )
     }
 
@@ -321,7 +323,7 @@ def research_patents(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/research/patents/')
+            return HttpResponseRedirect(reverse('cv-research-patents'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -341,7 +343,7 @@ def research_other(request):
             OtherResearchForm,
             summary,
             'other',
-            request.user
+            request.user.id
         )
     }
 
@@ -351,7 +353,7 @@ def research_other(request):
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
+        allForms.update(forms)
 
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
@@ -360,7 +362,7 @@ def research_other(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/research/other/')
+            return HttpResponseRedirect(reverse('cv-research-other'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -380,7 +382,7 @@ def research_recognition(request):
             RecognitionResearchForm,
             summary,
             'recognition',
-            request.user
+            request.user.id
         )
     }
 
@@ -399,7 +401,7 @@ def research_recognition(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect('/research/recognition/')
+            return HttpResponseRedirect(reverse('cv-research-recognition'))
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -432,7 +434,7 @@ def research_grants(request):
             for formset in formsets.values():
                 formset.save_all()
 
-            return HttpResponseRedirect('/research/grants/')
+            return HttpResponseRedirect(reverse('cv-research-grants'))
 
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
@@ -448,90 +450,97 @@ def research_grants(request):
 def courses(request):
     formInfo = {
         'coursesJoined': (
-            inlineformset_factory(User, FacultyCourseJoinTable, form=CourseJoinForm, extra=0, formset=InlineFormsetMixin, can_delete=True),
+            inlineformset_factory(User, FacultyCourseJoin,
+                form=CourseJoinForm, extra=0, formset=InlineFormsetMixin, can_delete=True),
             request.user,
             'cjoin',
-            request.user
+            request.user.id
         )
-    }    
+    }
     formsetInfo = {
         'courses': (
-            modelformset_factory(CourseTable, form=CourseForm, extra=0, formset=FormsetMixin, can_delete=True),
-            CourseTable.objects.all(),
+            modelformset_factory(Course, form=CourseForm, extra=0,
+                formset=FormsetMixin, can_delete=True),
+            Course.objects.all(),
             'courses',
             None
         )
     }
-    
+
     if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        formsets, forms = createContext(formsetInfo, formInfo,
+                postData=request.POST, files=request.FILES)
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
-            return HttpResponseRedirect('/teaching/courses/')
-            
+
+            return HttpResponseRedirect(reverse('cv-teaching-courses'))
+
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
     return direct_to_template(request, 'courses.html', context)
-    
+
 @login_required
 def service(request):
-    formInfo = {
-    }    
+    formInfo = {}
     formsetInfo = {
         'department': (
-            modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(user=request.user).filter(Level='d'),
+            modelformset_factory(Service, form=ServiceForm,
+                extra=0, formset=FormsetMixin, can_delete=True),
+            Service.objects.filter(user=request.user).filter(level='d'),
             'dept',
-            request.user
+            request.user.id
         ),
         'college': (
-            modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(user=request.user).filter(Level='c'),
+            modelformset_factory(Service, form=ServiceForm,
+                extra=0, formset=FormsetMixin, can_delete=True),
+            Service.objects.filter(user=request.user).filter(level='c'),
             'college',
-            request.user
+            request.user.id
         ),
         'university': (
-            modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(user=request.user).filter(Level='u'),
+            modelformset_factory(Service, form=ServiceForm,
+                extra=0, formset=FormsetMixin, can_delete=True),
+            Service.objects.filter(user=request.user).filter(level='u'),
             'uni',
-            request.user
+            request.user.id
         ),
         'external': (
-            modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(user=request.user).filter(Level='e'),
+            modelformset_factory(Service, form=ServiceForm,
+                extra=0, formset=FormsetMixin, can_delete=True),
+            Service.objects.filter(user=request.user).filter(level='e'),
             'ext',
-            request.user
+            request.user.id
         )
     }
-    
+
     if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        formsets, forms = createContext(formsetInfo, formInfo,
+                postData=request.POST, files=request.FILES)
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
-            return HttpResponseRedirect('/service/contributions/')
-            
+
+            return HttpResponseRedirect(reverse('cv-service-contributions'))
+
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])

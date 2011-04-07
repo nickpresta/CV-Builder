@@ -63,10 +63,10 @@ def export_download(request, download):
     out['honors_info'] = Honor.objects.filter(user=user)
     out['position_held_info'] = PositionHeld.objects.filter(
             user=user).order_by("start_date")
-    out['position_prior_info'] = PositionPriorTable.objects.filter(
-            user=user).order_by("StartDate")
-    out['position_elsewhere_info'] = PositionElsewhereTable.objects.filter(
-            user=user).order_by("StartDate")
+    out['position_prior_info'] = PositionPrior.objects.filter(
+            user=user).order_by("start_date")
+    out['position_elsewhere_info'] = PositionElsewhere.objects.filter(
+            user=user).order_by("start_date")
 
     # build up our full grant info
     grants_held = Grant.objects.filter(user=user, held=True)
@@ -80,6 +80,19 @@ def export_download(request, download):
         grant.year_info = GrantYear.objects.filter(grant=grant)
         grant.investigator_info = Investigator.objects.filter(grant=grant)
     out['grants_applied_info'] = grants_applied
+
+    out['courses_info'] = FacultyCourseJoin.objects.filter(user=user)
+    out['dept_service_contribution_info'] = Service.objects.filter(user=user,
+            level="d")
+    out['uni_service_contribution_info'] = Service.objects.filter(user=user,
+            level="u")
+    out['coll_service_contribution_info'] = Service.objects.filter(user=user,
+            level="c")
+    out['ext_service_contribution_info'] = Service.objects.filter(user=user,
+            level="e")
+
+
+
 
     if download:
         return write_pdf('export.html', out, request)
