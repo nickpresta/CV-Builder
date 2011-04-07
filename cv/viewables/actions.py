@@ -43,25 +43,43 @@ def export_download(request, download):
     """ Return the response, either a PDF, or some error text """
 
     # We need to build up the information for the export
+    user = request.user
     out = {}
-    out['user'] = request.user
+    out['user'] = user
 
-    doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
+    doeData = DistributionOfEffort.objects.filter(user=user).order_by('year')
     out['doe'] = doeData
 
-    out['summary'] = get_table_or_dict(Summary, user=request.user)
+    out['summary'] = get_table_or_dict(Summary, user=user)
 
-    out['faculty_info'] = request.user.get_profile()
-    out['faculty_info'].departments = out['faculty_info'].departments.split(",")
+    out['faculty_info'] = user.get_profile()
+    try:
+        out['faculty_info'].departments = out['faculty_info'].departments.split(",")
+    except AttributeError:
+        # No departments yet
+        out['faculty_info'].departments = []
 
-    out['degree_info'] = Accred.objects.filter(user=request.user).order_by("date")
-    out['honors_info'] = Honor.objects.filter(user=request.user)
+    out['degree_info'] = Accred.objects.filter(user=user).order_by("date")
+    out['honors_info'] = Honor.objects.filter(user=user)
     out['position_held_info'] = PositionHeld.objects.filter(
-            user=request.user).order_by("start_date")
+            user=user).order_by("start_date")
     out['position_prior_info'] = PositionPriorTable.objects.filter(
-            user=request.user).order_by("StartDate")
+            user=user).order_by("StartDate")
     out['position_elsewhere_info'] = PositionElsewhereTable.objects.filter(
-            user=request.user).order_by("StartDate")
+            user=user).order_by("StartDate")
+
+    # build up our full grant info
+    grants_held = Grant.objects.filter(user=user, held=True)
+    for grant in grants_held:
+        grant.year_info = GrantYear.objects.filter(grant=grant)
+        grant.investigator_info = Investigator.objects.filter(grant=grant)
+    out['grants_held_info'] = grants_held
+
+    grants_applied = Grant.objects.filter(user=user, held=False)
+    for grant in grants_applied:
+        grant.year_info = GrantYear.objects.filter(grant=grant)
+        grant.investigator_info = Investigator.objects.filter(grant=grant)
+    out['grants_applied_info'] = grants_applied
 
     if download:
         return write_pdf('export.html', out, request)

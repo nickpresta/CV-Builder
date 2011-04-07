@@ -114,21 +114,20 @@ class Grant(models.Model, FacultyKeyMixin):
             rv += ": " + self.project_title
         return rv
 
-class GrantYearTable(models.Model, GrantKeyMixin):
-    Grant = models.ForeignKey(Grant)
-    Amount = models.FloatField(blank=True)
-    StartYear = models.DateField(blank=True)
-    EndYear = models.DateField(blank=True)
-    Title = models.CharField(max_length=200, blank=True)
+class GrantYear(models.Model, GrantKeyMixin):
+    grant = models.ForeignKey(Grant)
+    amount = models.FloatField(blank=True)
+    start_year = models.DateField(blank=True)
+    end_year = models.DateField(blank=True)
+    title = models.CharField(max_length=200, blank=True)
 
-class InvestigatorTable(models.Model, GrantKeyMixin):
-    Grant = models.ForeignKey(Grant)
-    Name = models.CharField(max_length=200, blank=True)
-    Amount = models.FloatField(blank=True)
-    Role = models.CharField(max_length=2, choices=(('p', 'Principle'), ('s', 'Other')))
+class Investigator(models.Model, GrantKeyMixin):
+    grant = models.ForeignKey(Grant)
+    name = models.CharField(max_length=200, blank=True)
+    amount = models.FloatField(blank=True)
+    role = models.CharField(max_length=2, choices=(('p', 'Principle'), ('s', 'Other')))
 
-class CourseTable(models.Model): 
-    #CID = models.IntegerField()
+class CourseTable(models.Model):
     CCode = models.CharField(max_length=200, blank=True, unique=True)
     Name = models.CharField(max_length=200, blank=True)
     Info = models.CharField(max_length=200, blank=True)

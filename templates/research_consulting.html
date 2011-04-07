@@ -14,13 +14,13 @@
     {{ form.errors.as_ul }}
 {% endfor %}
 
-<form method="post" action="{% url cv-researchPatents %}">
+<form method="post" action="{% url cv-research-consulting %}">
     {% csrf_token %}
 
     <fieldset>
-        <legend>f - Patents</legend>
+        <legend>e - Professional Consulting</legend>
 
-        {{ forms.patents.R_Patents }}
+        {{ forms.consulting.research_professional_consulting }}
     </fieldset>
     <input type="submit" value="Save" />
 </form>

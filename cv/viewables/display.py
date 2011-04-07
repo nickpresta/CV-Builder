@@ -172,7 +172,7 @@ def service_and_admin(request):
     return direct_to_template(request, 'service_and_administrative_contributions.html', {})
 
 @login_required
-def reportOnTeaching(request):
+def report_on_teaching(request):
     try:
         summary = Summary.objects.get(user=request.user)
     except Summary.DoesNotExist:
@@ -190,64 +190,65 @@ def reportOnTeaching(request):
 
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/ReportOnTeaching/')
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
-    
+
     return direct_to_template(request, 'ReportOnTeaching.html', context)
-    
+
 @login_required
-def researchConsulting(request):
+def research_consulting(request):
     try:
         summary = Summary.objects.get(user=request.user)
     except Summary.DoesNotExist:
         summary = Summary(user=request.user)
-    
-    formsetInfo = { }
+
+    formsetInfo = {}
     formInfo = {
         'consulting': (
             ConsultingResearchForm,
             summary,
             'consulting',
-            request.user
+            request.user.id
         )
     }
-    
+
     if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        
+        formsets, forms = createContext(formsetInfo, formInfo,
+                postData=request.POST, files=request.FILES)
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/research/consulting/')
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
-    
-    return direct_to_template(request, 'researchconsulting.html', context)
+
+    return direct_to_template(request, 'research_consulting.html', context)
 
 @login_required
 def counselling(request):
@@ -255,7 +256,7 @@ def counselling(request):
         summary = Summary.objects.get(user=request.user)
     except Summary.DoesNotExist:
         summary = Summary(user=request.user)
-    
+
     formsetInfo = { }
     formInfo = {
         'counselling': (
@@ -265,36 +266,36 @@ def counselling(request):
             request.user
         )
     }
-    
+
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/teaching/counselling')
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
-    
+
     return direct_to_template(request, 'counselling.html', context)
 
 @login_required
-def researchPatents(request):
+def research_patents(request):
     try:
         summary = Summary.objects.get(user=request.user)
     except Summary.DoesNotExist:
         summary = Summary(user=request.user)
-    
+
     formsetInfo = { }
     formInfo = {
         'patents': (
@@ -304,36 +305,36 @@ def researchPatents(request):
             request.user
         )
     }
-    
+
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/research/patents/')
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
-    
-    return direct_to_template(request, 'researchpatents.html', context)
+
+    return direct_to_template(request, 'research_patents.html', context)
 
 @login_required
-def researchOther(request):
+def research_other(request):
     try:
         summary = Summary.objects.get(user=request.user)
     except Summary.DoesNotExist:
         summary = Summary(user=request.user)
-    
+
     formsetInfo = { }
     formInfo = {
         'other': (
@@ -343,36 +344,36 @@ def researchOther(request):
             request.user
         )
     }
-    
+
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
         allForms.update(forms)        
-        
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/research/other/')
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
-    
-    return direct_to_template(request, 'researchother.html', context)
+
+    return direct_to_template(request, 'research_other.html', context)
 
 @login_required
-def researchRecognition(request):
+def research_recognition(request):
     try:
         summary = Summary.objects.get(user=request.user)
     except Summary.DoesNotExist:
         summary = Summary(user=request.user)
-    
+
     formsetInfo = { }
     formInfo = {
         'recognition': (
@@ -382,28 +383,28 @@ def researchRecognition(request):
             request.user
         )
     }
-    
+
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-        
+
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/research/recognition/')
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
-    
-    return direct_to_template(request, 'researchrecognition.html', context)
+
+    return direct_to_template(request, 'research_recognition.html', context)
 
 @login_required
 def research_grants(request):
@@ -536,18 +537,20 @@ def service(request):
         context = dict([('forms', forms), ('formsets', formsets)])
 
     return direct_to_template(request, 'service.html', context)
+
 @login_required
-def ResearchActivity(request):
+def research_activity(request):
     """ Create a form view for Research Activity """
 
     try:
-        ResearchData = SummaryTable.objects.get(user=request.user)
-    except SummaryTable.DoesNotExist:
-        ResearchData = SummaryTable(user=request.user)
+        ResearchData = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        ResearchData = Summary(user=request.user)
 
 
     if request.method == 'POST':
-        ResearchFormset =  ResearchActivityForm(request.POST, request.FILES, instance=ResearchData, prefix="Research")
+        ResearchFormset =  ResearchActivityForm(request.POST, request.FILES,
+                instance=ResearchData, prefix="Research")
 
 
         if ResearchFormset.is_valid():
@@ -559,7 +562,8 @@ def ResearchActivity(request):
     else:
         ResearchFormset = ResearchActivityForm(instance=ResearchData, prefix="Research")
 
-    return direct_to_template(request, 'ResearchActivity.html', {'ResearchActivityForm': ResearchFormset})
+    return direct_to_template(request, 'research_activity.html',
+            {'ResearchActivityForm': ResearchFormset})
 
 @login_required
 def distribution_of_effort(request):

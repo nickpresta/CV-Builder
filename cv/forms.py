@@ -174,9 +174,9 @@ class OffCampusRecognitionForm(FormMixin):
 class ResearchActivityForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('Research',)
+        fields = ('research',)
         widgets = {
-            'Research': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'research': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class ReportOnTeachingForm(FormMixin):
@@ -190,33 +190,33 @@ class ReportOnTeachingForm(FormMixin):
 class ConsultingResearchForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('R_Consulting',)
+        fields = ('research_professional_consulting',)
         widgets = {
-            'R_Consulting': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'research_professional_consulting': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class PatentsResearchForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('R_Patents',)
+        fields = ('research_patents',)
         widgets = {
-            'R_Patents': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'research_patents': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class OtherResearchForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('R_Other',)
+        fields = ('research_other_activities',)
         widgets = {
-            'R_Other': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'research_other_activities': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class RecognitionResearchForm(FormMixin):
     class Meta:
         model = Summary
-        fields = ('R_Recognition',)
+        fields = ('research_recognition',)
         widgets = {
-            'R_Recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+            'research_recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
 class CounsellingForm(FormMixin):
@@ -226,16 +226,6 @@ class CounsellingForm(FormMixin):
         widgets = {
             'T_Counselling': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
-
-class InvestigatorForm(FormMixin):
-    class Meta:
-        model = InvestigatorTable
-        fields = ('Name', 'Amount', 'Role')
-
-class GrantYearForm(FormMixin):
-    class Meta:
-        model = GrantYearTable
-        fields = ('Title', 'Amount', 'StartYear', 'EndYear')
 
 class CourseJoinForm(FormMixin):
     class Meta:
@@ -252,21 +242,35 @@ class ServiceForm(FormMixin):
         model = ServiceTable
         fields = ('SSem', 'SYear', 'ESem', 'EYear', 'Committee', 'Role', 'Chair', 'Other', 'Level')
 
-InvestigatorFormset = inlineformset_factory(Grant, InvestigatorTable,
-        form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
-GrantYearFormset = inlineformset_factory(Grant, GrantYearTable,
-        form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
-
 class GrantForm(FormMixin):
     class Meta:
         model = Grant
         fields = ('held', 'agency', 'support_type', 'project_title')
 
+class InvestigatorForm(FormMixin):
+    class Meta:
+        model = Investigator
+        fields = ('name', 'amount', 'role')
+
+class GrantYearForm(FormMixin):
+    start_year = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    end_year = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
+    class Meta:
+        model = GrantYear
+        fields = ('title', 'amount', 'start_year', 'end_year')
+
 class GrantSelectForm(Form):
     pass
 
-class GrantFormset(FormsetMixin):
+InvestigatorFormset = inlineformset_factory(Grant, Investigator,
+        form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
+GrantYearFormset = inlineformset_factory(Grant, GrantYear,
+        form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
 
+class GrantFormset(FormsetMixin):
     def _get_empty_form(self):
         return super(GrantFormset, self)._get_empty_form()
 

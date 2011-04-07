@@ -3,13 +3,13 @@
 {% block content %}
 <h2>3A Research</h2>
 
-<form method="post" action="{% url cv-ResearchActivity %}">
+<form method="post" action="{% url cv-research-activity %}">
     {% csrf_token %}
 
     <fieldset>
         <legend>a - Summary of Research Activity</legend>
 
-        {{ ResearchActivityForm.Research }}
+        {{ ResearchActivityForm.research }}
     </fieldset>
     <input type="submit" value="Save" />
 </form>
