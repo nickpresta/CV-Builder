@@ -1,17 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Edit CV{% endblock %}
-
-{% block morehead %}
-
-<script type="text/javascript">
-
-</script>
-
-{% endblock %}
+{% block title %}Edit CV - Biographical{% endblock %}
 
 {% block content %}
-
 <h2>Biographical Information</h2>
 
 {% for name, formset in formsets.items %}
@@ -30,6 +21,9 @@
     <fieldset id="name">
         <legend>a</legend>
         {% with forms.facultyNameDeptForm as form %}
+            {% include "inline_form.html" %}
+        {% endwith %}
+        {% with forms.facultyDepartmentsForm as form %}
             {% include "inline_form.html" %}
         {% endwith %}
     </fieldset>

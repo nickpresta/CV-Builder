@@ -12,21 +12,19 @@ class UserProfileInline(admin.StackedInline):
 class UserProfileAdmin(UserAdmin):
     inlines = [UserProfileInline]
 
+def export_cv(modeladmin, request, queryset):
+    pass
+
 # This adds the UserProfile to the User admin page
 admin.site.register(User, UserProfileAdmin)
 admin.site.register(DistributionOfEffort)
 admin.site.register(Summary)
-admin.site.register(FacultyTable)
-admin.site.register(DoETable)
-admin.site.register(SummaryTable)
-admin.site.register(AccredTable)
-admin.site.register(HonorTable)
-#admin.site.register(PositionTable)
-admin.site.register(PositionHeldTable)
+admin.site.register(Accred)
+admin.site.register(Honor)
+admin.site.register(PositionHeld)
 admin.site.register(PositionPriorTable)
 admin.site.register(PositionElsewhereTable)
 admin.site.register(GrantTable)
-#admin.site.register(InvestTable)
 admin.site.register(InvestigatorTable)
 admin.site.register(CourseTable)
 admin.site.register(GradTable)

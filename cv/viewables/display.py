@@ -24,34 +24,28 @@ def editcv(request):
     return direct_to_template(request, 'editcv.html', {})
 
 @login_required
-def form1(request):
-    return direct_to_template(request, 'form1.html', {})
-
-@login_required
 def executive(request):
     """ Create a form view for the Distribution of Effort """
 
-    faculty = getFaculty(request.user)
-
     # get this user's Summary or else create a new one
     try:
-        summaryData = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summaryData = SummaryTable(Faculty_ID=faculty)
+        summaryData = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summaryData = Summary(user=request.user)
 
     # get this user's DoEs or else create a new one
     try:
-        doeData = DoETable.objects.filter(Faculty_ID=faculty).order_by('Year')
-    except DoETable.DoesNotExist:
-        doeData = DoETable(Faculty_ID=faculty)
+        doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
+    except DistributionOfEffort.DoesNotExist:
+        doeData = DistributionOfEffort(user=request.user)
 
     if request.method == 'POST':
         summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
                 instance=summaryData, prefix='summary')
-        doeFormset = modelformset_factory(DoETable,
+        doeFormset = modelformset_factory(DistributionOfEffort,
                 form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
-                    request.POST, request.FILES, queryset=doeData, 
-                    prefix='doe', pk=faculty)
+                    request.POST, request.FILES, queryset=doeData,
+                    prefix='doe', pk=request.user.id)
 
         if summaryFormset.is_valid() and doeFormset.is_valid():
             summaryFormset.save()
@@ -59,81 +53,88 @@ def executive(request):
 
             return HttpResponseRedirect('/executive/')
     else:
-        # Show the Executive Summary form
         summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix='summary')
-        doeFormset = modelformset_factory(DoETable,
-                form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(queryset=doeData, prefix='doe')
+        doeFormset = modelformset_factory(DistributionOfEffort,
+                form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
+                        queryset=doeData, prefix='doe')
 
-    return direct_to_template(request, 'executive.html', {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
+    return direct_to_template(request, 'executive.html',
+            {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
 
 @login_required
 def biographical(request):
-    faculty = getFaculty(request.user)
-    
     formInfo = {
         'facultyNameDeptForm': (
             FacultyNameDeptForm,
-            faculty,
+            request.user,
             'namedept',
             None
         ),
         'facultyStartForm': (
             FacultyStartForm,
-            faculty,
+            request.user.get_profile(),
             'facultystart',
+            None
+        ),
+        'facultyDepartmentsForm': (
+            FacultyDepartmentsForm,
+            request.user.get_profile(),
+            'facultydepartments',
             None
         )
     }
 
     formsetInfo = {
         'accredFormset': (
-            modelformset_factory(AccredTable, form=AccredForm, extra=0, formset=FormsetMixin, can_delete=True),
-            AccredTable.objects.filter(Faculty_ID=faculty).order_by('Date'),
+            modelformset_factory(Accred, form=AccredForm, extra=0,
+                formset=FormsetMixin, can_delete=True),
+            Accred.objects.filter(user=request.user).order_by('date'),
             'accred',
-            faculty
+            request.user.id
         ),
         'honorFormset': (
-            modelformset_factory(HonorTable, form=HonorForm, extra=0, formset=FormsetMixin, can_delete=True),
-            HonorTable.objects.filter(Faculty_ID=faculty),
+            modelformset_factory(Honor, form=HonorForm, extra=0,
+                formset=FormsetMixin, can_delete=True),
+            Honor.objects.filter(user=request.user),
             'honor',
-            faculty
+            request.user.id
         ),
         'positionHeldFormset': (
-            modelformset_factory(PositionHeldTable, form=PositionHeldForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionHeldTable.objects.filter(Faculty_ID=faculty),
+            modelformset_factory(PositionHeld, form=PositionHeldForm, extra=0, formset=FormsetMixin, can_delete=True),
+            PositionHeld.objects.filter(user=request.user),
             'positionheld',
-            faculty
+            request.user.id
         ),
         'positionPriorFormset': (
             modelformset_factory(PositionPriorTable, form=PositionPriorForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionPriorTable.objects.filter(Faculty_ID=faculty),
+            PositionPriorTable.objects.filter(user=request.user),
             'positionprior',
-            faculty
+            request.user.id
         ),
         'positionElsewhereFormset': (
             modelformset_factory(PositionElsewhereTable, form=PositionElsewhereForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionElsewhereTable.objects.filter(Faculty_ID=faculty),
+            PositionElsewhereTable.objects.filter(user=request.user),
             'positionelsewhere',
-            faculty
+            request.user.id
         )
     }
-    
+
     if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
+        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST,
+                files=request.FILES)
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
-        allForms.update(forms)        
-        
+        allForms.update(forms)
+
         if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
             # Save the form data, ensure they are updating as themselves
             for form in forms.values():
                 form.save()
             for formset in formsets.values():
                 formset.save()
-                
+
             return HttpResponseRedirect('/biographical/')
-            
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
@@ -142,16 +143,12 @@ def biographical(request):
 
 @login_required
 def offCampusRecognition(request):
-
     """ Create a form view for the off campus recognition """
 
-    faculty = getFaculty(request.user)
-
-
     try:
-        offCampusData = SummaryTable.objects.get(Faculty_ID = faculty)
-    except SummaryTable.DoesNotExist:
-        offCampusData = SummaryTable(Faculty_ID = faculty)
+        offCampusData = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        offCampusData = Summary(user=request.user)
 
 
     if request.method == 'POST':
@@ -175,20 +172,18 @@ def ServiceAndAdmin(request):
 
 @login_required
 def reportOnTeaching(request):
-    faculty = getFaculty(request.user)
-    
     try:
-        summary = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summary = SummaryTable(Faculty_ID=faculty)
-    
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
+
     formsetInfo = { }
     formInfo = {
         'reportOnTeaching': (
             ReportOnTeachingForm,
             summary,
             'report',
-            faculty
+            request.user
         )
     }
     
@@ -216,12 +211,10 @@ def reportOnTeaching(request):
     
 @login_required
 def researchConsulting(request):
-    faculty = getFaculty(request.user)
-    
     try:
-        summary = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summary = SummaryTable(Faculty_ID=faculty)
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
     
     formsetInfo = { }
     formInfo = {
@@ -229,7 +222,7 @@ def researchConsulting(request):
             ConsultingResearchForm,
             summary,
             'consulting',
-            faculty
+            request.user
         )
     }
     
@@ -257,12 +250,10 @@ def researchConsulting(request):
 
 @login_required
 def counselling(request):
-    faculty = getFaculty(request.user)
-    
     try:
-        summary = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summary = SummaryTable(Faculty_ID=faculty)
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
     
     formsetInfo = { }
     formInfo = {
@@ -270,7 +261,7 @@ def counselling(request):
             CounsellingForm,
             summary,
             'counselling',
-            faculty
+            request.user
         )
     }
     
@@ -298,12 +289,10 @@ def counselling(request):
 
 @login_required
 def researchPatents(request):
-    faculty = getFaculty(request.user)
-    
     try:
-        summary = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summary = SummaryTable(Faculty_ID=faculty)
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
     
     formsetInfo = { }
     formInfo = {
@@ -311,7 +300,7 @@ def researchPatents(request):
             PatentsResearchForm,
             summary,
             'consulting',
-            faculty
+            request.user
         )
     }
     
@@ -339,12 +328,10 @@ def researchPatents(request):
 
 @login_required
 def researchOther(request):
-    faculty = getFaculty(request.user)
-    
     try:
-        summary = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summary = SummaryTable(Faculty_ID=faculty)
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
     
     formsetInfo = { }
     formInfo = {
@@ -352,7 +339,7 @@ def researchOther(request):
             OtherResearchForm,
             summary,
             'other',
-            faculty
+            request.user
         )
     }
     
@@ -380,12 +367,10 @@ def researchOther(request):
 
 @login_required
 def researchRecognition(request):
-    faculty = getFaculty(request.user)
-    
     try:
-        summary = SummaryTable.objects.get(Faculty_ID=faculty)
-    except SummaryTable.DoesNotExist:
-        summary = SummaryTable(Faculty_ID=faculty)
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
     
     formsetInfo = { }
     formInfo = {
@@ -393,7 +378,7 @@ def researchRecognition(request):
             RecognitionResearchForm,
             summary,
             'recognition',
-            faculty
+            request.user
         )
     }
     
@@ -421,16 +406,13 @@ def researchRecognition(request):
 
 @login_required
 def researchGrants(request):
-    faculty = getFaculty(request.user)
-    formInfo = {
-
-    }    
+    formInfo = { }
     formsetInfo = {
         'grants': (
             modelformset_factory(GrantTable, form=GrantForm, extra=0, formset=GrantFormset, can_delete=True),
-            GrantTable.objects.filter(Faculty_ID=faculty),
+            GrantTable.objects.filter(user=request.user),
             'grant',
-            faculty
+            request.user
         )
     }
     
@@ -455,19 +437,19 @@ def researchGrants(request):
         context = dict([('forms', forms), ('formsets', formsets)])
 
     forms['grants'] = GrantSelectForm()
-    forms['grants'].fields['grantSelect'] = ModelChoiceField(queryset=GrantTable.objects.filter(Faculty_ID=faculty), label="Grant")
+    forms['grants'].fields['grantSelect'] = ModelChoiceField(queryset=GrantTable.objects.filter(
+        user=request.user), label="Grant")
 
     return direct_to_template(request, 'researchgrants.html', context)
 
 @login_required
 def courses(request):
-    faculty = getFaculty(request.user)
     formInfo = {
         'coursesJoined': (
-            inlineformset_factory(FacultyTable, FacultyCourseJoinTable, form=CourseJoinForm, extra=0, formset=InlineFormsetMixin, can_delete=True),
-            faculty,
+            inlineformset_factory(User, FacultyCourseJoinTable, form=CourseJoinForm, extra=0, formset=InlineFormsetMixin, can_delete=True),
+            request.user,
             'cjoin',
-            faculty
+            request.user
         )
     }    
     formsetInfo = {
@@ -503,33 +485,32 @@ def courses(request):
     
 @login_required
 def service(request):
-    faculty = getFaculty(request.user)
     formInfo = {
     }    
     formsetInfo = {
         'department': (
             modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(Faculty_ID=faculty).filter(Level='d'),
+            ServiceTable.objects.filter(user=request.user).filter(Level='d'),
             'dept',
-            faculty
+            request.user
         ),
         'college': (
             modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(Faculty_ID=faculty).filter(Level='c'),
+            ServiceTable.objects.filter(user=request.user).filter(Level='c'),
             'college',
-            faculty
+            request.user
         ),
         'university': (
             modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(Faculty_ID=faculty).filter(Level='u'),
+            ServiceTable.objects.filter(user=request.user).filter(Level='u'),
             'uni',
-            faculty
+            request.user
         ),
         'external': (
             modelformset_factory(ServiceTable, form=ServiceForm, extra=0, formset=FormsetMixin, can_delete=True),
-            ServiceTable.objects.filter(Faculty_ID=faculty).filter(Level='e'),
+            ServiceTable.objects.filter(user=request.user).filter(Level='e'),
             'ext',
-            faculty
+            request.user
         )
     }
     
@@ -556,16 +537,12 @@ def service(request):
     return direct_to_template(request, 'service.html', context)
 @login_required
 def ResearchActivity(request):
-
     """ Create a form view for Research Activity """
 
-    faculty = getFaculty(request.user)
-
-
     try:
-        ResearchData = SummaryTable.objects.get(Faculty_ID = faculty)
+        ResearchData = SummaryTable.objects.get(user=request.user)
     except SummaryTable.DoesNotExist:
-        ResearchData = SummaryTable(Faculty_ID = faculty)
+        ResearchData = SummaryTable(user=request.user)
 
 
     if request.method == 'POST':

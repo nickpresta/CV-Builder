@@ -2,7 +2,7 @@
         "http://www.w3.org/TR/html4/strict.dtd">
 <html lang="en">
     <head>
-        <title>{{ faculty_info.get_full_name }} - CV</title>
+        <title>{{ user.get_full_name }} - CV</title>
         <style type="text/css" media="screen" title="Screen">
             div#overlay {
                 position: fixed;
@@ -107,7 +107,7 @@
                     COLLEGE OF PHYSICAL AND ENGINEERING SCIENCE<br>
                     FACULTY CURRICULUM VITAE<br>
                     for<br>
-                    {{ faculty_info.get_full_name }}</h1>
+                    {{ user.get_full_name }}</h1>
 
                 <ul>
                     <li>Part 1: Basic Biographical Information</li>
@@ -122,15 +122,15 @@
                             <h2>Part 1: Executive Summary</h2>
                             <h3>Distribution of Effort</h3>
                             {% for data in doe %}
-                                <p>Year {{ data.Year|date:"Y" }}:
-                                <strong>Research</strong>: {{ data.Research }}%,
-                                <strong>Teaching</strong>: {{ data.Teaching }}%,
-                                <strong>Service</strong>: {{ data.Service }}%
+                                <p>Year {{ data.year|date:"Y" }}:
+                                <strong>Research</strong>: {{ data.research }}%,
+                                <strong>Teaching</strong>: {{ data.teaching }}%,
+                                <strong>Service</strong>: {{ data.service }}%
                             </p>
                             {% endfor %}
 
                             <h3>Research, Teaching, and Service</h3>
-                            {{ summary.Executive|safe }}
+                            {{ summary.executive|safe }}
                         </td>
                     </tr>
                 </table>
@@ -141,9 +141,9 @@
                     <tr>
                         <td style="width: 30px">(a)</td>
                         <td><strong>Name</strong>:</td>
-                        <td colspan="2">{{ faculty_info.get_full_name }}</td>
+                        <td colspan="2">{{ user.get_full_name }}</td>
                         <td colspan="2"><strong>Department</strong>:
-                            {% for dept in faculty_info.Department %}
+                            {% for dept in faculty_info.departments %}
                                 {{ dept }}<br />
                             {% endfor %}
                         </td>
@@ -158,10 +158,10 @@
                     {% for degree in degree_info %}
                     <tr>
                         <td></td>
-                        <td>{{ degree.Degree }}</td>
-                        <td>{{ degree.Discipline }}</td>
-                        <td>{{ degree.Institution }}</td>
-                        <td>{{ degree.Date|date:"Y" }}</td>
+                        <td>{{ degree.degree }}</td>
+                        <td>{{ degree.discipline }}</td>
+                        <td>{{ degree.institution }}</td>
+                        <td>{{ degree.date|date:"Y" }}</td>
                     </tr>
                     {% endfor %}
                     <tr>
@@ -173,7 +173,7 @@
                         <td colspan="4">
                             <ul>
                             {% for honor in honors_info %}
-                                <li>{{ honor.Honor_desc }}</li>
+                                <li>{{ honor.description }}</li>
                             {% endfor %}
                             </ul>
                         </td>
@@ -197,9 +197,9 @@
                     {% for position in position_held_info %}
                     <tr>
                         <td></td>
-                        <td colspan="2">{{ position.Rank }}</td>
-                        <td colspan="2">{{ position.StartDate}} -
-                            {{ position.EndDate }}</td>
+                        <td colspan="2">{{ position.rank }}</td>
+                        <td colspan="2">{{ position.start_date}} -
+                            {{ position.end_date }}</td>
                     </tr>
                     {% endfor %}
                     <tr>

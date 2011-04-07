@@ -100,7 +100,7 @@ INSTALLED_APPS = (
 )
 
 # User Profiles
-AUTH_PROFILE_MODULE = "cv.userprofile"
+AUTH_PROFILE_MODULE = "cv.UserProfile"
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"

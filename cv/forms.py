@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
-from django.forms import ModelForm, Form
-from cv.models import *
+import datetime
+import re
+
 from django import forms
+from django.forms import ModelForm, Form
 from django.forms.models import BaseModelFormSet
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.forms.formsets import DELETION_FIELD_NAME
-import datetime
-import re
+
+from cv.models import *
 
 class FormMixin(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -19,12 +21,12 @@ class FormMixin(ModelForm):
 
         if self.pk:
             form.setPK(self.pk)
-        
+
         if commit:
             form.save()
 
-        return form        
-        
+        return form
+
 class FormsetMixin(BaseModelFormSet):
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
@@ -39,7 +41,7 @@ class FormsetMixin(BaseModelFormSet):
             if commit:
                 form.save()
         return forms
-        
+
 class InlineFormsetMixin(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
@@ -55,90 +57,97 @@ class InlineFormsetMixin(BaseInlineFormSet):
                 form.save()
         return forms
 
-
-
 class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
-        
-    Year = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    
+
+    year = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
     class Meta:
-        fields = ('Year', 'Research', 'Teaching', 'Service')
-        model = DoETable
+        fields = ('year', 'research', 'teaching', 'service')
+        model = DistributionOfEffort
 
     def setPK(self, form):
-        form.Faculty_ID = self.pk
+        form.user_id = self.pk
 
     def clean(self):
         """ Clean the form according to our custom rules """
         cleaned_data = self.cleaned_data
-        research = cleaned_data.get("Research")
-        teaching = cleaned_data.get("Teaching")
-        service = cleaned_data.get("Service")
+        research = cleaned_data.get("research")
+        teaching = cleaned_data.get("teaching")
+        service = cleaned_data.get("service")
 
         # ensure that all 3 fields add up to 100
         if (research + teaching + service) != 100:
             msg = "Research, teaching and service must add up to 100"
-            self._errors['Research'] = self.error_class([msg])
-            self._errors['Teaching'] = self.error_class([msg])
-            self._errors['Service'] = self.error_class([msg])
+            self._errors['research'] = self.error_class([msg])
+            self._errors['teaching'] = self.error_class([msg])
+            self._errors['service'] = self.error_class([msg])
 
             # These fields are no longer valid
-            del cleaned_data['Research']
-            del cleaned_data['Teaching']
-            del cleaned_data['Service']
+            del cleaned_data['research']
+            del cleaned_data['teaching']
+            del cleaned_data['service']
 
         return cleaned_data
-        
+
 class FacultyNameDeptForm(FormMixin):
-    Faculty_GName = forms.CharField(label='Given Name')
-    Faculty_SName = forms.CharField(label='Surname')
+    first_name = forms.CharField(max_length=30)
+    last_name = forms.CharField(max_length=30)
 
     class Meta:
-        fields = ('Faculty_GName', 'Faculty_SName', 'Department')
-        model = FacultyTable
-        
+        fields = ('first_name', 'last_name')
+        model = User
+
 class AccredForm(FormMixin):
-    Date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
 
     class Meta:
-        model = AccredTable
-        fields = ('Degree', 'Discipline', 'Institution', 'Date')
+        model = Accred
+        fields = ('degree', 'discipline', 'institution', 'date')
         widgets = {
-            'Degree': forms.Textarea(attrs={'class': 'mceNoEditor'}),
-            'Discipline': forms.Textarea(attrs={'class': 'mceNoEditor'}),
-            'Institution': forms.Textarea(attrs={'class': 'mceNoEditor'}),
+            'degree': forms.Textarea(attrs={'class': 'mceNoEditor'}),
+            'discipline': forms.Textarea(attrs={'class': 'mceNoEditor'}),
+            'institution': forms.Textarea(attrs={'class': 'mceNoEditor'}),
         }
 
 class HonorForm(FormMixin):
-    Honor_desc = forms.CharField(label='Description', widget=forms.Textarea(attrs={'class': 'mceNoEditor'}))
-    
+    description = forms.CharField(label='Description',
+            widget=forms.Textarea(attrs={'class': 'mceNoEditor'}))
+
     class Meta:
-        model = HonorTable
-        fields = ('Honor_desc',)
-    
+        model = Honor
+        fields = ('description',)
+
 class FacultyStartForm(FormMixin):
-    Faculty_Start = forms.DateField(initial=datetime.date.today, widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    faculty_start = forms.DateField(label="Faculty Start Date", initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
     class Meta:
-        fields = ('Faculty_Start',)
-        model = FacultyTable
+        fields = ('faculty_start',)
+        model = UserProfile
+
+class FacultyDepartmentsForm(FormMixin):
+    class Meta:
+        fields = ('departments',)
+        model = UserProfile
 
 class ExecutiveSummaryForm(FormMixin):
     class Meta:
-        fields = ('Executive',)
-        model = SummaryTable
+        fields = ('executive',)
+        model = Summary
         widgets = {
-            'Executive': forms.Textarea(attrs={'rows': '50', 'cols': '40',})
+            'executive': forms.Textarea(attrs={'rows': '50', 'cols': '40',})
         }
-        
+
 class PositionHeldForm(FormMixin):
-    StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    EndDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    
+    start_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+
     class Meta:
-        fields = ('StartDate', 'EndDate', 'Location', 'Rank')
-        model = PositionHeldTable
+        fields = ('start_date', 'end_date', 'location', 'rank')
+        model = PositionHeld
 
 class PositionPriorForm(FormMixin):
     StartDate = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
@@ -160,11 +169,11 @@ class PositionElsewhereForm(FormMixin):
 class OffCampusRecognitionForm(FormMixin):
     class Meta:
         fields = ('OffCampus',)
-        model = SummaryTable 
+        model = Summary
 
 class ResearchActivityForm(FormMixin):
     class Meta:
-        model = SummaryTable 
+        model = Summary
         fields = ('Research',)
         widgets = {
             'Research': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
@@ -172,7 +181,7 @@ class ResearchActivityForm(FormMixin):
 
 class ReportOnTeachingForm(FormMixin):
     class Meta:
-        model = SummaryTable
+        model = Summary
         fields = ('Teaching',)
         widgets = {
             'Teaching': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
@@ -180,15 +189,15 @@ class ReportOnTeachingForm(FormMixin):
 
 class ConsultingResearchForm(FormMixin):
     class Meta:
-        model = SummaryTable
+        model = Summary
         fields = ('R_Consulting',)
         widgets = {
             'R_Consulting': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
-        
+
 class PatentsResearchForm(FormMixin):
     class Meta:
-        model = SummaryTable
+        model = Summary
         fields = ('R_Patents',)
         widgets = {
             'R_Patents': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
@@ -196,7 +205,7 @@ class PatentsResearchForm(FormMixin):
 
 class OtherResearchForm(FormMixin):
     class Meta:
-        model = SummaryTable
+        model = Summary
         fields = ('R_Other',)
         widgets = {
             'R_Other': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
@@ -204,7 +213,7 @@ class OtherResearchForm(FormMixin):
 
 class RecognitionResearchForm(FormMixin):
     class Meta:
-        model = SummaryTable
+        model = Summary
         fields = ('R_Recognition',)
         widgets = {
             'R_Recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
@@ -212,7 +221,7 @@ class RecognitionResearchForm(FormMixin):
 
 class CounsellingForm(FormMixin):
     class Meta:
-        model = SummaryTable
+        model = Summary
         fields = ('T_Counselling',)
         widgets = {
             'T_Counselling': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
@@ -261,7 +270,7 @@ class GrantFormset(FormsetMixin):
 
     def add_fields(self, form, index):
         super(GrantFormset, self).add_fields(form, index)
-        
+
         try:
             instance = self.get_queryset()[index]
             #pk_value = instance.pk
@@ -274,16 +283,16 @@ class GrantFormset(FormsetMixin):
         except TypeError:
             instance = None
             prefix = re.sub(r'-__prefix__', '___nested_prefix__', form.prefix)
-            
+
         form.nested = [
             InvestigatorFormset(data=self.data, instance=instance,
-                prefix='%s_invest' % prefix, pk=instance),                
+                prefix='%s_invest' % prefix, pk=instance),
             GrantYearFormset(data=self.data, instance=instance,
                 prefix='%s_gyear' % prefix, pk=instance)
         ]
     def is_valid(self):
         result = super(GrantFormset, self).is_valid()
-        
+
         for form in self.forms:
             if hasattr(form, 'nested'):
                 for nestedForm in form.nested:
@@ -292,38 +301,38 @@ class GrantFormset(FormsetMixin):
     def save_new(self, form, commit=True):
 
         instance = super(GrantFormset, self).save_new(form, commit=commit)
-        
+
         form.instance = instance
-        
+
         for nested in form.nested:
             nested.instance = instance
-            
+
             for cdata in nested.cleaned_data:
                 cdata[nested.fk.name] = instance
-                
+
         return instance
-        
-    def should_delete(self, form):    
+
+    def should_delete(self, form):
         if self.can_delete:
             raw_delete_value = form._raw_value(DELETION_FIELD_NAME)
             should_delete = form.fields[DELETION_FIELD_NAME].clean(raw_delete_value)
-            
+
             return should_delete
         return False
 
     def save_all(self, commit=True):
         objects = self.save(commit=False)
-        
+
         if commit:
             for o in objects:
                 o.save()
-                
+
         if not commit:
             self.save_m2m()
-            
+
         for form in set(self.initial_forms + self.saved_forms):
             if self.should_delete(form):
                 continue
-                
+
             for nested in form.nested:
                 nested.save(commit=commit)

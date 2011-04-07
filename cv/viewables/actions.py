@@ -42,28 +42,26 @@ def write_pdf(template_src, context_dict, request):
 def export_download(request, download):
     """ Return the response, either a PDF, or some error text """
 
-    faculty = getFaculty(request.user)
-
     # We need to build up the information for the export
     out = {}
     out['user'] = request.user
 
-    doeData = DoETable.objects.filter(Faculty_ID=faculty).order_by('Year')
+    doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
     out['doe'] = doeData
 
-    out['summary'] = get_table_or_dict(SummaryTable, Faculty_ID=faculty)
+    out['summary'] = get_table_or_dict(Summary, user=request.user)
 
-    out['faculty_info'] = get_table_or_dict(FacultyTable, Faculty_ID=faculty.Faculty_ID)
-    out['faculty_info'].Department = out['faculty_info'].Department.split(",")
+    out['faculty_info'] = request.user.get_profile()
+    out['faculty_info'].departments = out['faculty_info'].departments.split(",")
 
-    out['degree_info'] = AccredTable.objects.filter(Faculty_ID=faculty).order_by("Date")
-    out['honors_info'] = HonorTable.objects.filter(Faculty_ID=faculty)
-    out['position_held_info'] = PositionHeldTable.objects.filter(
-            Faculty_ID=faculty).order_by("StartDate")
+    out['degree_info'] = Accred.objects.filter(user=request.user).order_by("date")
+    out['honors_info'] = Honor.objects.filter(user=request.user)
+    out['position_held_info'] = PositionHeld.objects.filter(
+            user=request.user).order_by("start_date")
     out['position_prior_info'] = PositionPriorTable.objects.filter(
-            Faculty_ID=faculty).order_by("StartDate")
+            user=request.user).order_by("StartDate")
     out['position_elsewhere_info'] = PositionElsewhereTable.objects.filter(
-            Faculty_ID=faculty).order_by("StartDate")
+            user=request.user).order_by("StartDate")
 
     if download:
         return write_pdf('export.html', out, request)
