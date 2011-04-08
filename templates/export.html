@@ -352,7 +352,7 @@
                 <table width="100%">
                     {% for course in courses_info %}
                     <tr>
-                        <td>{{ course.semester }}</td>
+                        <td>{{ course.get_semester_display }}</td>
                         <td>{{ course.year }}</td>
                         <td>{{ course.course }}</td>
                         <td>{{ course.num_students }}</td>

@@ -236,10 +236,9 @@ class CourseJoinForm(FormMixin):
     class Meta:
         model = FacultyCourseJoin
         fields = ('course', 'year', 'semester', 'num_students')
-        widgets = {
-            'course': forms.TextInput
-        }
-
+        #widgets = {
+        #    'course': forms.TextInput
+        #}
 
 class CourseForm(FormMixin):
     class Meta:
@@ -328,8 +327,8 @@ class GrantYearForm(FormMixin):
     class Meta:
         model = GrantYear
         fields = ('title', 'amount', 'start_year', 'end_year')
-        
-        
+
+
     def clean(self):
         """ Clean the form according to our custom rules """
 

@@ -9,9 +9,9 @@ class UserProfileTestCase(unittest.TestCase):
     def setUp(self):
         self.user = User.objects.create_user("John Doe", "test@test.com",
                 "password")
-        self.faculty = FacultyTable.objects.create(Username=self.user,
-                Faculty_GName="John", Faculty_SName="Doe", Review_Term=2,
-                Department="Test", Faculty_Start=datetime.now())
+        self.user.first_name = "John"
+        self.user.last_name = "Doe"
+        self.user.save()
 
     def testGetFullName(self):
-        self.assertEquals(self.faculty.get_full_name(), "John Doe")
+        self.assertEquals(self.user.get_full_name(), "John Doe")
