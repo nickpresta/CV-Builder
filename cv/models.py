@@ -156,27 +156,41 @@ class FacultyCourseJoin(models.Model, FacultyKeyMixin):
     year = models.DateField(blank=True, null=True)
     semester = models.CharField(max_length=200, blank=True, null=True)
     num_students = models.IntegerField(blank=True, null=True)
-
-class GradTable(models.Model, FacultyKeyMixin):
+    
+class BaseGradAdvisor(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    grad_name = models.CharField(max_length=200, blank=True)
-    grad_degree = models.CharField(max_length=200, blank=True)
+    student_name = models.CharField(max_length=200, blank=True)
+    degree = models.CharField(max_length=200, blank=True)
     start_date = models.DateField(blank=True, null=True)
     end_date = models.DateField(blank=True, null=True)
-    note = models.CharField(max_length=200, blank=True)
+
+class GradAdvisor(BaseGradAdvisor):
+    pass
+
+class GradAdvisorCommitteeMember(BaseGradAdvisor):
+    pass
+
+class GradExaminer(models.Model, FacultyKeyMixin):
+    user = models.ForeignKey(User)
+    student_name = models.CharField(max_length=200, blank=True)
+    degree = models.CharField(max_length=200, blank=True)
+    date = models.DateField(blank=True, null=True)
+
+roles = [('c', 'Chair'), ('m', 'Member')]
+SEMESTERS = [('f', 'Fall'), ('w', 'Winter'), ('s', 'Summer')]
 
 class Service(models.Model, FacultyKeyMixin):
     service_levels = [('u', 'University'), ('d', 'Department'), ('c', 'College'), ('e', 'External')]
-    roles = [('c', 'Chair'), ('m', 'Member')]
-    semesters = [('f', 'Fall'), ('w', 'Winter'), ('s', 'Summer')]
-
     user = models.ForeignKey(User)
-    start_semester = models.CharField(max_length=200, blank=True, choices=semesters)
+    start_semester = models.CharField(max_length=200, blank=True, choices=SEMESTERS)
     start_year = models.DateField(blank=True, null=True)
-    end_semester = models.CharField(max_length=200, blank=True, choices=semesters)
+    end_semester = models.CharField(max_length=200, blank=True, choices=SEMESTERS)
     end_year = models.DateField(blank=True, null=True)
     committee = models.CharField(max_length=200, blank=True)
     role = models.CharField(max_length=200, blank=True, choices=roles)
     chair = models.CharField(max_length=200, blank=True)
     other = models.CharField(max_length=200, blank=True)
     level = models.CharField(max_length=200, blank=True, choices=service_levels)
+    
+    def __unicode__(self):
+        return self.committee

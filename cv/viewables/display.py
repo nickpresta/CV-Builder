@@ -495,32 +495,11 @@ def courses(request):
 def service(request):
     formInfo = {}
     formsetInfo = {
-        'department': (
+        'service': (
             modelformset_factory(Service, form=ServiceForm,
                 extra=0, formset=FormsetMixin, can_delete=True),
-            Service.objects.filter(user=request.user).filter(level='d'),
-            'dept',
-            request.user.id
-        ),
-        'college': (
-            modelformset_factory(Service, form=ServiceForm,
-                extra=0, formset=FormsetMixin, can_delete=True),
-            Service.objects.filter(user=request.user).filter(level='c'),
-            'college',
-            request.user.id
-        ),
-        'university': (
-            modelformset_factory(Service, form=ServiceForm,
-                extra=0, formset=FormsetMixin, can_delete=True),
-            Service.objects.filter(user=request.user).filter(level='u'),
-            'uni',
-            request.user.id
-        ),
-        'external': (
-            modelformset_factory(Service, form=ServiceForm,
-                extra=0, formset=FormsetMixin, can_delete=True),
-            Service.objects.filter(user=request.user).filter(level='e'),
-            'ext',
+            Service.objects.filter(user=request.user),
+            'service',
             request.user.id
         )
     }
@@ -545,6 +524,11 @@ def service(request):
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
+
+    forms['service'] = ServiceSelectForm()
+    forms['service'].fields['serviceSelect'] = ModelChoiceField(
+        queryset=Service.objects.filter(user=request.user), label="Service")
+
 
     return direct_to_template(request, 'service.html', context)
 
@@ -574,6 +558,57 @@ def research_activity(request):
 
     return direct_to_template(request, 'research_activity.html',
             {'ResearchActivityForm': ResearchFormset})
+
+@login_required
+def graduate(request):
+    formInfo = {
+    }
+    formsetInfo = {
+        'advisor': (
+            modelformset_factory(GradAdvisor, form=AdvisorForm, extra=0,
+                formset=FormsetMixin, can_delete=True),
+            GradAdvisor.objects.filter(user=request.user),
+            'gradad',
+            request.user.id
+        ),
+        'committee': (
+            modelformset_factory(GradAdvisorCommitteeMember, form=AdvisorCommitteeForm, extra=0,
+                formset=FormsetMixin, can_delete=True),
+            GradAdvisorCommitteeMember.objects.filter(user=request.user),
+            'gradmem',
+            request.user.id
+        ),
+        'examiner': (
+            modelformset_factory(GradExaminer, form=ExaminerForm, extra=0,
+                formset=FormsetMixin, can_delete=True),
+            GradExaminer.objects.filter(user=request.user),
+            'gradexam',
+            request.user.id
+        )
+    }
+
+    if request.method == 'POST':
+        formsets, forms = createContext(formsetInfo, formInfo,
+                postData=request.POST, files=request.FILES)
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+        allForms = dict(formsets)
+        allForms.update(forms)
+
+        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
+            # Save the form data, ensure they are updating as themselves
+            for form in forms.values():
+                form.save()
+            for formset in formsets.values():
+                formset.save()
+
+            return HttpResponseRedirect(reverse('cv-teaching-graduate'))
+
+    else:
+        formsets, forms = createContext(formsetInfo, formInfo)
+        context = dict([('forms', forms), ('formsets', formsets)])
+
+    return direct_to_template(request, 'teaching_graduate.html', context)
 
 @login_required
 def distribution_of_effort(request):

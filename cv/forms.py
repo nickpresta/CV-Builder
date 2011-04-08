@@ -239,8 +239,11 @@ class CourseForm(FormMixin):
 class ServiceForm(FormMixin):
     class Meta:
         model = Service
-        fields = ('start_semester', 'start_year', 'end_semester', 'end_year',
-                'committee', 'role', 'chair', 'other', 'level')
+        fields = ('level', 'start_semester', 'start_year', 'end_semester',
+                'end_year', 'committee', 'role', 'chair', 'other')
+
+class ServiceSelectForm(Form):
+    pass
 
 class GrantForm(FormMixin):
     class Meta:
@@ -251,6 +254,21 @@ class InvestigatorForm(FormMixin):
     class Meta:
         model = Investigator
         fields = ('name', 'amount', 'role')
+
+class AdvisorForm(FormMixin):
+    class Meta:
+        model = GradAdvisor
+        fields = ('student_name', 'degree', 'start_date', 'end_date')
+
+class AdvisorCommitteeForm(FormMixin):
+    class Meta:
+        model = GradAdvisor
+        fields = ('student_name', 'degree', 'start_date', 'end_date')
+
+class ExaminerForm(FormMixin):
+    class Meta:
+        model = GradAdvisor
+        fields = ('student_name', 'degree', 'date')
 
 class GrantYearForm(FormMixin):
     start_year = forms.DateField(initial=datetime.date.today,

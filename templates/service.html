@@ -2,6 +2,100 @@
 
 {% block title %}Edit CV{% endblock %}
 
+{% block morehead %}
+<script type="text/javascript">
+var grantData = eval('{{ grantData }}');
+var investigatorData = eval('{{ investigatorData }}');
+var grantYearData = eval('{{ grantYearData }}');
+
+function renumberElement(regexp, repl, elem) {
+    if (elem.id)
+        elem.id = elem.id.replace(regexp, repl);
+    if (elem.name)
+        elem.name = elem.name.replace(regexp, repl);
+}
+
+$(document).ready(function() {
+    var blank = $("#service > .service_wrapper:last");
+    var errorElems = $(".service_wrapper:has(.error)");
+    var removeNum_regex;
+    var totalElem = $("#service > .management > input[name$=\"-TOTAL_FORMS\"]");
+    var total = parseInt(totalElem.val());
+
+    $(".service_wrapper").hide();
+
+    if (errorElems.length > 0) {
+        var first = $(errorElems).first();
+
+        $(first).show();
+        $("#id_serviceSelect").val($(first).children("[name$=\"-id\"]").val());
+
+        $("#id_serviceSelect").addClass("error");
+    }
+
+    $(errorElems).each(function() {
+        var id = $(this).children("[name$=\"-id\"]").val();
+
+        // mark option in select element
+        $("#id_serviceSelect > [value=\"" + id + "\"]").addClass("error");
+    });
+
+    // name each grant_wrapper by their id value (primary key)
+    $(".service_wrapper").each(function () {
+        var id = $(this).children("[name$=\"-id\"]").val();
+        $(this).attr("name", id);
+    });
+
+    // grant select changed
+    $("#id_serviceSelect").change(function() {
+        var selectedID = $(this).val();
+        var prev = $(".service_wrapper:visible");
+
+        $(prev).hide();
+
+        if (selectedID)
+            $(".service_wrapper[name=\"" + selectedID + "\"]").show();
+    });
+
+    // update select element option string to reflect new values
+    $("[name $= \"committee\"]").keyup(function() {
+        var curService = $(".service_wrapper:visible");
+
+        if (curService.length > 0) {
+            var newOptStr = "";
+
+            newOptStr = $(curService).find("[name $= \"committee\"]").val();
+
+            $("#id_serviceSelect > [value = \"" + $(curService).attr("name") + "\"]").html(newOptStr);
+        }
+    });
+
+    $(".addservice").click(function () {
+        var newService = $(blank).clone(true);
+        var newOpt = $("<option value=\"new-" + total + "\">new</option>");
+
+        $(".service_wrapper:visible").hide();
+
+        ($(newService).children("[name *= \"__prefix__\"]").add($(newService).children("div").find("[name *= \"__prefix__\"]"))).each(function() {
+            renumberElement(new RegExp("(__prefix__)"), total, this);
+        });
+
+        $(newService).find("[name *= \"__prefix__\"]").each(function() {
+            renumberElement(new RegExp("(__prefix__)"), "0", this);
+        });
+
+        $(totalElem).val(++total);
+        $(newService).insertBefore(".service_wrapper:last").show();
+        $(newService).attr("name", "new-" + total);
+        $("#id_serviceSelect").append(newOpt);
+        $("#id_serviceSelect").val(newOpt.val());
+
+    });
+});
+</script>
+
+{% endblock %}
+
 {% block content %}
 <h3>3C Service and Administrative Contributions</h3>
 
@@ -16,35 +110,30 @@
     {{ form.errors.as_ul }}
 {% endfor %}
 
+<div>
+    <div class="field_label">{{ forms.service.serviceSelect.label_tag }}</div>
+    <div class="field_wrapper">{{ forms.service.serviceSelect }}</div>
+    <div class="field_wrapper"><span class="clickable addservice">add</span></div>
+    <div class="clear"></div>
+</div>
+
 <form method="post" action="{% url cv-service-contributions %}">
     {% csrf_token %}
-    <fieldset id="department">
-        <legend>a - Department Committees and Similar Bodies with Dates</legend>
-        {{ formsets.department.management_form }}
-        {% with formsets.department as tableFormset %}
-            {% include "multiitem_table.html" %}
-        {% endwith %}
-    </fieldset>
-    <fieldset id="college">
-        <legend>b - College Committees and Similar Bodies with Dates</legend>
-        {{ formsets.college.management_form }}
-        {% with formsets.college as tableFormset %}
-            {% include "multiitem_table.html" %}
-        {% endwith %}
-    </fieldset>
-    <fieldset id="university">
-        <legend>c - University Committees and Similar Bodies with Dates</legend>
-        {{ formsets.university.management_form }}
-        {% with formsets.university as tableFormset %}
-            {% include "multiitem_table.html" %}
-        {% endwith %}
-    </fieldset>
-    <fieldset id="external">
-        <legend>d - External Committees and Similar Bodies with Dates</legend>
-        {{ formsets.external.management_form }}
-        {% with formsets.external as tableFormset %}
-            {% include "multiitem_table.html" %}
-        {% endwith %}
+    <fieldset id="service">
+        <div class="management">
+            {{ formsets.service.management_form }}
+        </div>
+        {% for form in formsets.service.forms %}
+            <div class="service_wrapper">
+                {% include "inline_form.html" %}
+            </div>
+        {% endfor %}
+    
+        <div class="service_wrapper">
+            {% with formsets.service.empty_form as form %}
+                {% include "inline_form.html" %}
+            {% endwith %}
+        </div>
     </fieldset>
     <input type="submit" value="Save" />
 </form>
