@@ -237,13 +237,7 @@ def teaching_courses(request):
         )
     }
     formsetInfo = {
-        'courses': (
-            modelformset_factory(Course, form=CourseForm, extra=0,
-                formset=FormsetMixin, can_delete=True),
-            Course.objects.all(),
-            'courses',
-            None
-        )
+
     }
 
     if request.method == 'POST':

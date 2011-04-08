@@ -37,11 +37,13 @@ def create_user_profile(sender, instance, created, **kwargs):
 # Connect them
 post_save.connect(create_user_profile, sender=User)
 
+SEMESTERS = [('f', 'Fall'), ('w', 'Winter'), ('s', 'Summer')]
+
 class DistributionOfEffort(models.Model, FacultyKeyMixin):
     """ This class holds information about the DoE for a
         given employee (Teaching, Research, Service) """
     user = models.ForeignKey(User)
-    year = models.DateField()
+    year = models.DateField(unique=True)
     # These three fields should add up to 100 (%)
     research = models.IntegerField(default=40)
     teaching = models.IntegerField(default=40)
@@ -129,12 +131,12 @@ class Investigator(models.Model, GrantKeyMixin):
     role = models.CharField(max_length=2, choices=(('p', 'Principle'), ('s', 'Other')))
 
 class Course(models.Model):
-    code = models.CharField(max_length=200, blank=True, unique=True)
+    code = models.CharField(max_length=200, blank=True, primary_key=True)
     name = models.CharField(max_length=200, blank=True, null=True)
     info = models.CharField(max_length=200, blank=True, null=True)
 
     def __unicode__(self):
-        return self.code + ': ' + self.name
+        return self.code
 
     def save(self, *args, **kwargs):
         """ We need to ensure that there is some form of uniformity when storing
@@ -154,7 +156,7 @@ class FacultyCourseJoin(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
     course = models.ForeignKey(Course)
     year = models.DateField(blank=True, null=True)
-    semester = models.CharField(max_length=200, blank=True, null=True)
+    semester = models.CharField(max_length=200, blank=True, choices=SEMESTERS)
     num_students = models.IntegerField(blank=True, null=True)
     
 class BaseGradAdvisor(models.Model, FacultyKeyMixin):
@@ -177,7 +179,6 @@ class GradExaminer(models.Model, FacultyKeyMixin):
     date = models.DateField(blank=True, null=True)
 
 roles = [('c', 'Chair'), ('m', 'Member')]
-SEMESTERS = [('f', 'Fall'), ('w', 'Winter'), ('s', 'Summer')]
 
 class Service(models.Model, FacultyKeyMixin):
     service_levels = [('u', 'University'), ('d', 'Department'), ('c', 'College'), ('e', 'External')]

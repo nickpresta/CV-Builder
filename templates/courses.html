@@ -17,13 +17,6 @@
 
 <form method="post" action="{% url cv-teaching-courses %}">
     {% csrf_token %}
-    <fieldset>
-        <legend>Courses Offered</legend>
-        {{ formsets.courses.management_form }}
-        {% with formsets.courses as tableFormset %}
-            {% include "multiitem_table.html" %}
-        {% endwith %}
-    </fieldset>
     <fieldset id="courses">
         <legend>b - Courses Taught</legend>
         {{ forms.coursesJoined.management_form }}

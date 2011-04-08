@@ -73,13 +73,14 @@ class DoEForm(FormMixin):
 
     def clean(self):
         """ Clean the form according to our custom rules """
+
         cleaned_data = self.cleaned_data
         research = cleaned_data.get("research")
         teaching = cleaned_data.get("teaching")
         service = cleaned_data.get("service")
 
         # ensure that all 3 fields add up to 100
-        if (research + teaching + service) != 100:
+        if research and teaching and service and (research + teaching + service) != 100:
             msg = "Research, teaching and service must add up to 100"
             self._errors['research'] = self.error_class([msg])
             self._errors['teaching'] = self.error_class([msg])
@@ -230,9 +231,15 @@ class CounsellingForm(FormMixin):
         }
 
 class CourseJoinForm(FormMixin):
+    year = forms.DateField(input_formats=['%Y'], widget=forms.DateInput(format='%Y'))
+
     class Meta:
         model = FacultyCourseJoin
         fields = ('course', 'year', 'semester', 'num_students')
+        widgets = {
+            'course': forms.TextInput
+        }
+
 
 class CourseForm(FormMixin):
     class Meta:
@@ -310,6 +317,23 @@ class GrantYearForm(FormMixin):
     class Meta:
         model = GrantYear
         fields = ('title', 'amount', 'start_year', 'end_year')
+        
+        
+    def clean(self):
+        """ Clean the form according to our custom rules """
+
+        cleaned_data = self.cleaned_data
+        start_year = cleaned_data.get("start_year")
+        end_year = cleaned_data.get("end_year")
+
+        if start_year and end_year and end_year < start_year:
+            msg = "End year must fall after start year."
+            self._errors['end_year'] = self.error_class([msg])
+
+            # These fields are no longer valid
+            del cleaned_data['end_year']
+
+        return cleaned_data
 
 class GrantSelectForm(Form):
     pass
