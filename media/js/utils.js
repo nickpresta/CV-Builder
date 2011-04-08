@@ -184,3 +184,7 @@ function settings() {
         }
     }
 }
+
+function enable_autocomplete() {
+    $("#id_facultydepartments-departments").autocomplete({ source : "/autocomplete/?table=departments" });
+}

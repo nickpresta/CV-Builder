@@ -40,6 +40,7 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^export/$', 'export_download', {'download': False}, name='cv-export'),
     url(r'^export_download/$', 'export_download', {'download': True},
         name='cv-export-download'),
+    url(r'^autocomplete/$', 'autocomplete', name='cv-autocomplete'),
 )
 
 urlpatterns += patterns('',
