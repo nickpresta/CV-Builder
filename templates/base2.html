@@ -44,48 +44,48 @@
     <div id="content_wrapper">
         <div id="content">{% block content %}{% endblock %}</div>
         <div id="sidebar">
-            <h3>Main Menu</h3>
+            <h3><font size="3">1. Executive Summary</font></h3>
             <ul>
-                <li><a href="{% url cv-editcv %}">Home</a></li>
-                
-                <li><a href="{% url cv-executive %}"><b>Part 1: Executive Summary</b></a></li>
-                <li>
-                        <ul>
+                <ul>
                             <li><a href="{% url cv-executive %}">a. Distribution of Effort</a></li>
                             <li><a href="{% url cv-executive %}">b. Executive Summary</a></li>
-                        </ul>
-                </li>
-                <li><a href="{% url cv-biographical %}"><b>Part 2: Biographical Information</b></a></li>
-                <li>
-                        <ul>
-                            <li><a href="{% url cv-biographical %}">a. Given Name, Surname, Department</a></li>
-                            <li><a href="{% url cv-biographical %}">b. Degrees</a></li>
-                            <li><a href="{% url cv-biographical %}">c. Major Honours & Fellowships</a></li>
-                            <li><a href="{% url cv-biographical %}">d. Date of First Appointment at UofG</a></li>
-                            <li><a href="{% url cv-biographical %}">e. Positions Held at UofG</a></li>
-                            <li><a href="{% url cv-biographical %}">f. Experience Prior to Appointment at UofG</a></li>
-                            <li><a href="{% url cv-biographical %}">g. Visting Professorships</a></li>
-                        </ul>
-                </li>
-                <li><a href="#"><b>Part 3: Cumulative Information on Teaching, Research and Service</b></a></li>
-                <li>
-                        <ul>
-                            <li><a href="{% url cv-ResearchActivity %}">3A. Research</a></li>
-                            <li>
-                                    <ul>
-                                        <li><a href="{% url cv-ResearchActivity %}">a. Summary of Research Activity</a></li>
-                                        <li><a href="#">b. Six-year Publication List</a></li>
-                                        <li><a href="{% url cv-researchGrants %}">c. Research Grants and Contracts Held</a></li>
-                                    </ul>
-                            </li>
+                </ul>
+            </ul>
+                
+            <h3><font size="3">2. Biographical Information</font></h3>
+            <ul>
+                <ul>
+                    <li><a href="{% url cv-biographical %}">a. Given Name, Surname, Department</a></li>
+                    <li><a href="{% url cv-biographical %}">b. Degrees</a></li>
+                    <li><a href="{% url cv-biographical %}">c. Major Honours & Fellowships</a></li>
+                    <li><a href="{% url cv-biographical %}">d. Date of First Appointment at UofG</a></li>
+                    <li><a href="{% url cv-biographical %}">e. Positions Held at UofG</a></li>
+                    <li><a href="{% url cv-biographical %}">f. Experience Prior to Appointment at UofG</a></li>
+                    <li><a href="{% url cv-biographical %}">g. Visting Professorships</a></li>
+                </ul>
+            </ul>
+            <h3><font size="3">3A. Research</font></h3>
+            <ul>
+                <ul>
+                    <li><a href="#">a. Summary of Research Activity</a></li>
+                    <li><a href="#">b. Six-year Publication List</a></li>
+                    <li><a href="#">c. Research Grants and Contracts Held</a></li>
+                </ul>
+            <ul>
+            <h3><font size="3">3B. Teaching and Learning</font></h3>
+            <ul>
+                <ul>
+                    <li><a href="#">a. Summary of Research Activity</a></li>
+                    <li><a href="#">b. Six-year Publication List</a></li>
+                    <li><a href="#">c. Research Grants and Contracts Held</a></li>
+                </ul>
+            <ul>      
 
-                            
-
-                            <li><a href="{% url cv-executive %}">3B. Teaching and Learning</a></li>
-                            <li><a href="{% url cv-executive %}">3C. Service and Administrative Contributions</a></li>
-                            <li><a href="{% url cv-executive %}">3D. Off-Campus Recognition</a></li>
-                        </ul>
-                </li>
+                    <li><a href="{% url cv-executive %}">3B. Teaching and Learning</a></li>
+                    <li><a href="{% url cv-executive %}">3C. Service and Administrative Contributions</a></li>
+                    <li><a href="{% url cv-executive %}">3D. Off-Campus Recognition</a></li>
+                </ul>
+            </ul>
                 <li><a href="#">Part 4: Lifetime Publication List</a></li>
             </ul>
 
