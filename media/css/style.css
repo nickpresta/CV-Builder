@@ -87,10 +87,14 @@ div#navigation ul li a:hover {
 }
 
 div#content_wrapper {
+    position: relative;
+    height: auto !important;
+    min-height: 100%;
     margin-top: 0;
     width: 860px;
     margin: 0 auto;
     background: #fff;
+    padding-bottom: 10em;
 }
 
 div#sidebar {
@@ -98,6 +102,7 @@ div#sidebar {
     width: 270px;
     float: right;
     min-height: 300px;
+    padding-bottom: 10em;
 }
 
 div#sidebar h3 {
@@ -133,33 +138,42 @@ div#sidebar ul li a:hover {
 }
 
 div#content {
+    height: 100%;
+    min-height: 100%;
     float: left;
-    width: 830px;
+    width: 530px;
     background: #fff;
     padding: 15px;
 }
 
 div#footer {
     background: #45403a url("/media/img/footer_bg.jpg") repeat-x;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
 }
 
 div#footer h3 {
     margin-top: 0;
 }
 
-div#footer p {
+div#wrapper {
+    position: relative;
+}
+
+p#footer_p {
     background: #21201c;
     text-align: center;
     color: #ccc;
     clear: right;
     margin: 0 auto;
-    padding-top: 20px;
+    padding: 20px;
+    position: relative;
 }
 
 div#footer_wrapper {
     margin: 0 auto;
     width: 860px;
-    position: relative;
 }
 
 div#footer_text {
@@ -170,6 +184,7 @@ div#footer_text {
     line-height: 19px;
     font-size: 13px;
     float: right;
+    margin-bottom: -20px;
 }
 
 div#footer_text a {

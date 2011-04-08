@@ -413,9 +413,10 @@ def research_grants(request):
     formInfo = {}
     formsetInfo = {
         'grants': (
-            modelformset_factory(Grant, form=GrantForm, extra=0, formset=GrantFormset, can_delete=True),
+            modelformset_factory(Grant, form=GrantForm, extra=0,
+                formset=GrantFormset, can_delete=True),
             Grant.objects.filter(user=request.user),
-            'grant',
+            'grants',
             request.user.id
         )
     }

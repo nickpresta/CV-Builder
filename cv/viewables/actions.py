@@ -13,14 +13,19 @@ from cv.forms import *
 from cv.models import *
 from common import *
 
-def write_pdf(template_src, context_dict, request):
+def write_pdf(template_src, context_dict, request, raw=False):
     """ This writes the PDF using pisa and makes the PDF available for download """
     template = get_template(template_src)
     context = Context(context_dict)
     html  = template.render(context)
     result = StringIO.StringIO()
     try:
-        pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)
+        if raw:
+            pdf = pisa.CreatePDF(src=StringIO.StringIO(html.encode("UTF-8")),
+                    dest=result, show_error_as_pdf=True)
+            return result
+        else:
+            pdf = pisa.pisaDocument(StringIO.StringIO(html.encode("UTF-8")), result)
     except RuntimeError:
         # Is is a runtime error because the maximum recursion depth has been
         # exceeded. Raising the recursion limit is a bad idea in this case
@@ -39,11 +44,13 @@ def write_pdf(template_src, context_dict, request):
     return HttpResponse("Bad stuff happened. Oops!")
 
 @login_required
-def export_download(request, download):
+def export_download(request, download, user=None, raw=False):
     """ Return the response, either a PDF, or some error text """
 
     # We need to build up the information for the export
-    user = request.user
+    if not user:
+        user = request.user
+
     out = {}
     out['user'] = user
 
@@ -91,14 +98,10 @@ def export_download(request, download):
     out['ext_service_contribution_info'] = Service.objects.filter(user=user,
             level="e")
 
-
-
-
     if download:
-        return write_pdf('export.html', out, request)
+        return write_pdf('export.html', out, request, raw)
     else:
         return direct_to_template(request, 'export.html', out)
-
 
 # Helper Func
 def get_table_or_dict(table, *args, **kwargs):

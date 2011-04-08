@@ -95,16 +95,16 @@ class PositionPrior(models.Model, FacultyKeyMixin):
 
 class PositionElsewhere(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    start_date = models.DateField(blank=True)
-    end_date = models.DateField(blank=True)
+    start_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField(blank=True, null=True)
     location = models.CharField(max_length=200, blank=True)
     position = models.CharField(max_length=200, blank=True)
 
 class Grant(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
-    agency = models.CharField(max_length=200, blank=True)
-    support_type = models.CharField(max_length=200, blank=True)
-    project_title = models.CharField(max_length=200, blank=True)
+    agency = models.CharField(max_length=200, blank=True, null=True)
+    support_type = models.CharField(max_length=200, blank=True, null=True)
+    project_title = models.CharField(max_length=200, blank=True, null=True)
     held = models.BooleanField()
 
     def __unicode__(self):
@@ -117,9 +117,9 @@ class Grant(models.Model, FacultyKeyMixin):
 
 class GrantYear(models.Model, GrantKeyMixin):
     grant = models.ForeignKey(Grant)
-    amount = models.FloatField(blank=True)
-    start_year = models.DateField(blank=True)
-    end_year = models.DateField(blank=True)
+    amount = models.FloatField(blank=True, null=True)
+    start_year = models.DateField(blank=True, null=True)
+    end_year = models.DateField(blank=True, null=True)
     title = models.CharField(max_length=200, blank=True)
 
 class Investigator(models.Model, GrantKeyMixin):
