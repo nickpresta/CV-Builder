@@ -5,7 +5,7 @@ import urllib2
 from BeautifulSoup import BeautifulSoup
 
 soup = BeautifulSoup(urllib2.urlopen("http://www.uoguelph.ca/academics/departments/").read())
-lis = [re.sub("\s{2,}", " ", e.text).replace("&amp;", "&") for e in soup.findAll("li")]
+lis = [re.sub(r'\s+', ' ', e.find('a').string).strip().replace('&amp;', '&') for e in soup.find(id='content').findAll('li')]
 
 # Outputs the data in a YAML fixture that can be used to import into the
 # database

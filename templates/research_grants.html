@@ -23,9 +23,6 @@ $(document).ready(function() {
 
     $(".grant_wrapper").hide();
 
-    // reduce grant count by to compensate for the extra form
-    // $(totalGrantsElem).val(totalGrants);
-
     if (errorGrants.length > 0) {
         var first = $(errorGrants).first();
 
@@ -41,18 +38,6 @@ $(document).ready(function() {
         // mark option in select element
         $("#id_grantSelect > [value=\"" + grantID + "\"]").addClass("error");
     });
-
-    // remove numbering from blank grant form inputs
-    //removeNum_regex = new RegExp("(-\\d+-)");
-    //$(blankGrant).find("[name ^= \"grant-\"]").each(function() {
-    //    renumberElement(removeNum_regex, "--", this);
-    //});
-
-    // remove numbering from blank grant form nested inputs
-    //removeNum_regex = new RegExp("(_\\d+_)");
-    //$(blankGrant).find("[name ^= \"grant_\"]").each(function() {
-    //    renumberElement(removeNum_regex, "__", this);
-    //});
 
     // name each grant_wrapper by their id value (primary key)
     $(".grant_wrapper").each(function () {
@@ -72,19 +57,19 @@ $(document).ready(function() {
     });
 
     // update select element option string to reflect new values
-    $("[name $= \"Agency\"], [name $= \"SupportType\"], [name $= \"ProjectTitle\"]").keyup(function() {
+    $("[name $= \"agency\"], [name $= \"support_type\"], [name $= \"project_title\"]").keyup(function() {
         var curGrant = $(".grant_wrapper:visible");
 
         if (curGrant.length > 0) {
             var newOptStr = "";
             var tmpstr;
 
-            newOptStr = $(curGrant).find("[name $= \"Agency\"]").val();
-            tmpstr = $(curGrant).find("[name $= \"SupportType\"]").val();
+            newOptStr = $(curGrant).find("[name $= \"agency\"]").val();
+            tmpstr = $(curGrant).find("[name $= \"support_type\"]").val();
 
             if (tmpstr)
                 newOptStr += ", " + tmpstr;
-            tmpstr = $(curGrant).find("[name $= \"ProjectTitle\"]").val();
+            tmpstr = $(curGrant).find("[name $= \"project_title\"]").val();
             if (tmpstr)
                 newOptStr += ": " + tmpstr;
 
@@ -94,12 +79,7 @@ $(document).ready(function() {
 
     $(".addgrant").click(function () {
         var newGrant = $(blankGrant).clone(true);
-        //var newInvest = $(blankGrant).children("fieldset:first > table").clone(true);
-        //var newYears = $(blankGrant).children("fieldset:last > table").clone(true);
         var newGrantOpt = $("<option value=\"new-" + totalGrants + "\">new</option>");
-
-        //$(newGrant).children("fieldset:first > table").replaceWith(newInvest);
-        //$(newGrant).children("fieldset:last > table").replaceWith(newYears);
 
         $(".grant_wrapper:visible").hide();
 
@@ -115,12 +95,11 @@ $(document).ready(function() {
             renumberElement(new RegExp("(__nested_prefix__)"), totalGrants, this);
         });
 
-        $(totalGrantsElem).val(++totalGrants);
-        $(newGrant).insertBefore(".grant_wrapper:last").show();
         $(newGrant).attr("name", "new-" + totalGrants);
+        $(newGrant).insertBefore(".grant_wrapper:last").show();
         $("#id_grantSelect").append(newGrantOpt);
         $("#id_grantSelect").val(newGrantOpt.val());
-
+        $(totalGrantsElem).val(++totalGrants);
     });
 });
 </script>
@@ -129,7 +108,7 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<h2>3A Research</h2>
+<h2>Research</h2>
 
 {% for name, formset in formsets.items %}
     {% if formset.errors  %}
@@ -158,7 +137,7 @@ $(document).ready(function() {
 <form method="post" action="{% url cv-research-grants %}">
     {% csrf_token %}
     <fieldset id="grants">
-        <legend>c-d - Research Grants and Contracts</legend>
+        <legend>Research Grants and Contracts</legend>
 
         <div>
             <div class="field_label">{{ forms.grants.grantSelect.label_tag }}</div>

@@ -2,7 +2,7 @@
     <tr>
         <td><span class="clickable additem">add</span><td>
     </tr>
-    <tr>
+    <tr class="multiitem_header">
         {% for field in tableFormset.empty_form.visible_fields %}
             {% if field.label != "Delete" %}
             <th>{{ field.label }}</th>

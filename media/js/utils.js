@@ -109,23 +109,18 @@ function multiItemTable_functions() {
         var blankRow = $(this).find("tr:last");
         var totalFormsElem = $(this).siblings("input:hidden[id $= '-TOTAL_FORMS']");
 
-        // last row of the table is the "blank row", cloned to make new rows
-//        $(blankRow).find("input").each(function(index) {
-//            if (this.id)
-//                this.id = this.id.replace(removeNum_regex, "--");
-//            if (this.name)
-//                this.name = this.name.replace(removeNum_regex, "--");
-//        });
-
         blankRow.hide();
+        
+        if ($(this).find(".multiitem_row:visible").length == 0)
+            $(this).find(".multiitem_header").hide();
 
-        // decrement the form managers total form count
-        //$(totalFormsElem).val(parseInt($(totalFormsElem).val()) - 1);
 
         // add new row, insert duplicate of last row (blankRow) in table
         $(this).find(".additem").click(function() {
             var newRow = blankRow.clone(true);
             var formCount = parseInt($(totalFormsElem).val());
+
+            $(this).closest(".multiitem_table").find(".multiitem_header").show();
 
             // change the numbering of the new row's inputs
             $(newRow).find("[name *= \"__prefix__\"]").each(function(index) {
@@ -161,7 +156,6 @@ function multiItemTable_functions() {
         // mark hidden delete input as on
         $(this).parents("tr").find('input:hidden[id $= "-DELETE"]').val('on');
 
-
         $(this).parents("tr").hide();
         $(this).parents("tr").addClass("hidden");
 
@@ -169,6 +163,10 @@ function multiItemTable_functions() {
         // datepicker's must be destroyed, then recreated
         $(".datepicker").datepicker("destroy");
         date_picker();
+
+        
+        if ($(this).closest(".multiitem_table").find(".multiitem_row:visible").length == 0)
+            $(this).closest(".multiitem_table").find(".multiitem_header").hide();
 
         return false;
     });

@@ -55,7 +55,7 @@
             <h3>1. Executive Summary</h3>
             <ul>
                 <ul>
-                            <li><a href="{% url cv-executive %}">a. Distribution of Effort</a></li>
+                            <li><a href="{% url cv-distribution-of-effort %}">a. Distribution of Effort</a></li>
                             <li><a href="{% url cv-executive %}">b. Executive Summary</a></li>
                 </ul>
             </ul>
@@ -74,28 +74,28 @@
             <h3>3A. Research</h3>
             <ul>
                 <ul>
-                    <li><a href="{% url cv-research-activity %}">a. Summary of Research Activity</a></li>
+                    <li><a href="{% url cv-research %}">a. Summary of Research Activity</a></li>
                     <li><a href="#">b. Six-year Publication List</a></li>
                     <li><a href="{% url cv-research-grants %}">c. Research Grants and Contracts Held</a></li>
                     <li><a href="{% url cv-research-grants %}">d. Research Grants Applied For</a></li>
-                    <li><a href="{% url cv-research-consulting %}">e. Professional Consulting</a></li>
-                    <li><a href="{% url cv-research-patents %}">f. Patents</a></li>
-                    <li><a href="{% url cv-research-other %}">g. Other Activities</a></li>
-                    <li><a href="{% url cv-research-recognition %}">h. Recognition of Research and Scholarship</a></li>
+                    <li><a href="{% url cv-research 'professional_consulting' %}">e. Professional Consulting</a></li>
+                    <li><a href="{% url cv-research 'patents' %}">f. Patents</a></li>
+                    <li><a href="{% url cv-research 'other' %}">g. Other Activities</a></li>
+                    <li><a href="{% url cv-research 'recognition' %}">h. Recognition of Research and Scholarship</a></li>
                 </ul>
             <ul>
             <h3>3B. Teaching and Learning</h3>
             <ul>
                 <ul>
-                    <li><a href="{% url cv-report-on-teaching %}">a. Report on Teaching</a></li>
+                    <li><a href="{% url cv-teaching %}">a. Report on Teaching</a></li>
                     <li><a href="{% url cv-teaching-courses %}">b. Courses</a></li>
-                    <li><a href="{% url cv-teaching-counselling%}">c. Contributions to Student Counselling</a></li>
+                    <li><a href="{% url cv-teaching 'counselling' %}">c. Contributions to Student Counselling</a></li>
                     <li><a href="{% url cv-teaching-graduate %}">d. Graduate Advising and Examining</a></li>
-                    <li><a href="#">e. Major Work in Graduate and Undergraduate Course Development</a></li>
-                    <li><a href="#">f. Recognition of Teaching Ability and Achievement</a></li>
-                    <li><a href="#">g. Support Received for Major Teaching Projects</a></li>
-                    <li><a href="#">h. Scholarship in Education</a></li>
-                    <li><a href="#">i. Other Contributions to Education</a></li>
+                    <li><a href="{% url cv-teaching 'course_development' %}">e. Major Work in Graduate and Undergraduate Course Development</a></li>
+                    <li><a href="{% url cv-teaching 'recognition' %}">f. Recognition of Teaching Ability and Achievement</a></li>
+                    <li><a href="{% url cv-teaching 'support' %}">g. Support Received for Major Teaching Projects</a></li>
+                    <li><a href="{% url cv-teaching 'scholarship' %}">h. Scholarship in Education</a></li>
+                    <li><a href="{% url cv-teaching 'other' %}">i. Other Contributions to Education</a></li>
                 </ul>
             <h3>3C. Service and Administrative Contributions</h3>
             <ul>
@@ -108,7 +108,7 @@
             </ul>
             <h3><font size="3">3D. Off-Campus Recognition</font></h3>
             <ul>
-                <li><a href="{% url cv-off-campus-recognition %}">Off-Campus Recognition</a></li>
+                <li><a href="{% url cv-off-campus %}">Off-Campus Recognition</a></li>
             </ul>
 
             <h3><font size="3">4. Lifetime Publication List</font></h3>

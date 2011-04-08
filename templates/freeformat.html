@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>{{ section }}</h2>
+<h3>{{ subsection }}</h3>
+{{ form.errors.as_ul }}
+
+<form method="post" action="{{ action }}">
+    {% csrf_token %}
+
+    {% for field in form %}
+        {{ field }}
+    {% endfor %}
+    
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}
+
+

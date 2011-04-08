@@ -15,6 +15,37 @@ from cv.models import *
 # These are utility functions that we need through all views
 from common import *
 
+SECTION_LABELS = {
+    'teaching': (
+        'Teaching and Learning', {
+            'summary': 'Report on Teaching',
+            'counselling': 'Contributions to Student Counselling',
+            'course_development': 'Major Work in Graduate and Undergraduate Course Development',
+            'recognition': 'Recognition of Teaching Ability and Achievement',
+            'support': 'Support Received for Major Teaching and Projects',
+            'scholarship': 'Scholarship in Education',
+            'other': 'Other Contributions to Education'
+        }
+    ),
+    'research': (
+        'Research', {
+            'summary': 'Summary of Research Activity',
+            'professional_consulting': 'Professional Consulting',
+            'patents': 'Patents',
+            'other': 'Other Activities',
+            'recognition': 'Recognition of Research and Scholarship'
+        }
+    ),
+    'off_campus': (
+        'Off-Campus Recognition', {
+        }
+    ),
+    'executive': (
+        'Executive Summary', {
+        }
+    ),
+}
+
 def index(request):
     """ Responsible for showing the index page """
 
@@ -25,42 +56,28 @@ def editcv(request):
     return direct_to_template(request, 'editcv.html', {})
 
 @login_required
-def executive(request):
+def distribution_of_effort(request):
     """ Create a form view for the Distribution of Effort """
 
-    # get this user's Summary or else create a new one
-    try:
-        summaryData = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summaryData = Summary(user=request.user)
-
-    # get this user's DoEs or else create a new one
-    try:
-        doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
-    except DistributionOfEffort.DoesNotExist:
-        doeData = DistributionOfEffort(user=request.user)
+    doeData = DistributionOfEffort.objects.filter(user=request.user).order_by('year')
 
     if request.method == 'POST':
-        summaryFormset = ExecutiveSummaryForm(request.POST, request.FILES,
-                instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DistributionOfEffort,
                 form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
                     request.POST, request.FILES, queryset=doeData,
                     prefix='doe', pk=request.user.id)
 
-        if summaryFormset.is_valid() and doeFormset.is_valid():
-            summaryFormset.save()
+        if doeFormset.is_valid():
             doeFormset.save()
 
-            return HttpResponseRedirect(reverse('cv-executive'))
+            return HttpResponseRedirect(reverse('cv-distribution-of-effort'))
     else:
-        summaryFormset = ExecutiveSummaryForm(instance=summaryData, prefix='summary')
         doeFormset = modelformset_factory(DistributionOfEffort,
                 form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
                         queryset=doeData, prefix='doe')
 
-    return direct_to_template(request, 'executive.html',
-            {'summaryFormset': summaryFormset, 'doeFormset': doeFormset})
+    return direct_to_template(request, 'distribution_of_effort.html',
+            {'doeFormset': doeFormset})
 
 @login_required
 def biographical(request):
@@ -170,245 +187,6 @@ def off_campus_recognition(request):
             {'offCampusForm': offCampusFormset})
 
 @login_required
-def service_and_admin(request):
-    return direct_to_template(request, 'service_and_administrative_contributions.html', {})
-
-@login_required
-def report_on_teaching(request):
-    try:
-        summary = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summary = Summary(user=request.user)
-
-    formsetInfo = { }
-    formInfo = {
-        'reportOnTeaching': (
-            ReportOnTeachingForm,
-            summary,
-            'report',
-            request.user.id
-        )
-    }
-
-    if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-        allForms = dict(formsets)
-        allForms.update(forms)
-
-        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
-            # Save the form data, ensure they are updating as themselves
-            for form in forms.values():
-                form.save()
-            for formset in formsets.values():
-                formset.save()
-
-            return HttpResponseRedirect(reverse('cv-report-on-teaching'))
-    else:
-        formsets, forms = createContext(formsetInfo, formInfo)
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-    return direct_to_template(request, 'report_on_teaching.html', context)
-
-@login_required
-def research_consulting(request):
-    try:
-        summary = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summary = Summary(user=request.user)
-
-    formsetInfo = {}
-    formInfo = {
-        'consulting': (
-            ConsultingResearchForm,
-            summary,
-            'consulting',
-            request.user.id
-        )
-    }
-
-    if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo,
-                postData=request.POST, files=request.FILES)
-
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-        allForms = dict(formsets)
-        allForms.update(forms)
-
-        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
-            # Save the form data, ensure they are updating as themselves
-            for form in forms.values():
-                form.save()
-            for formset in formsets.values():
-                formset.save()
-
-            return HttpResponseRedirect(reverse('cv-research-consulting'))
-    else:
-        formsets, forms = createContext(formsetInfo, formInfo)
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-    return direct_to_template(request, 'research_consulting.html', context)
-
-@login_required
-def counselling(request):
-    try:
-        summary = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summary = Summary(user=request.user)
-
-    formsetInfo = { }
-    formInfo = {
-        'counselling': (
-            CounsellingForm,
-            summary,
-            'counselling',
-            request.user.id
-        )
-    }
-
-    if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-        allForms = dict(formsets)
-        allForms.update(forms)
-
-        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
-            # Save the form data, ensure they are updating as themselves
-            for form in forms.values():
-                form.save()
-            for formset in formsets.values():
-                formset.save()
-
-            return HttpResponseRedirect(reverse('cv-teaching-counselling'))
-    else:
-        formsets, forms = createContext(formsetInfo, formInfo)
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-    return direct_to_template(request, 'counselling.html', context)
-
-@login_required
-def research_patents(request):
-    try:
-        summary = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summary = Summary(user=request.user)
-
-    formsetInfo = { }
-    formInfo = {
-        'patents': (
-            PatentsResearchForm,
-            summary,
-            'consulting',
-            request.user.id
-        )
-    }
-
-    if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-        allForms = dict(formsets)
-        allForms.update(forms)
-
-        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
-            # Save the form data, ensure they are updating as themselves
-            for form in forms.values():
-                form.save()
-            for formset in formsets.values():
-                formset.save()
-
-            return HttpResponseRedirect(reverse('cv-research-patents'))
-    else:
-        formsets, forms = createContext(formsetInfo, formInfo)
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-    return direct_to_template(request, 'research_patents.html', context)
-
-@login_required
-def research_other(request):
-    try:
-        summary = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summary = Summary(user=request.user)
-
-    formsetInfo = { }
-    formInfo = {
-        'other': (
-            OtherResearchForm,
-            summary,
-            'other',
-            request.user.id
-        )
-    }
-
-    if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-        allForms = dict(formsets)
-        allForms.update(forms)
-
-        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
-            # Save the form data, ensure they are updating as themselves
-            for form in forms.values():
-                form.save()
-            for formset in formsets.values():
-                formset.save()
-
-            return HttpResponseRedirect(reverse('cv-research-other'))
-    else:
-        formsets, forms = createContext(formsetInfo, formInfo)
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-    return direct_to_template(request, 'research_other.html', context)
-
-@login_required
-def research_recognition(request):
-    try:
-        summary = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        summary = Summary(user=request.user)
-
-    formsetInfo = { }
-    formInfo = {
-        'recognition': (
-            RecognitionResearchForm,
-            summary,
-            'recognition',
-            request.user.id
-        )
-    }
-
-    if request.method == 'POST':
-        formsets, forms = createContext(formsetInfo, formInfo, postData=request.POST, files=request.FILES)
-
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-        allForms = dict(formsets)
-        allForms.update(forms)
-
-        if reduce(lambda f1, f2: f1 and f2.is_valid(), allForms.values(), True):
-            # Save the form data, ensure they are updating as themselves
-            for form in forms.values():
-                form.save()
-            for formset in formsets.values():
-                formset.save()
-
-            return HttpResponseRedirect(reverse('cv-research-recognition'))
-    else:
-        formsets, forms = createContext(formsetInfo, formInfo)
-        context = dict([('forms', forms), ('formsets', formsets)])
-
-    return direct_to_template(request, 'research_recognition.html', context)
-
-@login_required
 def research_grants(request):
     formInfo = {}
     formsetInfo = {
@@ -448,7 +226,7 @@ def research_grants(request):
     return direct_to_template(request, 'research_grants.html', context)
 
 @login_required
-def courses(request):
+def teaching_courses(request):
     formInfo = {
         'coursesJoined': (
             inlineformset_factory(User, FacultyCourseJoin,
@@ -492,6 +270,44 @@ def courses(request):
     return direct_to_template(request, 'courses.html', context)
 
 @login_required
+def freeformat(request, subsection='', section=''):
+    context = {
+        'action': request.path
+    }
+    
+    field = ''
+    
+    # determine which Summary field to edit as section[_subsection]
+    if section:
+        field = section
+        if section in SECTION_LABELS:
+            context['section'] = SECTION_LABELS[section][0]
+
+        if subsection:
+            field += '_' + subsection
+            if section in SECTION_LABELS and subsection in SECTION_LABELS[section][1]:
+                context['subsection'] = SECTION_LABELS[section][1][subsection]
+        elif section in SECTION_LABELS and 'summary' in SECTION_LABELS[section][1]:
+            context['subsection'] = SECTION_LABELS[section][1]['summary']    
+
+    try:
+        summary = Summary.objects.get(user=request.user)
+    except Summary.DoesNotExist:
+        summary = Summary(user=request.user)
+
+    if request.method == 'POST':
+        form = FreeFormatForm(request.POST, request.FILES, pk=request.user, instance=summary, field=field)
+        if form.is_valid():            
+            form.save()
+
+            return HttpResponseRedirect(request.path)
+    else:
+        form = FreeFormatForm(pk=request.user, instance=summary, field=field)
+
+    context['form'] = form
+    return direct_to_template(request, 'freeformat.html', context)
+
+@login_required
 def service(request):
     formInfo = {}
     formsetInfo = {
@@ -533,34 +349,7 @@ def service(request):
     return direct_to_template(request, 'service.html', context)
 
 @login_required
-def research_activity(request):
-    """ Create a form view for Research Activity """
-
-    try:
-        ResearchData = Summary.objects.get(user=request.user)
-    except Summary.DoesNotExist:
-        ResearchData = Summary(user=request.user)
-
-
-    if request.method == 'POST':
-        ResearchFormset =  ResearchActivityForm(request.POST, request.FILES,
-                instance=ResearchData, prefix="Research")
-
-
-        if ResearchFormset.is_valid():
-            Research = ResearchFormset.save(commit=False)
-            Research.user = request.user
-            Research.save()
-            ResearchFormset.save_m2m()
-
-    else:
-        ResearchFormset = ResearchActivityForm(instance=ResearchData, prefix="Research")
-
-    return direct_to_template(request, 'research_activity.html',
-            {'ResearchActivityForm': ResearchFormset})
-
-@login_required
-def graduate(request):
+def teaching_graduate(request):
     formInfo = {
     }
     formsetInfo = {
@@ -609,26 +398,3 @@ def graduate(request):
         context = dict([('forms', forms), ('formsets', formsets)])
 
     return direct_to_template(request, 'teaching_graduate.html', context)
-
-@login_required
-def distribution_of_effort(request):
-    """ Create a form view for the Distribution of Effort """
-
-    # get this user's DoE or else create a new one
-    try:
-        data = DistributionOfEffort.objects.get(user=request.user)
-    except:
-        data = DistributionOfEffort()
-
-    if request.method == 'POST':
-        formset = DistributionOfEffortForm(request.POST, request.FILES, instance=data)
-        if formset.is_valid():
-            # Save the form data, ensure they are updating as themselves
-            doe = formset.save(commit=False)
-            doe.user = request.user
-            doe.save()
-            formset.save_m2m()
-    else:
-        # Show the DoE form
-        formset = DistributionOfEffortForm(instance=data)
-    return direct_to_template(request, 'doe.html', {'formset': formset})

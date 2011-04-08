@@ -18,5 +18,9 @@ def autocomplete(request):
     table = request.GET['table']
     # it should be "departments":
     result = UserProfile.objects.filter(departments__icontains = request.GET['term']).values_list("departments", flat=True).distinct().order_by("departments")
+    #result = DepartmentChoice.objects.filter(name__icontains = request.GET['term']).values_list("name", flat=True).distinct().order_by("name")
+    rv = []
+    for item in result:
+        rv += item.split(',')
 
-    return HttpResponse(repr(map(str,result)).replace("'",'"'))
+    return HttpResponse(repr(map(str,rv)).replace("'",'"'))

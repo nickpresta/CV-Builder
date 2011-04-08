@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Edit CV{% endblock %}
+
+{% block content %}
+<h2>Executive Summary</h2>
+{% if doeFormset.errors  %}
+{% for error in doeFormset.errors %}
+    {{ error|escape }}
+{% endfor %}
+{% endif %}
+
+<form method="post" action="{% url cv-distribution-of-effort %}">
+    {% csrf_token %}
+    <fieldset id="distribution_fieldset" name="distribution">
+        <legend id="distribution">Distribution of Effort</legend>
+        {{ doeFormset.management_form }}
+        {% with doeFormset as tableFormset %}
+            {% include "multiitem_table.html" %}
+        {% endwith %}
+    </fieldset>
+    <input type="submit" value="Save" />
+</form>
+{% endblock %}

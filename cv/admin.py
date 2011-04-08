@@ -56,3 +56,4 @@ admin.site.register(Course)
 admin.site.register(GradAdvisor)
 admin.site.register(GradAdvisorCommitteeMember)
 admin.site.register(GradExaminer)
+

@@ -26,6 +26,15 @@
         {% with forms.facultyDepartmentsForm as form %}
             {% include "inline_form.html" %}
         {% endwith %}
+        {{ formsets.facultyDepartments }}
+        {% for form in formsets.facultyDepartments.forms %}
+            <div class="field_label"></div>
+            <div class="field_wrapper">{{ form.departments %}</div>
+            <div class="clear"></div>
+        {% endfor %}
+        <div class="field_label">&nbsp;</div>
+        <div class="field_wrapper">{{ formsets.facultyDepartments.empty_form.departments }}</div>
+        <div class="clear"></div>
     </fieldset>
     <fieldset id="degrees">
         <legend>b - Degrees</legend>

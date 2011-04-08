@@ -44,17 +44,14 @@
             </dt>
             <dd>
                 <ol class="expandlist">
-                    <li><a href="{% url cv-research-activity %}#summary_of_research_activity">
-                        Summary of Research Activity</a></li>
-                    <li>Six-year Publication List</li>
-                    <li><a href="{% url cv-research-grants %}#research_grants_and_contracts_held">
-                        Research Grants and Contracts Held</a></li>
-                    <li><a href="{% url cv-research-grants %}#research_grants_applied_for">
-                        Research Grants Applied For</a></li>
-                    <li><a href="{% url cv-research-consulting %}">Professional Consulting</a></li>
-                    <li><a href="{% url cv-research-patents %}">Patents</a></li>
-                    <li><a href="{% url cv-research-other %}">Other Activities</a></li>
-                    <li><a href="{% url cv-research-recognition %}">Recognition of Research and Scholarship</a></li>
+                    <li><a href="{% url cv-research %}">a. Summary of Research Activity</a></li>
+                    <li><a href="#">b. Six-year Publication List</a></li>
+                    <li><a href="{% url cv-research-grants %}">c. Research Grants and Contracts Held</a></li>
+                    <li><a href="{% url cv-research-grants %}">d. Research Grants Applied For</a></li>
+                    <li><a href="{% url cv-research 'professional_consulting' %}">e. Professional Consulting</a></li>
+                    <li><a href="{% url cv-research 'patents' %}">f. Patents</a></li>
+                    <li><a href="{% url cv-research 'other' %}">g. Other Activities</a></li>
+                    <li><a href="{% url cv-research 'recognition' %}">h. Recognition of Research and Scholarship</a></li>
                 </ol>
             </dd>
             <dt class="expandable">
@@ -63,15 +60,15 @@
             </dt>
             <dd>
                 <ol class="expandlist">
-                    <li><a href="{% url cv-report-on-teaching %}#report_on_teaching">Report on Teaching</a></li>
-                    <li><a href="{% url cv-teaching-courses %}#courses">Courses</a></li>
-                    <li><a href="{% url cv-teaching-counselling %}#contributions_to_student_counselling">Contributions to Student Counselling</a></li>
-                    <li><a href="{% url cv-teaching-graduate %}#graduate_advising_and_examining">Graduate Advising and Examining</a></li>
-                    <li><a href="{% url cv-teaching-courses %}#major_work_in_course_development">Major Work in Graduate and Undergraduate Course Development</a></li>
-                    <li><a href="{% url cv-teaching-courses %}#recognition_of_teaching_ability">Recognition of Teaching Ability and Achievement</a></li>
-                    <li><a href="{% url cv-teaching-courses %}#support_received_for_teaching_projects">Support Received for Major Teaching Projects</a></li>
-                    <li><a href="{% url cv-teaching-courses %}#scholarship_in_education">Scholarship in Education</a></li>
-                    <li><a href="{% url cv-teaching-courses %}#other_contributions_to_education">Other Contributions to Education</a></li>
+                    <li><a href="{% url cv-teaching %}">a. Report on Teaching</a></li>
+                    <li><a href="{% url cv-teaching-courses %}">b. Courses</a></li>
+                    <li><a href="{% url cv-teaching 'counselling' %}">c. Contributions to Student Counselling</a></li>
+                    <li><a href="{% url cv-teaching-graduate %}">d. Graduate Advising and Examining</a></li>
+                    <li><a href="{% url cv-teaching 'course_development' %}">e. Major Work in Graduate and Undergraduate Course Development</a></li>
+                    <li><a href="{% url cv-teaching 'recognition' %}">f. Recognition of Teaching Ability and Achievement</a></li>
+                    <li><a href="{% url cv-teaching 'support' %}">g. Support Received for Major Teaching Projects</a></li>
+                    <li><a href="{% url cv-teaching 'scholarship' %}">h. Scholarship in Education</a></li>
+                    <li><a href="{% url cv-teaching 'other' %}">i. Other Contributions to Education</a></li>
                 </ol>
             </dd>
             <dt class="expandable">

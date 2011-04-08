@@ -270,6 +270,34 @@ class ExaminerForm(FormMixin):
         model = GradAdvisor
         fields = ('student_name', 'degree', 'date')
 
+class TeachingCourseDevelopmentForm(FormMixin):
+    class Meta:
+        model = Summary
+        fields = ('teaching_course_development',)
+        widgets = {
+            'teaching_course_development': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+
+class TeachingRecognitionForm(FormMixin):
+    class Meta:
+        model = Summary
+        fields = ('teaching_recognition',)
+        widgets = {
+            'teaching_recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
+        
+class FreeFormatForm(FormMixin):
+    def __init__(self, *args, **kwargs):
+        field = kwargs.pop('field', None)
+        super(FreeFormatForm, self).__init__(*args, **kwargs)
+
+        self.fields = {
+            field: forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '50', 'cols': '40'}))
+        }
+            
+    class Meta:
+        model = Summary
+
 class GrantYearForm(FormMixin):
     start_year = forms.DateField(initial=datetime.date.today,
             widget=forms.TextInput(attrs={'class': 'datepicker'}))
