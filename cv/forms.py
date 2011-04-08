@@ -266,16 +266,26 @@ class InvestigatorForm(FormMixin):
         fields = ('name', 'amount', 'role')
 
 class AdvisorForm(FormMixin):
+    start_date = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
     class Meta:
         model = GradAdvisor
         fields = ('student_name', 'degree', 'start_date', 'end_date')
 
 class AdvisorCommitteeForm(FormMixin):
+    start_date = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
     class Meta:
         model = GradAdvisor
         fields = ('student_name', 'degree', 'start_date', 'end_date')
 
 class ExaminerForm(FormMixin):
+    date = forms.DateField(initial=datetime.date.today,
+            widget=forms.TextInput(attrs={'class': 'datepicker'}))
     class Meta:
         model = GradAdvisor
         fields = ('student_name', 'degree', 'date')
@@ -295,16 +305,17 @@ class TeachingRecognitionForm(FormMixin):
         widgets = {
             'teaching_recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
-        
+
 class FreeFormatForm(FormMixin):
     def __init__(self, *args, **kwargs):
         field = kwargs.pop('field', None)
         super(FreeFormatForm, self).__init__(*args, **kwargs)
 
         self.fields = {
-            field: forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': '50', 'cols': '40'}))
+            field: forms.CharField(required=False,
+                widget=forms.Textarea(attrs={'rows': '50', 'cols': '40'}))
         }
-            
+
     class Meta:
         model = Summary
 

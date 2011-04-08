@@ -268,9 +268,9 @@ def freeformat(request, subsection='', section=''):
     context = {
         'action': request.path
     }
-    
+
     field = ''
-    
+
     # determine which Summary field to edit as section[_subsection]
     if section:
         field = section
@@ -290,13 +290,14 @@ def freeformat(request, subsection='', section=''):
         summary = Summary(user=request.user)
 
     if request.method == 'POST':
-        form = FreeFormatForm(request.POST, request.FILES, pk=request.user, instance=summary, field=field)
-        if form.is_valid():            
+        form = FreeFormatForm(request.POST, request.FILES,
+                pk=request.user.id, instance=summary, field=field)
+        if form.is_valid():
             form.save()
 
             return HttpResponseRedirect(request.path)
     else:
-        form = FreeFormatForm(pk=request.user, instance=summary, field=field)
+        form = FreeFormatForm(pk=request.user.id, instance=summary, field=field)
 
     context['form'] = form
     return direct_to_template(request, 'freeformat.html', context)

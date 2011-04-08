@@ -362,63 +362,53 @@
                 <h4>(c) Contributions to Student Counselling</h4>
                 {{ summary.teaching_counselling|safe }}
                 <h4>(d) Graduate Advising and Examining</h4>
-                <p>8 PhD students advised to completion (past 6 years)</p>
-                <p>8 MSc students advised to completion (past 6 years)</p>
-                <h5>(i) Advisor (past 6 years)</h5>
+                <p>{{ graduate.num_phd }} PhD students
+                   advised to completion (past 6 years)</p>
+                <p>{{ graduate.num_msc }} MSc students
+                   advised to completion (past 6 years)</p>
+                <h5>(i) Advisor (Last 6 Years)</h5>
                 <table width="100%">
+                    {% for graduate in graduate_advising %}
                     <tr>
-                        <td>Nicholas Presta</td>
-                        <td>Bachelor of Computer Science</td>
-                        <td>Sept. 2008</td>
+                        <td width="50%">{{ graduate.student_name }}</td>
+                        <td width="30%">{{ graduate.degree }}</td>
+                        <td width="20%">{{ graduate.start_date|date:"M Y" }} -
+                            {{ graduate.end_date|date:"M Y" }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
-                <h5>(ii) Advisor committee member</h5>
+                <h5>(ii) Advisor committee member (Last 6 Years)</h5>
                 <table width="100%">
+                    {% for graduate in graduate_committee %}
                     <tr>
-                        <td>Nicholas Presta</td>
-                        <td>Bachelor of Computer Science</td>
-                        <td>Sept. 2008</td>
+                        <td width="50%">{{ graduate.student_name }}</td>
+                        <td width="30%">{{ graduate.degree }}</td>
+                        <td width="20">{{ graduate.start_date|date:"M Y" }} -
+                            {{ graduate.end_date|date:"M Y" }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
-                <h5>(iii) Examining committee member</h5>
+                <h5>(iii) Examining committee member (Last 6 Years)</h5>
                 <table width="100%">
+                    {% for graduate in graduate_examining %}
                     <tr>
-                        <td>Nicholas Presta</td>
-                        <td>Bachelor of Computer Science</td>
-                        <td>Sept. 2008</td>
+                        <td width="50%">{{ graduate.student_name }}</td>
+                        <td width="30%">{{ graduate.degree }}</td>
+                        <td width="20%">{{ graduate.date|date:"M Y" }}</td>
                     </tr>
+                    {% endfor %}
                 </table>
                 <h4>(e) Major Work in Graduate and Undergraduate Course
                     Development</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.teaching_course_development|safe }}
                 <h4>(f) Recognition of Teaching Ability and Achievement</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.teaching_recognition|safe }}
                 <h4>(g) Support Received for Major Teaching Projects </h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.teaching_support|safe }}
                 <h4>(h) Scholarship in Education</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.teaching_scholarship|safe }}
                 <h4>(i) Other Contributions to Education</h4>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Morbi rutrum, lectus non interdum accumsan, libero neque pretium
-                arcu, eu facilisis lectus nisi ut erat. Fusce sapien nibh,
-                cursus sit amet iaculis a, ultricies in est. Sed blandit sapien
-                sed ante euismod vitae congue mauris dignissim.</p>
+                {{ summary.teaching_other|safe }}
                 <h3>3C Service and Administrative Contributions</h3>
                 <h4>(a) Department Committees and Similar Bodies with Dates</h4>
                 <table width="100%">

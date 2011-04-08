@@ -98,6 +98,17 @@ def export_download(request, download, user=None, raw=False):
     out['ext_service_contribution_info'] = Service.objects.filter(user=user,
             level="e")
 
+    # filter last 6 years
+    out['graduate_advising'] = GradAdvisor.objects.filter(user=user,
+            start_date__gte=datetime.datetime.now().replace(
+                year=datetime.datetime.now().year - 6)).order_by("start_date")
+    out['graduate_committee'] = GradAdvisorCommitteeMember.objects.filter(user=user,
+            start_date__gte=datetime.datetime.now().replace(
+                year=datetime.datetime.now().year - 6)).order_by("start_date")
+    out['graduate_examining'] = GradExaminer.objects.filter(user=user,
+            date__gte=datetime.datetime.now().replace(
+                year=datetime.datetime.now().year - 6)).order_by("date")
+
     if download:
         return write_pdf('export.html', out, request, raw)
     else:

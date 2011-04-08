@@ -158,7 +158,7 @@ class FacultyCourseJoin(models.Model, FacultyKeyMixin):
     year = models.DateField(blank=True, null=True)
     semester = models.CharField(max_length=200, blank=True, choices=SEMESTERS)
     num_students = models.IntegerField(blank=True, null=True)
-    
+
 class BaseGradAdvisor(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)
     student_name = models.CharField(max_length=200, blank=True)
@@ -192,6 +192,6 @@ class Service(models.Model, FacultyKeyMixin):
     chair = models.CharField(max_length=200, blank=True)
     other = models.CharField(max_length=200, blank=True)
     level = models.CharField(max_length=200, blank=True, choices=service_levels)
-    
+
     def __unicode__(self):
         return self.committee
