@@ -367,3 +367,8 @@ option.error {
 .hidden {
     display: none;
 }
+
+h2 {
+    color: #69C;
+    letter-spacing: -1px;
+}

@@ -23,7 +23,5 @@ def createContext(formsetInfo, formInfo, postData=None, files=None):
         Form(postData, files, pk=key, instance=ins, prefix=pf)
     ) for formName, (Form, ins, pf, key) in formInfo.iteritems())
 
-    print formsets, forms
-
     return formsets, forms
 
