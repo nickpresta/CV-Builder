@@ -46,7 +46,7 @@ urlpatterns += patterns('',
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
         'login.html'}, name="cv-login"),
     url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page':
-        '/login/'}, name="cv-logout")
+        '/'}, name="cv-logout")
 )
 
 if settings.DEBUG:

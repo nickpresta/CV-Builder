@@ -33,8 +33,12 @@
                 <ul id="navlist">
                     <li><a href="{% url cv-export %}" class="navitem">Export CV</a></li>
                     <li><a href="{% url cv-editcv %}" class="navitem">Edit CV</a></li>
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url cv-login %}" class="navitem">Logout</a></li>
+                    {% if user.is_authenticated and user.is_active and user.is_superuser %}
+                    <li><a href="{% url admin:index %}"
+                        class="navitem">Admin</a></li>
+                    {% endif %}
+                    {% if user.is_authenticated and user.is_active %}
+                    <li><a href="{% url cv-logout %}" class="navitem">Logout</a></li>
                     {% else %}
                     <li><a href="{% url cv-login %}" class="navitem">Login</a></li>
                     {% endif %}

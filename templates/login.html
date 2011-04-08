@@ -25,7 +25,6 @@
     <input type="submit" value="Login" />
 </form>
 {% else %}
-    <p>Howdy, {{ user.first_name }}!</p>
-    <p><a href="{% url cv-logout %}">Logout</a> | <a href="{% url admin:index %}">Admin</a></p>
+<p>You're already logged in!</p>
 {% endif %}
 {% endblock %}
