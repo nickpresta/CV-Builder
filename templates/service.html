@@ -84,12 +84,11 @@ $(document).ready(function() {
             renumberElement(new RegExp("(__prefix__)"), "0", this);
         });
 
-        $(totalElem).val(++total);
         $(newService).insertBefore(".service_wrapper:last").show();
         $(newService).attr("name", "new-" + total);
         $("#id_serviceSelect").append(newOpt);
         $("#id_serviceSelect").val(newOpt.val());
-
+        $(totalElem).val(++total);
     });
 });
 </script>

@@ -169,6 +169,9 @@ class OffCampusRecognitionForm(FormMixin):
     class Meta:
         fields = ('off_campus',)
         model = Summary
+        widgets = {
+            'off_campus': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
+        }
 
 class ResearchActivityForm(FormMixin):
     class Meta:

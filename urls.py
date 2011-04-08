@@ -24,8 +24,6 @@ urlpatterns += patterns('3760.cv.views',
     url(r'^editcv/$', 'editcv', name='cv-editcv'),
 
     url(r'^biographical/$', 'biographical', name='cv-biographical'),
-    url(r'^off_campus_recognition/$', 'off_campus_recognition',
-        name='cv-off-campus-recognition'),
     url(r'^off_campus/$', 'freeformat', {'section': 'off_campus'}, name='cv-off-campus'),
     url(r'^research/grants/$', 'research_grants', name='cv-research-grants'),
     url(r'^teaching/courses/$', 'teaching_courses', name='cv-teaching-courses'),
