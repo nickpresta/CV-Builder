@@ -43,7 +43,7 @@ class DistributionOfEffort(models.Model, FacultyKeyMixin):
     """ This class holds information about the DoE for a
         given employee (Teaching, Research, Service) """
     user = models.ForeignKey(User)
-    year = models.DateField(unique=True)
+    year = models.DateField(unique=False)
     # These three fields should add up to 100 (%)
     research = models.IntegerField(default=40)
     teaching = models.IntegerField(default=40)
