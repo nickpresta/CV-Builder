@@ -8,7 +8,6 @@
 <form method="post" action="{% url cv-biographical %}">
     {% csrf_token %}
     <fieldset id="name">
-        <legend>a</legend>
         {% with forms.facultyNameDeptForm as form %}
             {% include "inline_form.html" %}
         {% endwith %}
@@ -18,42 +17,35 @@
         {{ formsets.facultyDepartments }}
     </fieldset>
     <fieldset id="degrees">
-        <legend>b - Degrees</legend>
         {{ formsets.accredFormset.management_form }}
         {% with formsets.accredFormset as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     <fieldset id="honours">
-        <legend>c - Major Honours & Fellowships</legend>
         {{ formsets.honorFormset.management_form }}
         {% with formsets.honorFormset as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     <fieldset id="appointed">
-        <legend>d - Date of first appointment at University of Guelph</legend>
         {% with forms.facultyStartForm as form %}
             {% include "inline_form.html" %}
         {% endwith %}
     </fieldset>
     <fieldset id="positions">
-        <legend>e - Positions held at University of Guelph and dates</legend>
         {{ formsets.positionHeldFormset.management_form }}
         {% with formsets.positionHeldFormset as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
-    
     <fieldset id="experience">
-        <legend>f - Experince prior to appointment at Guelph</legend>
         {{ formsets.positionPriorFormset.management_form }}
         {% with formsets.positionPriorFormset as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
-    <fieldset id="elsewhere">
-        <legend>g - Visiting Professorships, etc. elsewhere since appointment</legend>
+    <fieldset id="professorships">
         {{ formsets.positionElsewhereFormset.management_form }}
         {% with formsets.positionElsewhereFormset as tableFormset %}
             {% include "multiitem_table.html" %}

@@ -3,36 +3,23 @@
 {% block title %}Edit CV{% endblock %}
 
 {% block content %}
-<h2>d - Graduate Advising and Examining</h2>
-{% for name, formset in formsets.items %}
-    {% if formset.errors  %}
-        {% for error in formset.errors %}
-            {{ error|escape }}
-        {% endfor %}
-    {% endif %}
-{% endfor %}
-{% for name, form in forms.items %}
-    {{ form.errors.as_ul }}
-{% endfor %}
+<h2>Teaching and Learning</h2>
 
 <form method="post" action="{% url cv-teaching-graduate %}">
     {% csrf_token %}
     <fieldset id="advisor">
-        <legend>i - Advisor</legend>
         {{ formsets.advisor.management_form }}
         {% with formsets.advisor as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     <fieldset id="committee">
-        <legend>ii - Advisor committee member</legend>
         {{ formsets.committee.management_form }}
         {% with formsets.committee as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     <fieldset id="examiner">
-        <legend>iii - Examining committee member</legend>
         {{ formsets.examiner.management_form }}
         {% with formsets.examiner as tableFormset %}
             {% include "multiitem_table.html" %}

@@ -3,24 +3,13 @@
 {% block title %}Edit CV{% endblock %}
 
 {% block content %}
-<h2>3B Teaching</h2>
-{% for name, formset in formsets.items %}
-    {% if formset.errors  %}
-        {% for error in formset.errors %}
-            {{ error|escape }}
-        {% endfor %}
-    {% endif %}
-{% endfor %}
-{% for name, form in forms.items %}
-    {{ form.errors.as_ul }}
-{% endfor %}
+<h2>Teaching and Learning</h2>
 
 <form method="post" action="{% url cv-teaching-courses %}">
     {% csrf_token %}
     <fieldset id="courses">
-        <legend>b - Courses Taught</legend>
-        {{ forms.coursesJoined.management_form }}
-        {% with forms.coursesJoined as tableFormset %}
+        {{ formsets.coursesJoined.management_form }}
+        {% with formsets.coursesJoined as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>

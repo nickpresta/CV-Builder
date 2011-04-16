@@ -1,8 +1,6 @@
 {{ tableFormset.non_form_errors }}
+<legend>{{ tableFormset.label }} <span class="clickable additem">add</span></legend>
 <table class="multiitem_table">
-    <tr>
-        <td><span class="clickable additem">add</span><td>
-    </tr>
     <tr class="multiitem_header">
         {% for field in tableFormset.empty_form.visible_fields %}
             {% if field.label != "Delete" %}

@@ -8,7 +8,7 @@
 <form method="post" action="{% url cv-distribution-of-effort %}">
     {% csrf_token %}
     <fieldset id="distribution_fieldset" name="distribution">
-        <legend id="distribution">Distribution of Effort</legend>
+<!--        <legend id="distribution">Distribution of Effort</legend>-->
         {{ doeFormset.management_form }}
         {% with doeFormset as tableFormset %}
             {% include "multiitem_table.html" %}

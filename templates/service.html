@@ -24,30 +24,11 @@ $(document).ready(function() {
 
     $(".service_wrapper").hide();
 
-    if (errorElems.length > 0) {
-        var first = $(errorElems).first();
+    var opts = [];
+    var new_count = 0;
 
-        $(first).show();
-        $("#id_serviceSelect").val($(first).children("[name$=\"-id\"]").val());
-
-        $("#id_serviceSelect").addClass("error");
-    }
-
-    $(errorElems).each(function() {
-        var id = $(this).children("[name$=\"-id\"]").val();
-
-        // mark option in select element
-        $("#id_serviceSelect > [value=\"" + id + "\"]").addClass("error");
-    });
-
-    // name each grant_wrapper by their id value (primary key)
-    $(".service_wrapper").each(function () {
-        var id = $(this).children("[name$=\"-id\"]").val();
-        $(this).attr("name", id);
-    });
-
-    // grant select changed
-    $("#id_serviceSelect").change(function() {
+    $(".form_select").change(function() {
+        // grant select changed
         var selectedID = $(this).val();
         var prev = $(".service_wrapper:visible");
 
@@ -57,8 +38,8 @@ $(document).ready(function() {
             $(".service_wrapper[name=\"" + selectedID + "\"]").show();
     });
 
-    // update select element option string to reflect new values
     $("[name $= \"committee\"]").keyup(function() {
+        // update select element option string to reflect new values
         var curService = $(".service_wrapper:visible");
 
         if (curService.length > 0) {
@@ -66,7 +47,7 @@ $(document).ready(function() {
 
             newOptStr = $(curService).find("[name $= \"committee\"]").val();
 
-            $("#id_serviceSelect > [value = \"" + $(curService).attr("name") + "\"]").html(newOptStr);
+            $(".form_select > [value = \"" + $(curService).attr("name") + "\"]").html(newOptStr);
         }
     });
 
@@ -86,9 +67,71 @@ $(document).ready(function() {
 
         $(newService).insertBefore(".service_wrapper:last").show();
         $(newService).attr("name", "new-" + total);
-        $("#id_serviceSelect").append(newOpt);
-        $("#id_serviceSelect").val(newOpt.val());
+        $(".form_select").append(newOpt);
+        $(".form_select").val(newOpt.val());
         $(totalElem).val(++total);
+    });
+
+    $(".service_wrapper:not(:last)").each(function () {
+        // name each grant_wrapper by their id value (primary key) and create an
+        // array of <option> elements coresponding to each service form
+        var id = $(this).children("[name$=\"-id\"]").val();
+        var optElem = $("<option></option>");
+        
+        if (id)
+            $(this).attr("name", id);
+        else
+            $(this).attr("name", "new-" + parseInt(new_count++));
+        
+
+        $(optElem).val($(this).attr("name"));
+        $(optElem).text($(this).find("[name $= \"committee\"]").val());
+        
+        opts.push(optElem);
+    });
+    
+    opts.sort(function(a, b) {
+        // sort <option>s by service committee name
+        var aName = $(a).text().toLowerCase();
+        var bName = $(b).text().toLowerCase();
+
+        if (aName < bName)
+            return -1;
+        else if (aName > bName)
+            return 1;
+        else
+            return 0;
+    });
+    
+    for (i in opts)
+        $(".form_select").append(opts[i]);
+
+    if (sessionStorage.getItem("lastForm")) {
+        $(".form_select").val(sessionStorage.getItem("lastForm"));
+        $(".form_select").trigger("change");
+        sessionStorage.removeItem("lastForm");
+    }
+    
+    $("form").submit(function() {
+        sessionStorage.setItem("lastForm", $(".form_select").val());
+    });
+
+    if (errorElems.length > 0) {
+        var first = $(errorElems).first();
+
+        $(".service_wrapper").hide();
+
+        $(first).show();
+        $(".form_select").val($(first).attr("name"));
+
+        $(".form_select").addClass("error");
+    }
+
+    $(errorElems).each(function() {
+        var id = $(this).children("[name$=\"-id\"]").val();
+
+        // mark option in select element
+        $(".form_select > [value=\"" + id + "\"]").addClass("error");
     });
 });
 </script>
@@ -96,18 +139,17 @@ $(document).ready(function() {
 {% endblock %}
 
 {% block content %}
-<h3>3C Service and Administrative Contributions</h3>
-
-<div>
-    <div class="field_label">{{ forms.service.serviceSelect.label_tag }}</div>
-    <div class="field_wrapper">{{ forms.service.serviceSelect }}</div>
-    <div class="field_wrapper"><span class="clickable addservice">add</span></div>
-    <div class="clear"></div>
-</div>
+<h2>Service and Administrative Contributions</h2>
 
 <form method="post" action="{% url cv-service %}">
     {% csrf_token %}
+
     <fieldset id="service">
+        <legend>{{formsets.service.label }} <span class="clickable addservice">add</span></legend>
+        {{ forms.service.non_form_errors }}
+        <select class="form_select">
+            <option selected="selected">---------</option>
+        </select>
         <div class="management">
             {{ formsets.service.management_form }}
         </div>

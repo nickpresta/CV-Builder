@@ -113,14 +113,9 @@ $(document).ready(function() {
 <form method="post" action="{% url cv-research-grants %}">
     {% csrf_token %}
     <fieldset id="grants">
-        <legend>Research Grants and Contracts</legend>
+        <legend>{{formsets.grants.label }} <span class="clickable addgrant">add</span></legend>
 
-        <div>
-            <div class="field_label">{{ forms.grants.grantSelect.label_tag }}</div>
-            <div class="field_wrapper">{{ forms.grants.grantSelect }}</div>
-            <div class="field_wrapper"><span class="clickable addgrant">add</span></div>
-            <div class="clear"></div>
-        </div>
+        <span class="form_select">{{ forms.grants.grantSelect }}</span>
         <div class="grants">
             <div class="management">
                 {{ formsets.grants.management_form }}
@@ -131,8 +126,6 @@ $(document).ready(function() {
 
                 {% with form.nested.0 as formset %}
                 <fieldset>
-
-                    <legend>Investigators</legend>
                     {{ formset.management_form }}
                     {% with formset as tableFormset %}
                         {% include "multiitem_table.html" %}
@@ -142,7 +135,6 @@ $(document).ready(function() {
 
                 {% with form.nested.1 as formset %}
                 <fieldset>
-                    <legend>Years of Tenure</legend>
                     {{ formset.management_form }}
                     {% with formset as tableFormset %}
                         {% include "multiitem_table.html" %}
@@ -157,8 +149,6 @@ $(document).ready(function() {
 
                 {% with form.nested.0 as formset %}
                 <fieldset>
-
-                    <legend>Investigators</legend>
                     {{ formset.management_form }}
                     {% with formset as tableFormset %}
                         {% include "multiitem_table.html" %}
@@ -168,7 +158,6 @@ $(document).ready(function() {
 
                 {% with form.nested.1 as formset %}
                 <fieldset>
-                    <legend>Years of Tenure</legend>
                     {{ formset.management_form }}
                     {% with formset as tableFormset %}
                         {% include "multiitem_table.html" %}

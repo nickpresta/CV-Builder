@@ -208,6 +208,7 @@ div.field_wrapper div.label {
     float: left;
     text-align: left;
     font-weight: bold;
+    font-size: 0.75em;
 }
 
 div.field_wrapper div.field {
@@ -357,7 +358,7 @@ img.plus:hover {
     border: 0px;
 }
 
-span.clickable {
+.clickable {
     cursor: pointer;
     color: #777;
     font-size: 11px;
@@ -391,4 +392,16 @@ ul.errorlist li {
 h2 {
     color: #69C;
     letter-spacing: -1px;
+}
+
+fieldset {
+    margin-bottom: 1em;
+}
+
+span.form_select select {
+    width: 100%;
+}
+
+.form_select {
+    width: 100%;
 }

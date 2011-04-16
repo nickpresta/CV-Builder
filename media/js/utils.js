@@ -102,7 +102,7 @@ function shortcut_functions() {
 }
 
 function multiItemTable_functions() {
-    var removeNum_regex = new RegExp("(-\\d+-)");
+
     var addNum_regex = new RegExp("(__prefix__)");
 
     $(".multiitem_table").each(function(index) {
@@ -114,13 +114,12 @@ function multiItemTable_functions() {
         if ($(this).find(".multiitem_row:visible").length == 0)
             $(this).find(".multiitem_header").hide();
 
-
         // add new row, insert duplicate of last row (blankRow) in table
-        $(this).find(".additem").click(function() {
+        $(this).siblings("legend").find(".additem").click(function() {
             var newRow = blankRow.clone(true);
             var formCount = parseInt($(totalFormsElem).val());
 
-            $(this).closest(".multiitem_table").find(".multiitem_header").show();
+            $(this).parent().siblings(".multiitem_table").find(".multiitem_header").show();
 
             // change the numbering of the new row's inputs
             $(newRow).find("[name *= \"__prefix__\"]").each(function(index) {
@@ -130,7 +129,7 @@ function multiItemTable_functions() {
                     this.name = this.name.replace(addNum_regex, formCount);
             });
 
-            newRow.appendTo($(this).parents(".multiitem_table")).show();
+            newRow.appendTo($(this).parent().siblings(".multiitem_table")).show();
 
             // increment the form manager form count
             $(totalFormsElem).val(formCount + 1);

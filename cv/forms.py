@@ -75,6 +75,7 @@ class FormsetMixin(BaseModelFormSet):
     # FIXME: pk should be renamed to fk
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
+        self.label = kwargs.pop('label', None)
         super(FormsetMixin, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
@@ -99,6 +100,7 @@ class InlineFormsetMixin(BaseInlineFormSet):
     """ InlineFormSet mixin used to set foreign keys on new model instances. """
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
+        self.label = kwargs.pop('label', None)
         super(InlineFormsetMixin, self).__init__(*args, **kwargs)
 
     def save(self, commit=True):
@@ -270,9 +272,6 @@ class ServiceForm(FormMixin):
         fields = ('level', 'start_semester', 'start_year', 'end_semester',
                 'end_year', 'committee', 'role', 'chair', 'other')
 
-class ServiceSelectForm(Form):
-    pass
-
 class GrantForm(FormMixin):
     class Meta:
         model = Grant
@@ -394,9 +393,9 @@ class GrantFormset(FormsetMixin):
         # create the nested forms
         form.nested = [
             InvestigatorFormset(data=self.data, instance=instance,
-                prefix='%s_invest' % prefix, pk=instance),
+                prefix='%s_invest' % prefix, pk=instance, label='Investigators'),
             GrantYearFormset(data=self.data, instance=instance,
-                prefix='%s_gyear' % prefix, pk=instance)
+                prefix='%s_gyear' % prefix, pk=instance, label='Years of Tenure')
         ]
 
     def is_valid(self):
