@@ -396,7 +396,7 @@ fieldset {
 
 legend {
     width: 95%;
-    line-height: 2em;
+    line-height: 1em;
     font-weight: bold;
     padding-left: 1em;
 }
