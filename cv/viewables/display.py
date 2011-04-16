@@ -246,10 +246,6 @@ def research_grants(request):
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
-    forms['grants'] = GrantSelectForm()
-    forms['grants'].fields['grantSelect'] = ModelChoiceField(queryset=Grant.objects.filter(
-        user=request.user), label="Grant")
-
     return direct_to_template(request, 'research_grants.html', context)
 
 @login_required

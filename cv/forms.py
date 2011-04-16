@@ -349,9 +349,6 @@ class GrantYearForm(FormMixin):
 
         return cleaned_data
 
-class GrantSelectForm(Form):
-    pass
-
 InvestigatorFormset = inlineformset_factory(Grant, Investigator,
         form=InvestigatorForm, formset=InlineFormsetMixin, extra=0)
 GrantYearFormset = inlineformset_factory(Grant, GrantYear,

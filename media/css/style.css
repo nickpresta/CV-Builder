@@ -398,8 +398,9 @@ fieldset {
     margin-bottom: 1em;
 }
 
-span.form_select select {
-    width: 100%;
+legend span {
+    margin-left: 4em;
+    display: inline-block;
 }
 
 .form_select {

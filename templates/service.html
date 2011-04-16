@@ -18,17 +18,13 @@ function renumberElement(regexp, repl, elem) {
 $(document).ready(function() {
     var blank = $("#service > .service_wrapper:last");
     var errorElems = $(".service_wrapper:has(.error)");
-    var removeNum_regex;
     var totalElem = $("#service > .management > input[name$=\"-TOTAL_FORMS\"]");
     var total = parseInt(totalElem.val());
 
     $(".service_wrapper").hide();
 
-    var opts = [];
-    var new_count = 0;
-
     $(".form_select").change(function() {
-        // grant select changed
+        // service select changed
         var selectedID = $(this).val();
         var prev = $(".service_wrapper:visible");
 
@@ -71,6 +67,9 @@ $(document).ready(function() {
         $(".form_select").val(newOpt.val());
         $(totalElem).val(++total);
     });
+
+    var opts = [];
+    var new_count = 0;
 
     $(".service_wrapper:not(:last)").each(function () {
         // name each grant_wrapper by their id value (primary key) and create an

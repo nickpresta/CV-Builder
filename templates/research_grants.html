@@ -17,40 +17,28 @@ function renumberElement(regexp, repl, elem) {
 $(document).ready(function() {
     var blankGrant = $(".grants > .grant_wrapper:last");
     var errorGrants = $(".grant_wrapper:has(.error)");
-    var removeNum_regex;
     var totalGrantsElem = $(".grants > .management > input[name$=\"-TOTAL_FORMS\"]");
     var totalGrants = parseInt(totalGrantsElem.val());
 
     $(".grant_wrapper").hide();
 
-    if (errorGrants.length > 0) {
-        var first = $(errorGrants).first();
-
-        $(first).show();
-        $("#id_grantSelect").val($(first).children("[name$=\"-id\"]").val());
-
-        $("#id_grantSelect").addClass("error");
-    }
-
-    $(errorGrants).each(function() {
-        var grantID = $(this).children("[name$=\"-id\"]").val();
-
-        // mark option in select element
-        $("#id_grantSelect > [value=\"" + grantID + "\"]").addClass("error");
-    });
-
-    // name each grant_wrapper by their id value (primary key)
-    $(".grant_wrapper").each(function () {
-        var id = $(this).children("[name$=\"-id\"]").val();
-        $(this).attr("name", id);
-    });
-
-    // grant select changed
-    $("#id_grantSelect").change(function() {
+    $(".form_select").change(function() {
+        // grant select changed
         var selectedID = $(this).val();
-        var prevGrant = $(".grant_wrapper:visible");
+        var prev = $(".grant_wrapper:visible");
 
-        $(prevGrant).hide();
+        $(prev).hide();
+
+        if (selectedID)
+            $(".grant_wrapper[name=\"" + selectedID + "\"]").show();
+    });
+
+    $(".form_select").change(function() {
+        // grant select changed
+        var selectedID = $(this).val();
+        var prev = $(".grant_wrapper:visible");
+
+        $(prev).hide();
 
         if (selectedID)
             $(".grant_wrapper[name=\"" + selectedID + "\"]").show();
@@ -97,9 +85,85 @@ $(document).ready(function() {
 
         $(newGrant).attr("name", "new-" + totalGrants);
         $(newGrant).insertBefore(".grant_wrapper:last").show();
-        $("#id_grantSelect").append(newGrantOpt);
-        $("#id_grantSelect").val(newGrantOpt.val());
+        $(".form_select").append(newGrantOpt);
+        $(".form_select").val(newGrantOpt.val());
         $(totalGrantsElem).val(++totalGrants);
+    });
+
+
+    var opts = [];
+    var new_count = 0;
+    
+    $(".grant_wrapper:not(:last)").each(function () {
+        // name each grant_wrapper by their id value (primary key) and create an
+        // array of <option> elements coresponding to each service form
+        var id = $(this).children("[name$=\"-id\"]").val();
+        var optElem = $("<option></option>");
+        var newOptStr = "";
+        var tmpstr;
+
+        newOptStr = $(this).find("[name $= \"agency\"]").val();
+        tmpstr = $(this).find("[name $= \"support_type\"]").val();
+
+        if (tmpstr)
+            newOptStr += ", " + tmpstr;
+        tmpstr = $(this).find("[name $= \"project_title\"]").val();
+        if (tmpstr)
+            newOptStr += ": " + tmpstr;
+        
+        if (id)
+            $(this).attr("name", id);
+        else
+            $(this).attr("name", "new-" + parseInt(new_count++));
+
+        $(optElem).val($(this).attr("name"));
+        $(optElem).text(newOptStr);
+        
+        opts.push(optElem);
+    });
+    
+    opts.sort(function(a, b) {
+        // sort <option>s by <option> text
+        var aName = $(a).text().toLowerCase();
+        var bName = $(b).text().toLowerCase();
+
+        if (aName < bName)
+            return -1;
+        else if (aName > bName)
+            return 1;
+        else
+            return 0;
+    });
+    
+    for (i in opts)
+        $(".form_select").append(opts[i]);
+
+    if (sessionStorage.getItem("lastForm")) {
+        $(".form_select").val(sessionStorage.getItem("lastForm"));
+        $(".form_select").trigger("change");
+        sessionStorage.removeItem("lastForm");
+    }
+    
+    $("form").submit(function() {
+        sessionStorage.setItem("lastForm", $(".form_select").val());
+    });
+
+    if (errorGrants.length > 0) {
+        var first = $(errorGrants).first();
+        
+        $(".grant_wrapper").hide();
+
+        $(first).show();
+        $(".form_select").val($(first).attr("name"));
+
+        $(".form_select").addClass("error");
+    }
+
+    $(errorGrants).each(function() {
+        var grantID = $(this).children("[name$=\"-id\"]").val();
+
+        // mark option in select element
+        $(".form_select > [value=\"" + grantID + "\"]").addClass("error");
     });
 });
 </script>
@@ -115,7 +179,9 @@ $(document).ready(function() {
     <fieldset id="grants">
         <legend>{{formsets.grants.label }} <span class="clickable addgrant">add</span></legend>
 
-        <span class="form_select">{{ forms.grants.grantSelect }}</span>
+        <select class="form_select">
+            <option selected="selected">---------</option>
+        </select>
         <div class="grants">
             <div class="management">
                 {{ formsets.grants.management_form }}
