@@ -2,7 +2,6 @@ html, body {
     margin: 0;
     padding: 0;
     background: #21201c;
-    font-size: 100%;
 }
 
 body {
@@ -237,7 +236,6 @@ div.field_wrapper input, div.field_wrapper select:not([name ^= facultystart]) {
 .multiitem_table textarea {
     height: 20px;
     overflow: hidden;
-    resize: none;
     white-space: nowrap;
 }
 
@@ -409,14 +407,17 @@ fieldset {
 }
 
 legend {
-    width: 95%;
-    line-height: 1em;
+    width: 100%;
     font-weight: bold;
+    padding: 0px;
+    margin: 0px;
     padding-left: 1em;
 }
 
 legend .additem, legend .addgrant, legend .addservice {
     float: right;
+    padding: 0px;
+    margin: 0px;
     margin-right: 2em;
 }
 
