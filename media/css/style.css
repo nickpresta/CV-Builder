@@ -240,6 +240,10 @@ div.field_wrapper {
     text-align: left;
 }
 
+.multiitem_table {
+    border-collapse: collapse;
+}
+
 /** Misc classes and styles **/
 div#content table {
     width: 90%;
@@ -355,12 +359,24 @@ span.clickable {
     font-size: 11px;
 }
 
-td.error, div.error input, select.error {
+td.error, div.error input, select.error, tr.error {
     border: 3px solid red;
 }
 
 option.error {
     color: red;
+    font-weight: bold;
+}
+
+ul.errorlist {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+ul.errorlist li {
+    color: red;
+    font-size: 0.5em;
     font-weight: bold;
 }
 

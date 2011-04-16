@@ -7,7 +7,7 @@ from django.forms import ModelForm, Form
 from django.forms.models import BaseModelFormSet
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
-from django.forms.formsets import DELETION_FIELD_NAME, TOTAL_FORM_COUNT
+from django.forms.formsets import DELETION_FIELD_NAME
 
 from cv.models import *
 
@@ -70,7 +70,7 @@ class DoEForm(FormMixin):
         year, research, teaching, and service """
 
     year = forms.DateField(input_formats=['%y', '%Y'],
-            widget=forms.DateInput(format='%Y', attrs={'class': 'datepicker'}))
+            widget=forms.DateInput(format='%Y'))
 
     class Meta:
         fields = ('year', 'research', 'teaching', 'service')

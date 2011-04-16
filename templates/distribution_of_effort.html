@@ -4,11 +4,6 @@
 
 {% block content %}
 <h2>Executive Summary</h2>
-{% if doeFormset.errors  %}
-{% for error in doeFormset.errors %}
-    {{ error|escape }}
-{% endfor %}
-{% endif %}
 
 <form method="post" action="{% url cv-distribution-of-effort %}">
     {% csrf_token %}

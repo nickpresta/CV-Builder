@@ -1,3 +1,4 @@
+{{ tableFormset.non_form_errors }}
 <table class="multiitem_table">
     <tr>
         <td><span class="clickable additem">add</span><td>
@@ -10,10 +11,14 @@
         {% endfor %}
     </tr>
     {% for form in tableFormset.forms %}
+    {% if form.non_field_errors %}
+    <tr class="multiitem_row error">
+    {% else %}
     <tr class="multiitem_row">
+    {% endif %}
     {% for field in form %}
         {% if field.errors %}
-        <td class='error'>
+        <td class="error">{{ field.errors }}
         {% else %}
         <td>
         {% endif %}
