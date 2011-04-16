@@ -270,10 +270,6 @@ label {
     width: 100px;
 }
 
-legend {
-    font-weight: bold;
-}
-
 input.empty {
     color:gray;
     font-style:italic;
@@ -398,9 +394,16 @@ fieldset {
     margin-bottom: 1em;
 }
 
-legend span {
-    margin-left: 4em;
-    display: inline-block;
+legend {
+    width: 95%;
+    line-height: 2em;
+    font-weight: bold;
+    padding-left: 1em;
+}
+
+legend .additem, legend .addgrant, legend .addservice {
+    float: right;
+    margin-right: 2em;
 }
 
 .form_select {

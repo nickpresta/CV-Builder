@@ -177,7 +177,7 @@ $(document).ready(function() {
 <form method="post" action="{% url cv-research-grants %}">
     {% csrf_token %}
     <fieldset id="grants">
-        <legend>{{formsets.grants.label }} <span class="clickable addgrant">add</span></legend>
+        <legend>{{formsets.grants.label }} <div class="clickable addgrant">add</div></legend>
 
         <select class="form_select">
             <option selected="selected">---------</option>

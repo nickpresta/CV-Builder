@@ -144,7 +144,7 @@ $(document).ready(function() {
     {% csrf_token %}
 
     <fieldset id="service">
-        <legend>{{formsets.service.label }} <span class="clickable addservice">add</span></legend>
+        <legend>{{formsets.service.label }} <div class="clickable addservice">add</div></legend>
         {{ forms.service.non_form_errors }}
         <select class="form_select">
             <option selected="selected">---------</option>
