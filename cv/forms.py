@@ -7,7 +7,7 @@ from django.forms import ModelForm, Form
 from django.forms.models import BaseModelFormSet
 from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
-from django.forms.formsets import DELETION_FIELD_NAME
+from django.forms.formsets import DELETION_FIELD_NAME, TOTAL_FORM_COUNT
 
 from cv.models import *
 
@@ -35,12 +35,20 @@ class FormsetMixin(BaseModelFormSet):
     def save(self, commit=True):
         forms = super(FormsetMixin, self).save(commit=False)
         for form in forms:
-
             if self.pk:
                 form.setPK(self.pk)
             if commit:
                 form.save()
+
         return forms
+
+    def clean(self):
+        """Clean formset, removing any forms to be deleted."""
+        for form in self.forms:
+            if self._should_delete_form(form):
+                del form.cleaned_data
+        # BaseModelFormSet.clean() preforms model uniqueness validation
+        super(FormsetMixin, self).clean()
 
 class InlineFormsetMixin(BaseInlineFormSet):
     def __init__(self, *args, **kwargs):
@@ -49,8 +57,8 @@ class InlineFormsetMixin(BaseInlineFormSet):
 
     def save(self, commit=True):
         forms = super(InlineFormsetMixin, self).save(commit=False)
-        for form in forms:
 
+        for form in forms:
             if self.pk:
                 form.setPK(self.pk)
             if commit:
@@ -61,8 +69,8 @@ class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
 
-    year = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    year = forms.DateField(input_formats=['%y', '%Y'],
+            widget=forms.DateInput(format='%Y', attrs={'class': 'datepicker'}))
 
     class Meta:
         fields = ('year', 'research', 'teaching', 'service')
