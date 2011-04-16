@@ -2,13 +2,18 @@
     {{ field }}
 {% endfor %}
 {% for field in form.visible_fields %}
-    <div class="field_label">{{ field.label_tag }}</div>
+{% if field.errors %}
+<div class="field_wrapper">
+    {{ field.errors }}
+{% else %}
+<div class="field_wrapper">
+{% endif %}
+    <div class="label">{{ field.label_tag }}</div>
     {% if field.errors %}
-        <div class="field_wrapper error">{{ field.errors }}
+    <div class="field error">{{ field }}</div>
     {% else %}
-        <div class="field_wrapper">
+    <div class="field">{{ field }}</div>
     {% endif %}
-        {{ field }}
-    </div>
     <div class="clear"></div>
+</div>
 {% endfor %}

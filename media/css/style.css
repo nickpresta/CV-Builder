@@ -202,7 +202,7 @@ div.clear:after {
 }
 
 /** inline_form classes and styles **/
-div.field_label {
+div.field_wrapper div.label {
     width: 150px;
     padding-right: 15px;
     float: left;
@@ -210,9 +210,13 @@ div.field_label {
     font-weight: bold;
 }
 
-div.field_wrapper {
+div.field_wrapper div.field {
     float: left;
     margin-left: 25px;
+}
+
+div.field_wrapper ul.errorlist {
+    margin-left: 190px;
 }
 
 /** multiitem_table classes and styles **/

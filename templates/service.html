@@ -98,17 +98,6 @@ $(document).ready(function() {
 {% block content %}
 <h3>3C Service and Administrative Contributions</h3>
 
-{% for name, formset in formsets.items %}
-    {% if formset.errors  %}
-        {% for error in formset.errors %}
-            {{ error|escape }}
-        {% endfor %}
-    {% endif %}
-{% endfor %}
-{% for name, form in forms.items %}
-    {{ form.errors.as_ul }}
-{% endfor %}
-
 <div>
     <div class="field_label">{{ forms.service.serviceSelect.label_tag }}</div>
     <div class="field_wrapper">{{ forms.service.serviceSelect }}</div>
