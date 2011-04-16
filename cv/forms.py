@@ -16,6 +16,7 @@ from cv.models import *
 
 DATE_FORMATS = [
     '%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', # '2006-10-25', '10/25/2006', '10/25/06'
+    '%d/%m/%Y', '%d/%m/%y',             # '25/10/2006', '25/10/06'
     '%b %d %Y', '%b %d, %Y',            # 'Oct 25 2006', 'Oct 25, 2006'
     '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
     '%B %d %Y', '%B %d, %Y',            # 'October 25 2006', 'October 25, 2006'
@@ -202,24 +203,30 @@ class ExecutiveSummaryForm(FormMixin):
         }
 
 class PositionHeldForm(FormMixin):
-    start_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    end_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
 
     class Meta:
         fields = ('start_date', 'end_date', 'location', 'rank')
         model = PositionHeld
 
 class PositionPriorForm(FormMixin):
-    start_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    end_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
 
     class Meta:
         fields = ('start_date', 'end_date', 'location', 'position')
         model = PositionPrior
 
 class PositionElsewhereForm(FormMixin):
-    start_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    end_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
 
     class Meta:
         fields = ('start_date', 'end_date', 'location', 'position')
