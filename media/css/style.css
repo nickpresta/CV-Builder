@@ -233,7 +233,7 @@ div.field_wrapper {
 }
 
 .multiitem_table td {
-    vertical-align: top;
+    vertical-align: bottom;
 }
 
 .multiitem_table th {
@@ -359,7 +359,7 @@ span.clickable {
     font-size: 11px;
 }
 
-td.error, div.error input, select.error, tr.error {
+td.error input, div.error input, select.error, tr.error {
     border: 3px solid red;
 }
 

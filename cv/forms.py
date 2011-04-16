@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import datetime
+import time
 import re
 
 from django import forms
@@ -9,9 +10,49 @@ from django.forms.models import BaseInlineFormSet
 from django.forms.models import inlineformset_factory
 from django.forms.formsets import DELETION_FIELD_NAME
 
+from django.forms.extras.widgets import SelectDateWidget
+
 from cv.models import *
 
+DATE_FORMATS = [
+    '%Y-%m-%d', '%m/%d/%Y', '%m/%d/%y', # '2006-10-25', '10/25/2006', '10/25/06'
+    '%b %d %Y', '%b %d, %Y',            # 'Oct 25 2006', 'Oct 25, 2006'
+    '%d %b %Y', '%d %b, %Y',            # '25 Oct 2006', '25 Oct, 2006'
+    '%B %d %Y', '%B %d, %Y',            # 'October 25 2006', 'October 25, 2006'
+    '%d %B %Y', '%d %B, %Y',            # '25 October 2006', '25 October, 2006'
+    '%Y-%m', '%m/%Y', '%m/%y',          # '2006-10', '10/2006', '10/06'
+    '%b %Y',                            # 'Oct 2006'
+    '%B %Y',                            # 'October 2006'
+    '%Y'                                # '2006'
+]
+
+class DateWidget(SelectDateWidget):
+    """
+    A Widget that splits date input into three <select> boxes.
+    
+    If any of the three date <select>s are left blank, the default 01 is used.
+    """
+    
+    def value_from_datadict(self, data, files, name):
+        """ Replace any blank date field with the default 01. """
+        data = data.copy()
+
+        y = data.get(self.year_field % name)
+        m = data.get(self.month_field % name)
+        d = data.get(self.day_field % name)
+
+        if y == '0':
+            data[self.year_field % name] = '0001'
+        if m == '0':
+            data[self.month_field % name] = '01'
+        if d == '0':
+            data[self.day_field % name] = '01'
+
+        return super(DateWidget, self).value_from_datadict(data, files, name)
+
 class FormMixin(ModelForm):
+    """ Form mixin used to set foreign keys on new model instances. """
+    # FIXME: pk should be renamed to fk
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
         super(FormMixin, self).__init__(*args, **kwargs)
@@ -28,6 +69,9 @@ class FormMixin(ModelForm):
         return form
 
 class FormsetMixin(BaseModelFormSet):
+    """ FormSet mixin used to set foreign keys on new model instances and clean
+    sets of forms. """
+    # FIXME: pk should be renamed to fk
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
         super(FormsetMixin, self).__init__(*args, **kwargs)
@@ -51,6 +95,7 @@ class FormsetMixin(BaseModelFormSet):
         super(FormsetMixin, self).clean()
 
 class InlineFormsetMixin(BaseInlineFormSet):
+    """ InlineFormSet mixin used to set foreign keys on new model instances. """
     def __init__(self, *args, **kwargs):
         self.pk = kwargs.pop('pk', None)
         super(InlineFormsetMixin, self).__init__(*args, **kwargs)
@@ -69,7 +114,7 @@ class DoEForm(FormMixin):
     """ This form is based on the DoE model and shows the
         year, research, teaching, and service """
 
-    year = forms.DateField(input_formats=['%y', '%Y'],
+    year = forms.DateField(input_formats=DATE_FORMATS,
             widget=forms.DateInput(format='%Y'))
 
     class Meta:
@@ -108,6 +153,20 @@ class FacultyNameDeptForm(FormMixin):
     class Meta:
         fields = ('first_name', 'last_name')
         model = User
+        
+class FacultyStartForm(FormMixin):
+    faculty_start = forms.DateField(label="Faculty Start Date", required=False,
+            widget=DateWidget(required=False, years=range(1940, datetime.date.today().year)))
+
+    class Meta:
+        fields = ('faculty_start',)
+        model = UserProfile
+        
+    def clean(self):
+        cleaned_data = self.cleaned_data
+        start = cleaned_data.get('faculty_start')
+
+        return cleaned_data
 
 class AccredForm(FormMixin):
     date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
@@ -128,14 +187,6 @@ class HonorForm(FormMixin):
     class Meta:
         model = Honor
         fields = ('description',)
-
-class FacultyStartForm(FormMixin):
-    faculty_start = forms.DateField(label="Faculty Start Date", initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
-
-    class Meta:
-        fields = ('faculty_start',)
-        model = UserProfile
 
 class FacultyDepartmentsForm(FormMixin):
     class Meta:
