@@ -312,10 +312,10 @@ class FreeFormatForm(FormMixin):
         model = Summary
 
 class GrantYearForm(FormMixin):
-    start_year = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    end_year = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_year = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%Y'))
+    end_year = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%Y'))
 
     class Meta:
         model = GrantYear
