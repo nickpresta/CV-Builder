@@ -330,7 +330,7 @@ def service(request):
             for formset in formsets.values():
                 formset.save()
 
-            return HttpResponseRedirect(reverse('cv-service-contributions'))
+            return HttpResponseRedirect(reverse('cv-service'))
 
     else:
         formsets, forms = createContext(formsetInfo, formInfo)
