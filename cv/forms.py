@@ -257,6 +257,11 @@ class CourseForm(FormMixin):
         fields = ('code', 'name', 'info')
 
 class ServiceForm(FormMixin):
+    start_year = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%Y'))
+    end_year = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%Y'))
+
     class Meta:
         model = Service
         fields = ('level', 'start_semester', 'start_year', 'end_semester',
