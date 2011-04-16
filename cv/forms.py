@@ -354,22 +354,39 @@ GrantYearFormset = inlineformset_factory(Grant, GrantYear,
         form=GrantYearForm, formset=InlineFormsetMixin, extra=0)
 
 class GrantFormset(FormsetMixin):
+    """A formset for Grants, with two nested formsets for Investigators and
+    GrantYears.
+    
+    Based on example from 
+    http://yergler.net/blog/2009/09/27/nested-formsets-with-django/
+    Form fields use the prefix: grants-__prefix__
+    Nested form fields use the prefix: grants-__nested_prefix___PREFIX-__prefix__-
+    eg: grants-0_gyear-0-id
+    
+    """
+    
     def _get_empty_form(self):
         return super(GrantFormset, self)._get_empty_form()
 
     def add_fields(self, form, index):
+        """Called when creating a new form in this formset, adding nested
+        Investigator and GrantYear forms."""
+
         super(GrantFormset, self).add_fields(form, index)
 
         try:
+            # retrieve Grant associated with this form
             instance = self.get_queryset()[index]
             prefix = re.sub(r'-(?!.*-)', '_', form.prefix)
         except IndexError:
+            # form does not exist in formset (new form)
             instance = None
             prefix = re.sub(r'-(?!.*-)', '_', form.prefix)
         except TypeError:
             instance = None
             prefix = re.sub(r'-__prefix__', '___nested_prefix__', form.prefix)
 
+        # create the nested forms
         form.nested = [
             InvestigatorFormset(data=self.data, instance=instance,
                 prefix='%s_invest' % prefix, pk=instance),
@@ -378,6 +395,7 @@ class GrantFormset(FormsetMixin):
         ]
 
     def is_valid(self):
+        """Validate all the forms in this formset, including their nested forms."""
         result = super(GrantFormset, self).is_valid()
 
         for form in self.forms:
@@ -387,6 +405,11 @@ class GrantFormset(FormsetMixin):
         return result
 
     def save_new(self, form, commit=True):
+        """Save a new Grant instance.
+        
+        New GrantYear and Investigator instances will be saved from nested forms.
+        
+        """
         instance = super(GrantFormset, self).save_new(form, commit=commit)
 
         form.instance = instance
@@ -400,6 +423,12 @@ class GrantFormset(FormsetMixin):
         return instance
 
     def should_delete(self, form):
+        """Determine whether a form indicates deletion of a Grant instance.      
+
+        Deltion is specified by the DELETE form field.
+
+        """
+
         if self.can_delete:
             raw_delete_value = form._raw_value(DELETION_FIELD_NAME)
             should_delete = form.fields[DELETION_FIELD_NAME].clean(raw_delete_value)
@@ -408,6 +437,11 @@ class GrantFormset(FormsetMixin):
         return False
 
     def save_all(self, commit=True):
+        """Save all forms in this formset, including nested forms.
+        
+        This should be used instead of the normal save() method.
+        
+        """
         objects = self.save(commit=False)
 
         if commit:
@@ -418,8 +452,11 @@ class GrantFormset(FormsetMixin):
             self.save_m2m()
 
         for form in set(self.initial_forms + self.saved_forms):
+            # save forms for existing Grant instances(initial_forms) as well as
+            # new Grant instances (saved_forms)
+
             if self.should_delete(form):
                 continue
 
             for nested in form.nested:
-                nested.save(commit=commit)
+                nested.save()
