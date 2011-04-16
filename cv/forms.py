@@ -174,71 +174,12 @@ class OffCampusRecognitionForm(FormMixin):
             'off_campus': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
         }
 
-class ResearchActivityForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('research',)
-        widgets = {
-            'research': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class ReportOnTeachingForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('teaching',)
-        widgets = {
-            'teaching': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class ConsultingResearchForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('research_professional_consulting',)
-        widgets = {
-            'research_professional_consulting': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class PatentsResearchForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('research_patents',)
-        widgets = {
-            'research_patents': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class OtherResearchForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('research_other_activities',)
-        widgets = {
-            'research_other_activities': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class RecognitionResearchForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('research_recognition',)
-        widgets = {
-            'research_recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class CounsellingForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('teaching_counselling',)
-        widgets = {
-            'teaching_counselling': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
 class CourseJoinForm(FormMixin):
     year = forms.DateField(input_formats=['%Y'], widget=forms.DateInput(format='%Y'))
 
     class Meta:
         model = FacultyCourseJoin
         fields = ('course', 'year', 'semester', 'num_students')
-        #widgets = {
-        #    'course': forms.TextInput
-        #}
 
 class CourseForm(FormMixin):
     class Meta:
@@ -289,23 +230,9 @@ class ExaminerForm(FormMixin):
         model = GradAdvisor
         fields = ('student_name', 'degree', 'date')
 
-class TeachingCourseDevelopmentForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('teaching_course_development',)
-        widgets = {
-            'teaching_course_development': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
-class TeachingRecognitionForm(FormMixin):
-    class Meta:
-        model = Summary
-        fields = ('teaching_recognition',)
-        widgets = {
-            'teaching_recognition': forms.Textarea(attrs={'rows': '50', 'cols': '40'})
-        }
-
 class FreeFormatForm(FormMixin):
+    """A form for single page, free format entries in the Summary table."""
+
     def __init__(self, *args, **kwargs):
         field = kwargs.pop('field', None)
         super(FreeFormatForm, self).__init__(*args, **kwargs)
@@ -459,4 +386,4 @@ class GrantFormset(FormsetMixin):
                 continue
 
             for nested in form.nested:
-                nested.save()
+                nested.save(commit=commit)

@@ -43,7 +43,7 @@ class DistributionOfEffort(models.Model, FacultyKeyMixin):
     """ This class holds information about the DoE for a
         given employee (Teaching, Research, Service) """
     user = models.ForeignKey(User)
-    year = models.DateField(unique=False)
+    year = models.IntegerField(unique=False)
     # These three fields should add up to 100 (%)
     research = models.IntegerField(default=40)
     teaching = models.IntegerField(default=40)
@@ -58,7 +58,7 @@ class Summary(models.Model, FacultyKeyMixin):
     research  = models.TextField(max_length=10000, blank=True)
     research_professional_consulting = models.CharField(max_length=10000, blank=True)
     research_patents = models.CharField(max_length=10000, blank=True)
-    research_other_activities = models.CharField(max_length=10000, blank=True)
+    research_other = models.CharField(max_length=10000, blank=True)
     research_recognition = models.CharField(max_length=10000, blank=True)
 
     # the following fields refer to teaching
