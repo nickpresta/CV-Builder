@@ -15,8 +15,8 @@ def getFaculty(user):
 def createContext(formsetInfo, formInfo, postData=None, files=None):
     formsets = dict((
         formsetName,
-        Formset(postData, files, pk=key, queryset=qs, prefix=pf)
-    ) for formsetName, (Formset, qs, pf, key) in formsetInfo.iteritems())
+        Formset(postData, files, **kwargs)
+    ) for formsetName, (Formset, kwargs) in formsetInfo.iteritems())
 
     forms = dict((
         formName,

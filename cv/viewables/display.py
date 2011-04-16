@@ -74,7 +74,7 @@ def distribution_of_effort(request):
         doeFormset = modelformset_factory(DistributionOfEffort,
                 form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
                     request.POST, request.FILES, queryset=doeData,
-                    prefix='doe', pk=request.user.id)
+                    prefix='doe', pk=request.user.id, label='Distribution of Effort')
 
         if doeFormset.is_valid():
             doeFormset.save()
@@ -83,7 +83,7 @@ def distribution_of_effort(request):
     else:
         doeFormset = modelformset_factory(DistributionOfEffort,
                 form=DoEForm, extra=0, can_delete=True, formset=FormsetMixin)(
-                        queryset=doeData, prefix='doe')
+                        queryset=doeData, prefix='doe',  label='Distribution of Effort')
 
     return direct_to_template(request, 'distribution_of_effort.html',
             {'doeFormset': doeFormset})
@@ -115,35 +115,50 @@ def biographical(request):
         'accredFormset': (
             modelformset_factory(Accred, form=AccredForm, extra=0,
                 formset=FormsetMixin, can_delete=True),
-            Accred.objects.filter(user=request.user).order_by('date'),
-            'accred',
-            request.user.id
+            {
+                'queryset': Accred.objects.filter(user=request.user).order_by('date'),
+                'prefix': 'accred',
+                'pk': request.user.id,
+                'label': 'Degrees'
+            }
         ),
         'honorFormset': (
             modelformset_factory(Honor, form=HonorForm, extra=0,
                 formset=FormsetMixin, can_delete=True),
-            Honor.objects.filter(user=request.user),
-            'honor',
-            request.user.id
+            {
+                'queryset': Honor.objects.filter(user=request.user),
+                'prefix': 'honor',
+                'pk': request.user.id,
+                'label': 'Major Honours & Fellowships'
+            }
         ),
         'positionHeldFormset': (
             modelformset_factory(PositionHeld, form=PositionHeldForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionHeld.objects.filter(user=request.user),
-            'positionheld',
-            request.user.id
+            {
+                'queryset': PositionHeld.objects.filter(user=request.user),
+                'prefix': 'positionheld',
+                'pk': request.user.id,
+                'label': 'Positions Held at University of Guelph'
+            }
         ),
         'positionPriorFormset': (
             modelformset_factory(PositionPrior, form=PositionPriorForm, extra=0, formset=FormsetMixin, can_delete=True),
-            PositionPrior.objects.filter(user=request.user),
-            'positionprior',
-            request.user.id
+            {
+                'queryset': PositionPrior.objects.filter(user=request.user),
+                'prefix': 'positionprior',
+                'pk': request.user.id,
+                'label': 'Experience Prior to Appointment at Guelph'
+            }
         ),
         'positionElsewhereFormset': (
             modelformset_factory(PositionElsewhere, form=PositionElsewhereForm,
                 extra=0, formset=FormsetMixin, can_delete=True),
-            PositionElsewhere.objects.filter(user=request.user),
-            'positionelsewhere',
-            request.user.id
+            {
+                'queryset': PositionElsewhere.objects.filter(user=request.user),
+                'prefix': 'positionelsewhere',
+                'pk': request.user.id,
+                'label': 'Visiting Professorships'
+            }
         )
     }
 
@@ -202,9 +217,12 @@ def research_grants(request):
         'grants': (
             modelformset_factory(Grant, form=GrantForm, extra=0,
                 formset=GrantFormset, can_delete=True),
-            Grant.objects.filter(user=request.user),
-            'grants',
-            request.user.id
+            {
+                'queryset': Grant.objects.filter(user=request.user),
+                'prefix': 'grants',
+                'pk': request.user.id,
+                'label': 'Research Grants and Contracts'
+            }
         )
     }
 
@@ -237,16 +255,18 @@ def research_grants(request):
 @login_required
 def teaching_courses(request):
     formInfo = {
+    }
+    formsetInfo = {
         'coursesJoined': (
             inlineformset_factory(User, FacultyCourseJoin,
                 form=CourseJoinForm, extra=0, formset=InlineFormsetMixin, can_delete=True),
-            request.user,
-            'cjoin',
-            request.user.id
+            {
+                'instance': request.user,
+                'prefix': 'cjoin',
+                'pk': request.user.id,
+                'label': 'Courses Taught'
+            }
         )
-    }
-    formsetInfo = {
-
     }
 
     if request.method == 'POST':
@@ -318,15 +338,18 @@ def service(request):
         'service': (
             modelformset_factory(Service, form=ServiceForm,
                 extra=0, formset=FormsetMixin, can_delete=True),
-            Service.objects.filter(user=request.user),
-            'service',
-            request.user.id
+            {
+                'queryset': Service.objects.filter(user=request.user),
+                'prefix': 'service',
+                'pk': request.user.id,
+                'label': 'Committees and Similar Bodies'
+            }
         )
     }
 
     if request.method == 'POST':
         formsets, forms = createContext(formsetInfo, formInfo,
-                postData=request.POST, files=request.FILES)
+                postData=request.POST, files=request.FILES)          
         context = dict([('forms', forms), ('formsets', formsets)])
 
         allForms = dict(formsets)
@@ -345,11 +368,6 @@ def service(request):
         formsets, forms = createContext(formsetInfo, formInfo)
         context = dict([('forms', forms), ('formsets', formsets)])
 
-    forms['service'] = ServiceSelectForm()
-    forms['service'].fields['serviceSelect'] = ModelChoiceField(
-        queryset=Service.objects.filter(user=request.user), label="Service")
-
-
     return direct_to_template(request, 'service.html', context)
 
 @login_required
@@ -360,23 +378,32 @@ def teaching_graduate(request):
         'advisor': (
             modelformset_factory(GradAdvisor, form=AdvisorForm, extra=0,
                 formset=FormsetMixin, can_delete=True),
-            GradAdvisor.objects.filter(user=request.user),
-            'gradad',
-            request.user.id
+            {
+                'queryset': GradAdvisor.objects.filter(user=request.user),
+                'prefix': 'gradad',
+                'pk': request.user.id,
+                'label': 'Advisor'
+            }
         ),
         'committee': (
             modelformset_factory(GradAdvisorCommitteeMember, form=AdvisorCommitteeForm, extra=0,
                 formset=FormsetMixin, can_delete=True),
-            GradAdvisorCommitteeMember.objects.filter(user=request.user),
-            'gradmem',
-            request.user.id
+            {
+                'queryset': GradAdvisorCommitteeMember.objects.filter(user=request.user),
+                'prefix': 'gradmem',
+                'pk': request.user.id,
+                'label': 'Advising Committee Member'
+            }
         ),
         'examiner': (
             modelformset_factory(GradExaminer, form=ExaminerForm, extra=0,
                 formset=FormsetMixin, can_delete=True),
-            GradExaminer.objects.filter(user=request.user),
-            'gradexam',
-            request.user.id
+            {
+                'queryset': GradExaminer.objects.filter(user=request.user),
+                'prefix': 'gradexam',
+                'pk': request.user.id,
+                'label': 'Examining Committee Member'
+            }
         )
     }
 
