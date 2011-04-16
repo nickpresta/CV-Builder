@@ -25,14 +25,14 @@
         {% endwith %}
     </fieldset>
     <fieldset id="committee">
-        <legend>i - Advisor committee member</legend>
+        <legend>ii - Advisor committee member</legend>
         {{ formsets.committee.management_form }}
         {% with formsets.committee as tableFormset %}
             {% include "multiitem_table.html" %}
         {% endwith %}
     </fieldset>
     <fieldset id="examiner">
-        <legend>i - Examining committee member</legend>
+        <legend>iii - Examining committee member</legend>
         {{ formsets.examiner.management_form }}
         {% with formsets.examiner as tableFormset %}
             {% include "multiitem_table.html" %}
