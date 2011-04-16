@@ -157,7 +157,7 @@ class FacultyCourseJoin(models.Model, FacultyKeyMixin):
     course = models.ForeignKey(Course)
     year = models.DateField(blank=True, null=True)
     semester = models.CharField(max_length=200, blank=True, choices=SEMESTERS)
-    num_students = models.IntegerField(blank=True, null=True)
+    num_students = models.IntegerField('# Students', blank=True, null=True)
 
 class BaseGradAdvisor(models.Model, FacultyKeyMixin):
     user = models.ForeignKey(User)

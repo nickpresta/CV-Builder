@@ -241,7 +241,8 @@ class OffCampusRecognitionForm(FormMixin):
         }
 
 class CourseJoinForm(FormMixin):
-    year = forms.DateField(input_formats=['%Y'], widget=forms.DateInput(format='%Y'))
+    year = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%Y'))
 
     class Meta:
         model = FacultyCourseJoin

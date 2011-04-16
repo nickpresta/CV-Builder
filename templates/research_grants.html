@@ -110,30 +110,6 @@ $(document).ready(function() {
 {% block content %}
 <h2>Research</h2>
 
-{% for name, formset in formsets.items %}
-    {% if formset.errors  %}
-        {% for error in formset.errors %}
-            {{ error|escape }}
-        {% endfor %}
-    {% endif %}
-    {% for form in formset.forms %}
-        {% for nestedFormset in form.nested %}
-            {% if nestedFormset.errors %}
-                {% for error in nestedFormset.errors %}
-                    {{ error|escape }}
-                {% endfor %}
-            {% endif %}
-        {% empty %}
-            no nested list
-            {{ formset.forms.nested }}
-        {% endfor %}
-    {% endfor %}
-{% endfor %}
-
-{% for name, form in forms.items %}
-    {{ form.errors.as_ul }}
-{% endfor %}
-
 <form method="post" action="{% url cv-research-grants %}">
     {% csrf_token %}
     <fieldset id="grants">
