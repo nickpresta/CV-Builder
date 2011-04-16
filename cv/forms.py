@@ -247,6 +247,9 @@ class CourseJoinForm(FormMixin):
     class Meta:
         model = FacultyCourseJoin
         fields = ('course', 'year', 'semester', 'num_students')
+        widgets = {
+            'course': forms.TextInput(attrs={'class': 'courses'})
+        }
 
 class CourseForm(FormMixin):
     class Meta:
