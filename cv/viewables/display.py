@@ -24,7 +24,9 @@ SECTION_LABELS = {
             'recognition': 'Recognition of Teaching Ability and Achievement',
             'support': 'Support Received for Major Teaching and Projects',
             'scholarship': 'Scholarship in Education',
-            'other': 'Other Contributions to Education'
+            'other': 'Other Contributions to Education',
+            'courses': 'Courses Taught',
+            'graduate': 'Graduate Advising and Examining'
         }
     ),
     'research': (
@@ -33,7 +35,8 @@ SECTION_LABELS = {
             'professional_consulting': 'Professional Consulting',
             'patents': 'Patents',
             'other': 'Other Activities',
-            'recognition': 'Recognition of Research and Scholarship'
+            'recognition': 'Recognition of Research and Scholarship',
+            'grants': 'Research Grants and Contracts'
         }
     ),
     'off_campus': (
@@ -42,8 +45,14 @@ SECTION_LABELS = {
     ),
     'executive': (
         'Executive Summary', {
+            'doe': 'Distribution of Effort'
         }
     ),
+    'service': (
+        'Service and Administrative Contributions', {
+        
+        }
+    )
 }
 
 def index(request):

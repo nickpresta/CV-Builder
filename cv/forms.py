@@ -157,7 +157,8 @@ class FacultyNameDeptForm(FormMixin):
         
 class FacultyStartForm(FormMixin):
     faculty_start = forms.DateField(label="Faculty Start Date", required=False,
-            widget=DateWidget(required=False, years=range(1940, datetime.date.today().year)))
+            widget=DateWidget(required=False,
+            years=range(1940, datetime.date.today().year)))
 
     class Meta:
         fields = ('faculty_start',)
@@ -170,7 +171,9 @@ class FacultyStartForm(FormMixin):
         return cleaned_data
 
 class AccredForm(FormMixin):
-    date = forms.DateField(widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+
 
     class Meta:
         model = Accred
