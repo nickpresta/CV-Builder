@@ -276,26 +276,26 @@ class InvestigatorForm(FormMixin):
         fields = ('name', 'amount', 'role')
 
 class AdvisorForm(FormMixin):
-    start_date = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    end_date = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
     class Meta:
         model = GradAdvisor
         fields = ('student_name', 'degree', 'start_date', 'end_date')
 
 class AdvisorCommitteeForm(FormMixin):
-    start_date = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
-    end_date = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    start_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
+    end_date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
     class Meta:
         model = GradAdvisor
         fields = ('student_name', 'degree', 'start_date', 'end_date')
 
 class ExaminerForm(FormMixin):
-    date = forms.DateField(initial=datetime.date.today,
-            widget=forms.TextInput(attrs={'class': 'datepicker'}))
+    date = forms.DateField(input_formats=DATE_FORMATS,
+        widget=forms.DateInput(format='%d/%m/%Y', attrs={'class': 'datepicker'}))
     class Meta:
         model = GradAdvisor
         fields = ('student_name', 'degree', 'date')
