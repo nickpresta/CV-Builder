@@ -91,7 +91,7 @@ class FormsetMixin(BaseModelFormSet):
     def clean(self):
         """Clean formset, removing any forms to be deleted."""
         for form in self.forms:
-            if self._should_delete_form(form):
+            if hasattr(form, 'cleaned_data') and self._should_delete_form(form):
                 del form.cleaned_data
         # BaseModelFormSet.clean() preforms model uniqueness validation
         super(FormsetMixin, self).clean()
