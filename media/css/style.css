@@ -2,6 +2,7 @@ html, body {
     margin: 0;
     padding: 0;
     background: #21201c;
+    font-size: 100%;
 }
 
 body {
@@ -203,8 +204,9 @@ div.clear:after {
 
 /** inline_form classes and styles **/
 div.field_wrapper div.label {
-    width: 150px;
-    padding-right: 15px;
+    width: 35%;
+    margin-left: 0px;
+    margin-right: 0px;
     float: left;
     text-align: left;
     font-weight: bold;
@@ -213,12 +215,23 @@ div.field_wrapper div.label {
 
 div.field_wrapper div.field {
     float: left;
-    margin-left: 25px;
+    width: 65%;
+    text-align: left;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 div.field_wrapper ul.errorlist {
-    margin-left: 190px;
+    padding-left: 35%;
+    margin-left: 0px;
+    margin-right: 0px;
+
 }
+
+div.field_wrapper input, div.field_wrapper select:not([name ^= facultystart]) {
+    width: 100%;
+}
+
 
 /** multiitem_table classes and styles **/
 .multiitem_table textarea {
@@ -243,6 +256,7 @@ div.field_wrapper ul.errorlist {
 
 .multiitem_table th {
     text-align: left;
+    font-size: 0.75em;
 }
 
 .multiitem_table {
@@ -408,4 +422,5 @@ legend .additem, legend .addgrant, legend .addservice {
 
 .form_select {
     width: 100%;
+    margin-bottom: 1em;
 }
